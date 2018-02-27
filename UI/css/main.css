@@ -1,0 +1,13 @@
+@import "form.css";
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+hr {
+  color: #fbfbfb;
+}
+
+.wrapper {
+  background: floralwhite;
+}
