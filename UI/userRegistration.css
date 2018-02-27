@@ -16,3 +16,49 @@
 .form_container > h1 {
   text-align: center;
 }
+
+.form_container .gender_area {
+  margin: 5px 0 0 0;
+}
+
+.form_container label {
+  font-size: .9em;
+}
+.form_container p {
+  font-size: .8em;
+}
+
+.form_container legend {
+  font-style: italic;
+}
+
+.radio_options div {
+  display: flex;
+  flex-direction: row;
+  width: 75px;
+}
+
+.form_container .gender_area .radio_options{
+  display: flex;
+  flex-direction: row;
+
+}
+
+.gender_area div {
+  flex-grow: 1;
+}
+
+.gender_area input {
+  margin-left: 7px;
+}
+
+input[name=submit] {
+  background-color: green;
+  border: none;
+  padding: 5px;
+  color: white;
+}
+
+input[type=radio] {
+  width: 5px;
+}
