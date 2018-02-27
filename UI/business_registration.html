@@ -4,61 +4,63 @@
     <meta charset="utf-8">
     <meta name="description" content="WeConnect provides a platform that brings businesses and individuals together.">
     <link rel="stylesheet" href="css/main.css">
-    <title></title>
+    <title>Business Registration</title>
   </head>
   <body>
       <header>
         <h1>Business Registration</h1>
         <hr>
       </header>
-      <div class="wrapper">
-        <section>
-          <article class="form_container">
-            <form class="business_registration" action="index.html" method="post">
-              <fieldset>
-                <legend>Basic Business Details</legend>
-                <label for="business_name">Business Name: </label>
-                <input type="text" name="business_name" value="" placeholder="Enter name of Business">
-                <label for="location">Location: </label>
-                <input type="text" name="location" value="" placeholder="Enter business physical location">
+      <main>
+        <div class="wrapper">
+          <section>
+            <article class="form_container">
+              <form class="business_registration" action="index.html" method="post">
+                <fieldset>
+                  <legend>Basic Business Details</legend>
+                  <label for="business_name">Business Name: </label>
+                  <input type="text" name="business_name" value="" placeholder="Enter name of Business">
+                  <label for="location">Location: </label>
+                  <input type="text" name="location" value="" placeholder="Enter business physical location">
 
-                <label for="business_category">Business Category:</label>
-                <select class="business_category" name="business_category">
-                  <optgroup label="Fashion">
-                    <option value="clothing">Clothing</option>
-                    <option value="foot_wear">Footwear</option>
-                    <option value="makeup_accessories">Make &amp; Jewelry</option>
-                  </optgroup>
-                  <optgroup label="Furniture">
-                    <option value="living_room">Living Room</option>
-                    <option value="bedroom">Bedroom</option>
-                    <option value="kitchen">Kitchen</option>
-                  </optgroup>
-                  <optgroup label="Locomotives">
-                    <option value="cars">Cars</option>
-                    <option value="trucks">Trucks</option>
-                    <option value="motorbikes">Motorbikes</option>
-                  </optgroup>
-                  <option value="other" selected = 'selected'>Other</option>
-                </select>
-              </fieldset>
+                  <label for="business_category">Business Category:</label>
+                  <select class="business_category" name="business_category" multiple>
+                    <optgroup label="Fashion">
+                      <option value="clothing">Clothing</option>
+                      <option value="foot_wear">Footwear</option>
+                      <option value="makeup_accessories">Make &amp; Jewelry</option>
+                    </optgroup>
+                    <optgroup label="Furniture">
+                      <option value="living_room">Living Room</option>
+                      <option value="bedroom">Bedroom</option>
+                      <option value="kitchen">Kitchen</option>
+                    </optgroup>
+                    <optgroup label="Locomotives">
+                      <option value="cars">Cars</option>
+                      <option value="trucks">Trucks</option>
+                      <option value="motorbikes">Motorbikes</option>
+                    </optgroup>
+                    <option value="other" selected = 'selected'>Other</option>
+                  </select>
+                </fieldset>
 
-              <fieldset>
-                <legend>Business Contact Details</legend>
-                <label for="email">Email Address: </label>
-                <input type="email" name="user_name" value="" placeholder="Email / Username">
-                <label for="mobile">Mobile: </label>
-                <input type="text" name="mobile" value="" placeholder="Enter mobile number">
-                <label for="phone">Office Phone: </label>
-                <input type="text" name="phone" value="" placeholder="Enter landline number">
-              </fieldset>
+                <fieldset>
+                  <legend>Business Contact Details</legend>
+                  <label for="email">Email Address: </label>
+                  <input type="email" name="user_name" value="" placeholder="Enter email address">
+                  <label for="mobile">Mobile: </label>
+                  <input type="text" name="mobile" value="" placeholder="Enter mobile number">
+                  <label for="phone">Office Phone: </label>
+                  <input type="text" name="phone" value="" placeholder="Enter landline number">
+                </fieldset>
 
-              <fieldset>
-                <input type="submit" name="submit" value="Register Business">
-              </fieldset>
-            </form>
-          </article>
-        </section>
-      </div>
+                <fieldset>
+                  <input type="submit" name="submit" value="Register Business">
+                </fieldset>
+              </form>
+            </article>
+          </section>
+        </div>
+      </main>
   </body>
 </html>

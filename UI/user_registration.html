@@ -9,55 +9,56 @@
   </head>
   <body>
     <div class="wrapper">
-        <header>
-          <h1>Sign Up</h1>
-          <hr>
-        </header>
+      <header>
+        <h1>Sign Up</h1>
+        <hr>
+      </header>
+      <main>
+        <section>
+          <article class="form_container">
+            <form class="sign_up" action="" method="post">
+                <fieldset>
+                  <legend>Basic Info</legend>
+                  <label for="first_name">First Name: </label>
+                  <input type="text" name="first_name" value="" placeholder="Your first name here">
+                  <label for="last_name">Last Name: </label>
+                  <input type="text" name="last_name" value="" placeholder="Your last name here">
 
-      <section>
-        <article class="form_container">
-          <form class="sign_up" action="" method="post">
-              <fieldset>
-                <legend>Basic Info</legend>
-                <label for="first_name">First Name: </label>
-                <input type="text" name="first_name" value="" placeholder="Your first name here">
-                <label for="last_name">Last Name: </label>
-                <input type="text" name="last_name" value="" placeholder="Your last name here">
-
-                <div class="gender_area">
-                  <label for="gender">Gender: </label>
-                  <div class="radio_options">
-                    <div class="">
-                      <p>Male: </p> <input type="radio" name="gender" value="Male">
-                    </div>
-                    <div class="">
-                      <p>Female: </p> <input type="radio" name="gender" value="Female">
+                  <div class="gender_area">
+                    <label for="gender">Gender: </label>
+                    <div class="radio_options">
+                      <div class="">
+                        <p>Male: </p> <input type="radio" name="gender" value="Male">
+                      </div>
+                      <div class="">
+                        <p>Female: </p> <input type="radio" name="gender" value="Female">
+                      </div>
                     </div>
                   </div>
-                </div>
-              </fieldset>
+                </fieldset>
 
-              <fieldset>
-                <legend>Contact Info </legend>
-                <label for="email">Email: </label>
-                <input type="email" name="email" value="" placeholder="example@domain.com">
-                <label for="email">Mobile: </label>
-                <input type="text" name="mobile" value="" placeholder="+254 700 000 000">
-              </fieldset>
+                <fieldset>
+                  <legend>Contact Info </legend>
+                  <label for="email">Email: </label>
+                  <input type="email" name="email" value="" placeholder="example@domain.com">
+                  <label for="email">Mobile: </label>
+                  <input type="text" name="mobile" value="" placeholder="+254 700 000 000">
+                </fieldset>
 
-              <fieldset>
-                <legend>Security Info</legend>
-                <label for="password">Password: </label>
-                <input type="password" name="password" value="" placeholder="Choose a password">
-                <label for="password">Confirm Password: </label>
-                <input type="password" name="password" value="" placeholder="Repeat the password">
-              </fieldset>
-              <fieldset>
-                <input type="submit" name="submit" value="Submit">
-              </fieldset>
-          </form>
-        </article>
-      </section>
+                <fieldset>
+                  <legend>Security Info</legend>
+                  <label for="password">Password: </label>
+                  <input type="password" name="password" value="" placeholder="Choose a password">
+                  <label for="password">Confirm Password: </label>
+                  <input type="password" name="password" value="" placeholder="Repeat the password">
+                </fieldset>
+                <fieldset>
+                  <input type="submit" name="submit" value="Submit">
+                </fieldset>
+            </form>
+          </article>
+        </section>
+      </main>
       <br>
       <footer>
         Copyright
