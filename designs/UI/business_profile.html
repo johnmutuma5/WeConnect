@@ -23,42 +23,39 @@
         </nav>
       </div>
     </header>
+    <div class="jumbotron">
+      <!-- <div class="">
+        <h2>Quick details</h2>
+      </div> -->
+
+      <div class="business_details">
+        <div class="quick_details">
+          <h3>Clean Fits Clothing and Footwear</h3>
+          <hr>
+          <div class="owner">
+            <p><span>Business Owner:</span> John Mutuma</p>
+          </div>
+          <div class="business_category">
+            <p><span>Business Category:</span> Fashion</p>
+            <p><span>Specialization:</span> Clothing &amp; Footwear</p>
+          </div>
+          <div class="registration_date">
+            <p><span>Registration date:</span> Tue, February 27 2018 </p>
+          </div>
+        </div>
+
+          <div class="background_overlay">
+          </div>
+      </div>
+    </div>
 
     <div class="wrapper">
       <main>
         <section>
-          <article class="">
-            <div class="">
-              <h2>Quick details</h2>
-            </div>
-
-            <div class="business_details">
-              <div class="quick_details">
-                <h3>Clean Fits Clothing and Footwear</h3>
-                <hr>
-                <div class="owner">
-                  <p><span>Business Owner:</span> John Mutuma</p>
-                </div>
-                <div class="business_category">
-                  <p><span>Business Category:</span> Fashion</p>
-                  <p><span>Specialization:</span> Clothing &amp; Footwear</p>
-                </div>
-                <div class="registration_date">
-                  <p><span>Registration date:</span> Tue, February 27 2018 </p>
-                </div>
-              </div>
-
-                <div class="background_overlay">
-                </div>
-            </div>
-          </article>
-          <br>
-          <br>
-
           <div class="">
             <h2>Detailed information</h2>
           </div>
-          <article class="">
+          <article id="info_wrapper">
             <div class="detailed_info">
               <div class="info about">
                 <div class="info_heading">
@@ -95,13 +92,14 @@
                   </div>
 
                   <div>
-                    <h4>Brands</h4>
-                    <p>Marks &amp; Spencer, Gucci, Armani</p>
+                    <h4>Open Hours</h4>
+                    <p>Weekdays: 0600hrs - 2000hrs</p>
+                    <p>Weekends: 0800hrs - 1800hrs</p>
                   </div>
 
                   <div>
-                    <h4>Brands</h4>
-                    <p>Marks &amp; Spencer, Gucci, Armani</p>
+                    <h4>Methods of payment</h4>
+                    <p>Cash, Cheque, Mpesa, Credit Card</p>
                   </div>
                 </div>
               </div>
@@ -114,6 +112,14 @@
             <h2>User reviews</h2>
           </div>
           <article class="">
+            <div class="prompt_review">
+              <div class="prompt">
+                <p>If you know this business, please leave a review...</p>
+              </div>
+              <div class="button">
+                <span>Write a Review</span>
+              </div>
+            </div>
             <div class="reviews">
               <ul>
                 <li>
@@ -181,8 +187,39 @@
             </div>
           </article>
         </section>
-      </main>
 
+        <section>
+          <div class="">
+            <h2>Business Location</h2>
+          </div>
+          <article class="map">
+            <div id="map">map here</div>
+            <script>
+              function initMap() {
+                var uluru = {lat:  -1.2833300, lng: 36.8166700};
+                var map = new google.maps.Map(document.getElementById('map'), {
+                  zoom: 15,
+                  center: uluru
+                });
+                var marker = new google.maps.Marker({
+                  position: uluru,
+                  map: map
+                });
+              }
+            </script>
+            <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByfLPTDMlAQgWmlMW8Wp-OQ6lIOvvB_AM&callback=initMap">
+            </script>
+          </article>
+        </section>
+      </main>
     </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <footer>
+      Copyright
+    </footer>
   </body>
 </html>
