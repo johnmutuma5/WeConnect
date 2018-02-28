@@ -8,14 +8,41 @@
     <title>User Registration</title>
   </head>
   <body>
+
+    <header>
+      <div class="toolbar">
+        <div class="logo">
+          <img src="" alt="WeConnect" />
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#">Businesses</a></li>
+            <li><a href="#">Register Business</a></li>
+            <li><a href="#">About WeConnect</a></li>
+            <li><a href="#">Sign Up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
     <div class="wrapper">
-      <header>
-        <h1>Sign Up</h1>
-        <hr>
-      </header>
       <main>
         <section>
+          <article class="form_header">
+            <div>
+              <h2>Sign Up</h2>
+            </div>
+          </article>
+
           <article class="form_container">
+            <div class="form_cover">
+              <div class="cover_note">
+                <h3>Welcome to WeConnect!</h3>
+                <hr>
+                <p>Let's start here..</p>
+              </div>
+            </div>
+
             <form class="sign_up" action="" method="post">
                 <fieldset>
                   <legend>Basic Info</legend>
@@ -24,13 +51,13 @@
                   <label for="last_name">Last Name: </label>
                   <input type="text" name="last_name" value="" placeholder="Your last name here">
 
-                  <div class="gender_area">
+                  <div class="options">
                     <label for="gender">Gender: </label>
                     <div class="radio_options">
-                      <div class="">
+                      <div class="radio_option">
                         <p>Male: </p> <input type="radio" name="gender" value="Male">
                       </div>
-                      <div class="">
+                      <div class="radio_option">
                         <p>Female: </p> <input type="radio" name="gender" value="Female">
                       </div>
                     </div>
@@ -59,10 +86,13 @@
           </article>
         </section>
       </main>
+
+
       <br>
       <footer>
         Copyright
       </footer>
     </div>
+
   </body>
 </html>

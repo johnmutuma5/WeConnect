@@ -1,0 +1,81 @@
+/* dusty: #96858F
+lavender: #6D7993
+overcast: #9099A2
+paper: #D5D5D5 */
+
+
+
+@import "form.css";
+@import "business_profile.css";
+@import "navigation.css";
+
+*, *::after, *::before {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+}
+
+
+article:not([class='form_container']) {
+  box-shadow: 0px 0px 1px 1px #96858F;
+  border-radius: 15px;
+}
+
+
+article:not(:first-of-type) {
+  margin-bottom: 50px;
+  padding: 25px;
+  background: white;
+}
+article[class='form_container'] {
+  padding: 0;
+}
+
+article:first-of-type {
+  box-shadow: none;
+}
+
+hr {
+  color: #fbfbfb;
+}
+
+.wrapper {
+  width: 95%;
+  padding: 0;
+  position: relative;
+  top: 50px;
+  margin: 0 auto;
+}
+
+h2::before {
+  content: '';
+  display: inline-block;
+  position: relative;
+  top: 55px;
+  transform: translateY(-25px);
+  height: 50px;
+  width: 2.5px;
+  background-color: #6D7993;
+  margin-right: 5px;
+}
+
+h2 {
+  color: #222233;
+  font-weight: 100;
+  margin-bottom: 50px;
+}
+
+h3 {
+  font-style: normal;
+  color: black;
+  font-weight: bolder;
+}
+
+h4, h2 {
+  margin-top: 0;
+}

@@ -1,0 +1,230 @@
+
+
+
+.form_container, .form_header {
+  width: 90%;
+  display: flex;
+  margin: auto;
+}
+
+.form_container {
+  min-height: 500px;
+  display: flex;
+  margin: auto;
+  border-radius: 20px;
+  -webkit-box-shadow: 2px 2px 4px 1px #9099A2;
+          box-shadow: 2px 2px 4px 1px #9099A2;
+  background-color: white;
+  overflow: hidden;
+}
+
+.form_container fieldset {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-top: 10px;
+  border: none;
+  border-top: 1px dotted #6D7993;
+  border-left: 1px dotted #6D7993;
+  border-radius: 5px;
+  background: transparent;
+}
+
+form {
+  flex-basis: 50%;
+  margin: 10px;
+}
+
+form label {
+  margin: 5px 0 5px 0;
+}
+
+header > h1, footer {
+  text-align: center;
+}
+
+.form_container .options {
+  margin: 5px 0 0 0;
+}
+
+.form_container label {
+  font-size: .9em;
+}
+.form_container p {
+  font-size: .8em;
+}
+
+.form_container legend {
+  font-style: italic;
+  font-weight: bolder;
+}
+
+.radio_options div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 5px;
+}
+
+
+
+.form_container .options .radio_options{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+
+}
+
+.options div {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+
+
+input:not([type='checkbox']), select, .radio_options {
+  border-radius: 5px;
+  border: none;
+  border-bottom: 1px solid #96858F;
+  height: 45px;
+  width: 100%;
+  margin: auto;
+}
+
+fieldset:last-child {
+  background-color: transparent;
+  border: none;
+  width: 47%;
+}
+
+.options input {
+  margin-left: 7px;
+}
+
+input[name=submit] {
+  background-color: #96858F;
+  border: none;
+  padding: 5px;
+  color: white;
+  margin-left: 0;
+  cursor: pointer;
+}
+
+input[name='submit']:hover {
+  background-color: #6D7993;
+}
+
+input {
+  -webkit-transition: all .7s;
+  -o-transition: all .7s;
+  transition: all .7s;
+  padding-left: 5px !important;
+}
+
+input:focus {
+  -webkit-box-shadow: 0px 0px 5px 1px #6D7993;
+          box-shadow: 0px 0px 5px 1px #6D7993;
+  outline: none;
+}
+
+
+input[type='radio'], input[type='checkbox'] {
+  width: auto;
+  height: auto;
+  margin: auto;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+select {
+  height: 150px;
+}
+
+select optgroup {
+  color: #96858F;
+}
+select option {
+  color: black;
+  font-style: italic;
+}
+
+
+.checkbox .checkbox_option, .radio_options .radio_option{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+}
+
+.radio_options {
+  border: none;
+}
+
+
+.form_cover {
+  display: flex;
+  flex-basis: 50%;
+  /* background: radial-gradient(#96858F 15%, transparent 16%) 0 0,
+              radial-gradient(#96858F 15%, transparent 16%) 8px 8px,
+              radial-gradient(rgba(150, 133, 143, .1) 15%, transparent 20%) 0 1px,
+              radial-gradient(rgba(150, 133, 143, .1) 15%, transparent 20%) 8px 9px; */
+  background-color:#96858F;
+  background-blend-mode: multiply;
+  background-size:16px 16px;
+  border-right:5px dotted #D5D5D5;
+  justify-content: center;
+  align-items: center;
+}
+
+.form_cover .cover_note {
+  flex-basis: 50%;
+  display: block;
+  height: 30%;
+  text-align: center;
+}
+
+.form_cover .cover_note p {
+  font-style: italic;
+  color: white;
+}
+
+.form_cover .cover_note h3 {
+  color: #D5D5D5;
+}
+
+@media (min-width: 361px) {
+
+  .form_container {
+    width: 75%;
+  }
+}
+
+@media (min-width: 700px) {
+
+  .form_container {
+    width: 90%;
+  }
+}
+
+@media (min-width: 901px) {
+
+  .form_container {
+    width: 90%;
+  }
+}
