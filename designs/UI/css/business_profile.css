@@ -27,7 +27,9 @@ div.business_details span {
 .quick_details {
   position: absolute;
   top:50%;
-  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
   background-color: #96858F;
   padding: 25px;
   width: 400px;
@@ -51,6 +53,35 @@ div.business_details span {
   height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, .7);
+  background: -webkit-gradient(linear,
+                              left top, right top,
+                              from(rgba(150, 133, 143, 1)),
+                              color-stop(50%, rgba(150, 133, 143, .6)),
+                              to(rgba(150, 133, 143, 0))),
+              -webkit-gradient(linear,
+                              left top, left bottom,
+                              from(rgba(109, 121, 147, 1)),
+                              color-stop(20%, rgba(109, 121, 147, .3)),
+                              to(rgba(109, 121, 147, 0))),
+              transparent;
+  background: -webkit-linear-gradient(left,
+                              rgba(150, 133, 143, 1) 0%,
+                              rgba(150, 133, 143, .6) 50%,
+                              rgba(150, 133, 143, 0) 100%),
+              -webkit-linear-gradient(top,
+                              rgba(109, 121, 147, 1) 0%,
+                              rgba(109, 121, 147, .3) 20%,
+                              rgba(109, 121, 147, 0) 100%),
+              transparent;
+  background: -o-linear-gradient(left,
+                              rgba(150, 133, 143, 1) 0%,
+                              rgba(150, 133, 143, .6) 50%,
+                              rgba(150, 133, 143, 0) 100%),
+              -o-linear-gradient(top,
+                              rgba(109, 121, 147, 1) 0%,
+                              rgba(109, 121, 147, .3) 20%,
+                              rgba(109, 121, 147, 0) 100%),
+              transparent;
   background: linear-gradient(90deg,
                               rgba(150, 133, 143, 1) 0%,
                               rgba(150, 133, 143, .6) 50%,
@@ -65,15 +96,27 @@ div.business_details span {
 }
 
 .detailed_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: column;
-  justify-content: space-between;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 15px;
 }
 
 .detailed_info .info_heading {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
 }
 
 .info_heading .icon, .info_heading .title {
@@ -108,14 +151,23 @@ div.business_details span {
 }
 
 .more_detail .description {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 .more_detail .description div {
-  flex-basis: 30%;
+  -ms-flex-preferred-size: 30%;
+      flex-basis: 30%;
 }
 
 .more_detail h4 {
@@ -125,9 +177,16 @@ div.business_details span {
 
 
 .prompt_review {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row;
-  justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 0 7px;
   font-size: .9em;
 }
@@ -140,10 +199,13 @@ div.business_details span {
   background: #96858F;
   cursor: pointer;
   padding: 0 10px;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   height: 40px;
   line-height: 40px;
   color: white;
+  -webkit-transition: all .5s;
+  -o-transition: all .5s;
   transition: all .5s;
 }
 
@@ -204,7 +266,8 @@ div.business_details span {
 
 .review .review_body {
   background-color: #D5D5D5;
-  flex-basis: 80%;
+  -ms-flex-preferred-size: 80%;
+      flex-basis: 80%;
 }
 
 .review_body q {

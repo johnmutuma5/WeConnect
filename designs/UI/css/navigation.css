@@ -19,7 +19,9 @@
   -webkit-box-flex: 2;
       -ms-flex-positive: 2;
           flex-grow: 2;
-  justify-content: flex-end;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
   height: 100%;
   font-weight: normal;
   font-size: .9em;
@@ -32,7 +34,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  justify-content: flex-end;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
   list-style-type: none;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -45,19 +49,29 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .toolbar nav li a {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   width: auto;
   height: 100%;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   text-decoration: none;
   color: #D5D5D5;
   padding: 0 20px;
+  -webkit-transition: all .5s;
+  -o-transition: all .5s;
   transition: all .5s;
 }
 
@@ -70,18 +84,33 @@
   content: '';
   width: 100%;
   border-bottom: 4px solid #D5D5D5;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: absolute;
   bottom: 0;
   left: 0;
-  animation: scaleBorder .4s;
+  -webkit-animation: scaleBorder .4s;
+          animation: scaleBorder .4s;
+}
+
+@-webkit-keyframes scaleBorder {
+  from {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+            transform: scale(1)
+  }
 }
 
 @keyframes scaleBorder {
   from {
-    transform: scale(0);
+    -webkit-transform: scale(0);
+            transform: scale(0);
   }
   to {
-    transform: scale(1)
+    -webkit-transform: scale(1);
+            transform: scale(1)
   }
 }

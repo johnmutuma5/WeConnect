@@ -3,12 +3,16 @@
 
 .form_container, .form_header {
   width: 70%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin: auto;
 }
 
 .form_container {
   min-height: 500px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   margin: auto;
   border-radius: 20px;
@@ -22,7 +26,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -36,7 +42,8 @@
 }
 
 form {
-  flex-basis: 50%;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
   margin: 10px;
 }
 
@@ -187,8 +194,11 @@ textarea {
 
 
 .form_cover {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-basis: 50%;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
   /* background: radial-gradient(#96858F 15%, transparent 16%) 0 0,
               radial-gradient(#96858F 15%, transparent 16%) 8px 8px,
               radial-gradient(rgba(150, 133, 143, .1) 15%, transparent 20%) 0 1px,
@@ -197,12 +207,17 @@ textarea {
   background-blend-mode: multiply;
   background-size:16px 16px;
   border-right:5px dotted #D5D5D5;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .form_cover .cover_note {
-  flex-basis: 50%;
+  -ms-flex-preferred-size: 50%;
+      flex-basis: 50%;
   display: block;
   height: 30%;
   text-align: center;
