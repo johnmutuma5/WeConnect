@@ -2,7 +2,7 @@
 
 
 .form_container, .form_header {
-  width: 90%;
+  width: 70%;
   display: flex;
   margin: auto;
 }
@@ -22,6 +22,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  justify-content: space-between;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -101,7 +102,7 @@ input:not([type='checkbox']), select, .radio_options {
   border-bottom: 1px solid #96858F;
   height: 45px;
   width: 100%;
-  margin: auto;
+  margin: 7px auto;
 }
 
 fieldset:last-child {
@@ -159,6 +160,14 @@ select optgroup {
 select option {
   color: black;
   font-style: italic;
+}
+
+select.product_category {
+  height: 100px;
+}
+
+textarea {
+  font-family: "Open Sans", sans-serif;
 }
 
 
@@ -225,6 +234,6 @@ select option {
 @media (min-width: 901px) {
 
   .form_container {
-    width: 90%;
+    width: 70%;
   }
 }

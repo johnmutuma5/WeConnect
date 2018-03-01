@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="WeConnect provides a platform that brings businesses and individuals together.">
+    <link rel="stylesheet" href="css/main.css">
+
+    <title>Login</title>
+  </head>
+  <body>
+
+    <header>
+      <div class="toolbar">
+        <div class="logo">
+          <img src="" alt="WeConnect" />
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#">Businesses</a></li>
+            <li><a href="#">Sign Up</a></li>
+            <li><a href="#">Register Business</a></li>
+            <li><a href="#">About WeConnect</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="wrapper">
+      <main>
+        <section>
+          <article class="form_header">
+            <div>
+              <h2>Update Business Profile</h2>
+            </div>
+          </article>
+          <article class="form_container">
+            <div class="form_cover">
+              <div class="cover_note">
+                <h3>We hope that you're enjoying an experience with WeConnect...</h3>
+                <hr>
+                <p>Update your business profile...</p>
+              </div>
+            </div>
+            <form class="business_registration" action="index.html" method="post">
+              <fieldset>
+                <legend>Update Basic Business Details</legend>
+                <!-- <label for="business_name">Business Name: </label> -->
+                <input type="text" name="business_name" value="" placeholder="Update name of Business">
+                <!-- <label for="location">Location: </label> -->
+                <input type="text" name="location" value="" placeholder="Update business physical location">
+
+                <label for="business_category"> Update Business Category: <samll style= "font-size:.7em;"><i>(hold <b>Ctrl</b> to select multiple)</i> </small></label>
+                <select class="business_category" name="business_category" multiple>
+                  <optgroup label="Fashion">
+                    <option value="clothing">Clothing</option>
+                    <option value="foot_wear">Footwear</option>
+                    <option value="makeup_accessories">Make &amp; Jewelry</option>
+                  </optgroup>
+                  <optgroup label="Furniture">
+                    <option value="living_room">Living Room</option>
+                    <option value="bedroom">Bedroom</option>
+                    <option value="kitchen">Kitchen</option>
+                  </optgroup>
+                  <optgroup label="Locomotives">
+                    <option value="cars">Cars</option>
+                    <option value="trucks">Trucks</option>
+                    <option value="motorbikes">Motorbikes</option>
+                  </optgroup>
+                  <option value="other" selected = 'selected'>Other</option>
+                </select>
+              </fieldset>
+
+              <fieldset>
+                <legend>Update Business Contact Details</legend>
+                <!-- <label for="email">Email Address: </label> -->
+                <input type="email" name="user_name" value="" placeholder="Update email address">
+                <!-- <label for="mobile">Mobile: </label> -->
+                <input type="text" name="mobile" value="" placeholder="Update mobile number">
+                <!-- <label for="phone">Office Phone: </label> -->
+                <input type="text" name="phone" value="" placeholder="Update landline number">
+              </fieldset>
+
+              <fieldset>
+                <legend>Describe what your business does</legend>
+                <!-- <label for="short_description">Description</label> -->
+                <textarea name="short_description" rows="5" cols="40" placeholder="Business Descrition"></textarea>
+              </fieldset>
+
+              <fieldset>
+                <legend>Update more details</legend>
+                <label for="business_category"> Products: <samll style= "font-size:.7em;"><i>(hold <b>Ctrl</b> to select multiple)</i> </small></label>
+                <select class="product_category" name="business_category" multiple>
+                  <optgroup label="Fashion Categories">
+                    <option value="fashion1">All ladies clothing &amp; footwear </option>
+                    <option value="fashion2">All men clothing &amp; footwear </option>
+                    <option value="fashion3">All Children clothing &amp; footwear </option>
+                    <option value="fashion4">All Infants clothing &amp; footwear </option>
+                    <option value="fashion5">Make-up, Jewelry &amp; accessories </option>
+                  </optgroup>
+                  <option value="other" selected = 'selected'>Other</option>
+                </select>
+
+                <label for="brand_category"> Brands: <samll style= "font-size:.7em;"><i>(hold <b>Ctrl</b> to select multiple)</i> </small></label>
+                <select class="brand_category" name="brand_category" multiple>
+                  <optgroup label="Brands available">
+                    <option value="brand1">Gucci </option>
+                    <option value="brand2">Dolce &amp; Gabana </option>
+                    <option value="brand3">Armani </option>
+                    <option value="brand4">Marks &amp; Spencer </option>
+                    <option value="brand5"> Kylie Gena</option>
+                    <option value="brand6">  MAC </option>
+                    <option value="brand7"> Nike Air</option>
+                    <option value="brand8"> FILA </option>
+                  </optgroup>
+                  <option value="other" selected = 'selected'>Other</option>
+                </select>
+
+                <label for="payment_modes"> Modes of Payment: <samll style= "font-size:.7em;"><i>(hold <b>Ctrl</b> to select multiple)</i> </small></label>
+                <select class="payment_modes" name="payment_modes" multiple>
+                  <optgroup label="We accept">
+                    <option value="brand1">Cash </option>
+                    <option value="brand2">Credit Card </option>
+                    <option value="brand3">Cheque </option>
+                    <option value="brand4"> Mpesa</option>
+                    <option value="brand5"> Hire Purchase </option>
+                  </optgroup>
+                  <option value="other" selected = 'selected'>Other</option>
+                </select>
+              </fieldset>
+
+              <fieldset>
+                <legend>Update Open Hours</legend>
+                <!-- <label for="email">Email Address: </label> -->
+                <input type="email" name="user_name" value="" placeholder="Update Weekdays">
+                <!-- <label for="mobile">Mobile: </label> -->
+                <input type="text" name="mobile" value="" placeholder="Update Weekends">
+              </fieldset>
+
+              <fieldset>
+                <input type="submit" name="submit" value="Submit changes">
+              </fieldset>
+            </form>
+          </article>
+        </section>
+      </main>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <footer>
+      Copyright
+    </footer>
+  </body>
+</html>
