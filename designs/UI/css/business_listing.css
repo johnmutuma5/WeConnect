@@ -1,10 +1,11 @@
 
  @charset "UTF-8";
 
- article.business_list {
-   width: 60%;
 
- }
+article.business_list {
+  width: 95%;
+  margin: auto;
+}
 
  .business_list .business_item {
    flex-grow: 1;
@@ -18,7 +19,7 @@
  }
 
  .business_list .quick_tools {
-   height: 50px;
+   height: 40px;
  }
 
  .business_list .quick_tools {
@@ -29,7 +30,7 @@
  .quick_tools div {
    flex-grow: 1;
    text-align: center;
-   line-height: 50px;
+   line-height: 40px;
  }
 
  .quick_tools div:not(:last-child) {
@@ -82,3 +83,20 @@
      font-size: .8em;
      color: #595959;
  }
+
+
+@media (min-width: 500px) {
+
+   article.business_list {
+     width: 80%;
+
+   }
+}
+
+@media (min-width: 900px) {
+
+   article.business_list {
+     width: 60%;
+     margin-left: 0;
+   }
+}
