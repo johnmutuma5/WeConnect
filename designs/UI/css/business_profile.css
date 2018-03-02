@@ -149,6 +149,21 @@ div.business_details span {
   margin-bottom: 35px;
 }
 
+.social_media {
+  /* position: absolute;
+  right: 0;
+  bottom: 0; */
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.social_media div {
+  height: 50px;
+  width: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+
 .more_detail .description {
   display: -webkit-box;
   display: -ms-flexbox;
