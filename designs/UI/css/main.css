@@ -145,7 +145,40 @@ body hr {
 footer {
   position: absolute;
   bottom: -10;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
   height: 50px;
   width: 100%;
   background: #D5D5D5;
+  text-align: center;
+}
+
+footer .Copyright {
+  position: absolute;
+  bottom: 0;
+  font-size: .8em;
+}
+
+footer .Copyright p {
+  color: white;
+  text-shadow: 1px 1px black;
+}
+
+.zeroBottom {
+  margin-bottom: 0;
+}
+
+.draw-right {
+  animation: draw-right 1.2s;
+}
+
+@keyframes draw-right {
+  from {
+    left: -100%;
+  }
+  to {
+    left: 0;
+  }
 }
