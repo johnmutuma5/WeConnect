@@ -1,3 +1,3 @@
-from app.entities.user import User
-from app.entities.business import Business
-from app.entities.review import Review
+from .user import User
+from .business import Business
+from .review import Review
