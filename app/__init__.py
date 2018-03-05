@@ -1,4 +1,4 @@
-from .entities import User, Business, Review
+from .models import User, Business, Review
 from flask import Flask
 
 app = Flask (__name__)
