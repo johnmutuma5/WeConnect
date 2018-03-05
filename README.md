@@ -6,17 +6,24 @@ More guidelines as the project proceeds.
 
 
 HOW TO:
+
   Set up environmnet:
-    Inside project folde:
+
+    Inside project folder:
+
       * Auto for (Unix):
         - run 'source ./Configure'
+
       * Manual:
+
         - run 'make venv' to install virtualenv
         - run 'source ./venv/bin/activate'
         - run 'make install' to install dependencies
 
   Run:
+
     * run python run.py
 
   Test:
+
     * run pytest tests.py
