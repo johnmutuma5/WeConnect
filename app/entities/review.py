@@ -2,7 +2,13 @@ class Review ():
     '''
     Review
     Params: None
-
     '''
-    def __init__ (self):
-        pass
+    @classmethod
+    def creat_review (cls, data):
+        return cls (data)
+
+    def __init__ (self, data):
+        self.author = data['author']
+        self.message = data['message']
+        self.business = data['business']
+    
