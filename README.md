@@ -8,15 +8,15 @@ More guidelines as the project proceeds.
 HOW TO:
   Set up environmnet:
     Inside project folde:
-      *Auto for (Unix):
+      * Auto for (Unix):
         - run 'source ./Configure'
-      *Manual:
+      * Manual:
         - run 'make venv' to install virtualenv
         - run 'source ./venv/bin/activate'
         - run 'make install' to install dependencies
 
   Run:
-    *run python run.py
-    
+    * run python run.py
+
   Test:
-    *run pytest tests.py
+    * run pytest tests.py
