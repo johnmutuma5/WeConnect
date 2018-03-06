@@ -14,6 +14,7 @@ user_data = {
     "password": "pass",
 }
 login_data = {'username': 'john_doe', 'password': 'pass'}
+invalid_credentials = {'username': 'alice_doe', 'password': 'pass2'}
 requests = requests.Session() #persist cookies across requests
 
 
@@ -49,6 +50,11 @@ class TestAPICase (unittest.TestCase):
         match = re.search(pattern, msg)
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
+
+    def test_validates_credentials (self):
+        res = self.login_user (invalid_credentials)
+        msg = (res.json())['msg']
+        self.assertEqual (msg, 'Invalid username or password')
 
     def test_user_can_logout (self):
         # login user
