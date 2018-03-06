@@ -60,12 +60,6 @@ class TestAPICase (unittest.TestCase):
         msg = (res.json())['msg']
         self.assertEqual (msg, "logged out successfully!")
 
-
-
-
-
-
-
 class TestUserCase (unittest.TestCase):
     def setUp (self):
         self.user_data = user_data

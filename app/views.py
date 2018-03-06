@@ -13,7 +13,7 @@ def register ():
     try:
         msg = store.add_user (user)
     except DuplicationError as e:
-        return jsonify({'msg': e.msg})
+        return jsonify({'msg': e.msg}), 401
 
     return jsonify (msg), 200
 
