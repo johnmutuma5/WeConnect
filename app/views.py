@@ -1,4 +1,4 @@
-from app import app
+from app import app, store
 from flask import jsonify
 
 @app.route('/api/v1/auth/register', methods = ['POST'])

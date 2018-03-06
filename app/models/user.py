@@ -11,6 +11,7 @@ class User ():
         self.gender = data['gender']
         self._mobile = data['mobile']
         self.email = data['email']
+        self.username = data['username']
         self.password = data['password']
 
     @property
