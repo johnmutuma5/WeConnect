@@ -15,4 +15,7 @@ class Storage ():
         ...
 
     def add_user (self, user_obj):
-        self.__class__.users['username'] = user_obj
+        username = user_obj.username
+        self.__class__.users[username] = user_obj
+        new_user = self.__class__.users[username]
+        return 'SUCCESS: user {} created!'.format(new_user.username)
