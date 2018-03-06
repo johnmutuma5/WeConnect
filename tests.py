@@ -1,8 +1,8 @@
 import unittest
-from app import store
 from app.models import Business, User, Review
-from app.exceptions import DuplicationError
+# from app.exceptions import DuplicationError
 import requests, json, re
+
 
 user_data = {
     "'first_name'": 'John',
@@ -13,6 +13,8 @@ user_data = {
     "username": "john_doe",
     "password": "pass",
 }
+login_data = {'username': 'john_doe', 'password': 'pass'}
+requests = requests.Session() #perssist cookies across requests
 
 
 class TestAPICase (unittest.TestCase):
@@ -23,49 +25,40 @@ class TestAPICase (unittest.TestCase):
 
     def register_user (self, data):
         url = self.base_url + '/api/v1/auth/register'
-        # req += 1
         res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
         return res
 
-    def test_user_can_register (self):
-        res = self.register_user (user_data)
-        self.assertEqual (res.status_code, 200)
-        # test repsose message
-        msg = res.text
-        pattern = r"SUCCESS: \w+ (?P<username>.+) \w+"
-        self.assertRegexpMatches (msg, pattern)
-
-        match = re.search(pattern, msg)
-        # user name returned by post message and compare with data posted
-        posted_username = match.group('username')
-        self.assertEqual (posted_username, user_data['username'])
+    def login_user (self, login_data):
+        url = self.base_url + '/api/v1/auth/login'
+        res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
+        return res
 
     def test_duplicate_username_disallowed (self):
-        ...
+        # register user with similar data as used in setUp
+        res = self.register_user (user_data)
+        msg = (res.json())['msg']
+        self.assertEqual (msg, 'Duplicates username not allowed')
 
     def test_user_can_login (self):
-        login_data = {'username': 'john_doe', 'password': 'pass'}
-        url = self.base_url + '/api/v1/auth/login'
+        res = self.login_user (login_data)
+        msg = (res.json())['msg']
 
-        # login user
-        res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
-
-        msg = res.text
-        pattern = r"logged in (?P<username>.+) successfully"
+        pattern = r"logged in (?P<username>.+)"
         self.assertRegexpMatches (msg, pattern)
 
         match = re.search(pattern, msg)
         logged_user = match.group ('username')
-        print(logged_user)
         self.assertEqual (login_data['username'], logged_user)
 
     def test_user_can_logout (self):
+        # login user
+        self.login_user (login_data)
+
         # logout user
         url = self.base_url + '/api/v1/auth/logout'
         res = requests.post(url)
-
-        msg = res.text
-        self.assertEqual (msg, 'logged out!')
+        msg = (res.json())['msg']
+        self.assertEqual (msg, "logged out successfully!")
 
 
 

@@ -13,6 +13,7 @@ class User ():
         # self.email = data['email']
         self.username = data['username']
         self.password = data['password']
+        print('user class created')
 
     @property
     def mobile (self):
