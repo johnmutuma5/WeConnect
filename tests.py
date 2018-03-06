@@ -37,7 +37,7 @@ class TestAPICase (unittest.TestCase):
         # register user with similar data as used in setUp
         res = self.register_user (user_data)
         msg = (res.json())['msg']
-        self.assertEqual (msg, 'Duplicates username not allowed')
+        self.assertEqual (msg, 'Duplicate username not allowed')
 
     def test_user_can_login (self):
         res = self.login_user (login_data)
