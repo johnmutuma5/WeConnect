@@ -10,6 +10,7 @@ class TestUserCase (unittest.TestCase):
             'gender': 'Male',
             'mobile': '254720000000',
             'email': 'johndoe@gmail.com',
+            'username': 'john_doe',
             'password': 'a_password',
         }
         self.new_user = User.create_user (self.data)

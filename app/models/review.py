@@ -11,4 +11,3 @@ class Review ():
         self.author = data['author']
         self.message = data['message']
         self.business = data['business']
-    
