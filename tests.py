@@ -1,27 +1,35 @@
 import unittest
+from app import store
 from app.models import Business, User, Review
+from app.exceptions import DuplicationError
 import requests, json, re
 
 user_data = {
-    'first_name': 'John',
+    "'first_name'": 'John',
     'last_name': 'Doe',
     'gender': 'Male',
     'mobile': '254720000000',
     'email': 'johndoe@gmail.com',
-    'username': 'john_doe',
-    'password': 'a_password',
+    "username": "john_doe",
+    "password": "pass",
 }
+
 
 class TestAPICase (unittest.TestCase):
     def setUp (self):
         self.base_url = 'http://0.0.0.0:8080'
         self.headers = {'content-type': 'application/json'}
+        self.register_user (user_data)
+
+    def register_user (self, data):
+        url = self.base_url + '/api/v1/auth/register'
+        # req += 1
+        res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
+        return res
 
     def test_user_can_register (self):
-        url = self.base_url + '/api/v1/auth/register'
-        res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
+        res = self.register_user (user_data)
         self.assertEqual (res.status_code, 200)
-
         # test repsose message
         msg = res.text
         pattern = r"SUCCESS: \w+ (?P<username>.+) \w+"
@@ -31,6 +39,24 @@ class TestAPICase (unittest.TestCase):
         # user name returned by post message and compare with data posted
         posted_username = match.group('username')
         self.assertEqual (posted_username, user_data['username'])
+
+    def test_duplicate_username_disallowed (self):
+        ...
+
+    def test_user_can_login (self):
+        login_data = {'username': 'john_doe', 'password': 'pass'}
+        url = self.base_url + '/api/v1/auth/login'
+        res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
+
+        msg = res.text
+        pattern = r"logged in (?P<username>.+) successfully"
+        self.assertRegexpMatches (msg, pattern)
+
+        match = re.search(pattern, msg)
+        logged_user = match.group ('username')
+        print(logged_user)
+        self.assertEqual (login_data['username'], logged_user)
+
 
 
 
@@ -42,10 +68,9 @@ class TestUserCase (unittest.TestCase):
 
     def test_create_user (self):
         user = self.new_user
-        first_name = self.user_data['first_name']
-        last_name = self.user_data['last_name']
+        first_name = self.user_data['username']
 
-        data_correct = user.first_name == first_name and user.last_name == last_name
+        data_correct = user.username
         self.assertTrue (data_correct)
 
         #edge case: raises AssertionError for mobile with non int characters
