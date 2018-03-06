@@ -13,7 +13,7 @@ def register ():
     try:
         msg = store.add_user (user)
     except DuplicationError as e:
-        return jsonify({'msg': e.msg})
+        return jsonify({'msg': e.msg}), 401
 
     return jsonify (msg), 200
 
@@ -25,13 +25,12 @@ def login ():
 
     target_user = store.users.get(username)
 
-    if not target_user:
-        return jsonify ('Could not login'), 401
+    if not target_user or not target_user.password == login_data['password']:
+        return jsonify ('Invalid username or password'), 401
 
-    if target_user.password == login_data['password']:
-        session['user'] = username
-        msg = "logged in {}".format(username)
-        return jsonify({'msg': msg}), 200
+    session['user'] = username
+    msg = "logged in {}".format(username)
+    return jsonify({'msg': msg}), 200
 
 
 @app.route ('/api/v1/auth/logout', methods = ['POST'])
