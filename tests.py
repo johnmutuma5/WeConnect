@@ -14,7 +14,7 @@ user_data = {
     "password": "pass",
 }
 login_data = {'username': 'john_doe', 'password': 'pass'}
-requests = requests.Session() #perssist cookies across requests
+requests = requests.Session() #persist cookies across requests
 
 
 class TestAPICase (unittest.TestCase):
