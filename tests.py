@@ -46,6 +46,8 @@ class TestAPICase (unittest.TestCase):
     def test_user_can_login (self):
         login_data = {'username': 'john_doe', 'password': 'pass'}
         url = self.base_url + '/api/v1/auth/login'
+
+        # login user
         res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
 
         msg = res.text
@@ -56,6 +58,17 @@ class TestAPICase (unittest.TestCase):
         logged_user = match.group ('username')
         print(logged_user)
         self.assertEqual (login_data['username'], logged_user)
+
+    def test_user_can_logout (self):
+        # logout user
+        url = self.base_url + '/api/v1/auth/logout'
+        res = requests.post(url)
+
+        msg = res.text
+        self.assertEqual (msg, 'logged out!')
+
+
+
 
 
 
