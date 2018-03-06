@@ -20,7 +20,7 @@ class Storage ():
         users = self.__class__.users
         username = user_obj.username
 
-        # if users.get(username): assert 0, 'Duplicate'
+        if users.get(username): raise DuplicationError ('Storage::add_user', 'Duplicates username not allowed')
 
         self.__class__.users[username] = user_obj
         new_user = self.__class__.users[username]
