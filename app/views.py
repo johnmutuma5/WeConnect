@@ -24,7 +24,6 @@ def login ():
     if not target_user:
         return jsonify ('Could not login'), 401
 
-    print(target_user)
     if target_user.password == login_data['password']:
         session['user'] = username
         msg = "logged in {} successfully".format(username)
