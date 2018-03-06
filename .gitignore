@@ -2,3 +2,4 @@
 /*__pycache__*
 /venv
 /testing/.pytest_cache*
+/.pytest_cache*
