@@ -56,3 +56,16 @@ class Storage ():
         self.__class__.businesses[businessname] = business_obj
         new_business = self.__class__.businesses[businessname]
         return 'SUCCESS: business {} created!'.format(new_business.name)
+
+    def get_businesses_info (self):
+        businesses_info = []
+        for business in self.__class__.businesses.values():
+            business_data = {}
+
+            business_data["name"] = business.name
+            business_data["owner"] = business.owner
+            business_data["location"] = business.location
+            business_data["mobile"] = business.mobile
+
+            businesses_info.append (business_data)
+        return businesses_info

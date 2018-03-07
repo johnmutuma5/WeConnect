@@ -55,5 +55,5 @@ def businesses ():
 
         return jsonify ({"msg": msg}), 201
 
-    # Handle GET
-    return jsonify ({"businesses": "businesses list"}), 200
+    businesses_info = store.get_businesses_info ()
+    return jsonify ({"businesses": businesses_info}), 200

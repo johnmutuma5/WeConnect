@@ -53,10 +53,13 @@ class TestAPICase (BaseAPITestSetUp, TestHelpers):
         # register a number of businesses
         for business_data in businesses_data:
             self.register_business (business_data)
-        # get all businesses
+        # get all businesses info
         res = self.get_businesses ()
         businesses = (res.json())["businesses"]
-        self.assertEqual (businesses, "businesses list")
+        # assert that every piece of information we have sent has been returned
+        for data in businesses_data:
+            self.assertIn (data, businesses)
+
 
 class TestUserCase (unittest.TestCase):
     def setUp (self):
