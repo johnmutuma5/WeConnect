@@ -11,7 +11,7 @@ def register ():
     user = User.create_user (data)
 
     try:
-        msg = store.add_user (user)
+        msg = store.add (user)
     except DuplicationError as e:
         return jsonify({'msg': e.msg}), 401
 
@@ -44,5 +44,5 @@ def logout ():
 def register_business ():
     business_data = json.loads(request.data.decode('utf-8'))
     business = Business.create_business (business_data)
-    msg = store.add_business (business)
+    # msg = store.add_business (business)
     return jsonify ({"msg": "SUCCESS: Andela created!"})
