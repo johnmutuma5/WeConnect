@@ -39,7 +39,8 @@ class Storage ():
         users = self.__class__.users
         username = user_obj.username
 
-        if users.get(username): raise DuplicationError ('Storage::add_user', 'Duplicate username not allowed')
+        if users.get(username): raise DuplicationError ('Storage::add_user',
+                                                        'Duplicate username not allowed')
 
         self.__class__.users[username] = user_obj
         new_user = self.__class__.users[username]
@@ -49,7 +50,8 @@ class Storage ():
         businesses = self.__class__.businesses
         businessname = business_obj.name
 
-        if businesses.get(businessname): raise DuplicationError ('Storage::add_business', 'Duplicate business name not allowed')
+        if businesses.get(businessname): raise DuplicationError ('Storage::add_business',
+                                                                    'Duplicate business name not allowed')
 
         self.__class__.businesses[businessname] = business_obj
         new_business = self.__class__.businesses[businessname]
