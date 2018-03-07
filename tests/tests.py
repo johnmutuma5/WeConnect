@@ -1,62 +1,11 @@
 import unittest
 from app.models import Business, User, Review
-# from app.exceptions import DuplicationError
-import requests, json, re
+from . import BaseAPITestSetUp, TestHelpers
+from .dummies import user_data, business_data, invalid_credentials, login_data
+import re
 
 
-user_data = {
-    "'first_name'": "John",
-    "last_name": "Doe",
-    "gender": "Male",
-    "mobile": "254720000000",
-    "email": "johndoe@gmail.com",
-    "username": "john_doe",
-    "password": "pass",
-}
-login_data = {
-    "username": "john_doe",
-    "password": "pass"
-}
-invalid_credentials = {"username": "alice_doe", "password": "pass2"}
-business_data = {
-    "name": "Andela Kenya",
-    "owner": "Alice Doe",
-    "location": "TRM, Thika Road",
-    "mobile": "254700020020"
-}
-
-requests = requests.Session() #persist cookies across requests
-
-
-
-class BaseTestSetUp (unittest.TestCase):
-    def setUp (self):
-        self.base_url = 'http://0.0.0.0:8080'
-        self.headers = {'content-type': 'application/json'}
-        self.register_user (user_data)
-
-
-class TestHelpers ():
-    def register_user (self, user_data):
-        url = self.base_url + '/api/v1/auth/register'
-        res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
-        return res
-
-    def login_user (self, login_data):
-        url = self.base_url + '/api/v1/auth/login'
-        res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
-        return res
-
-    def logout_user (self):
-        url = self.base_url + '/api/v1/auth/logout'
-        return requests.post(url)
-
-    def register_business (self, bizdata):
-        url = self.base_url + '/api/v1/businesses'
-        return requests.post(url, data = json.dumps(bizdata), headers = self.headers)
-
-
-class TestAPICase (BaseTestSetUp, TestHelpers):    
+class TestAPICase (BaseAPITestSetUp, TestHelpers):
     def test_duplicate_username_disallowed (self):
         # register user with similar data as used in setUp
         res = self.register_user (user_data)
@@ -69,7 +18,7 @@ class TestAPICase (BaseTestSetUp, TestHelpers):
 
         pattern = r"logged in (?P<username>.+)"
         self.assertRegexpMatches (msg, pattern)
-
+        # extract username from regular expression
         match = re.search(pattern, msg)
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
@@ -101,7 +50,6 @@ class TestAPICase (BaseTestSetUp, TestHelpers):
         self.assertEqual (msg, 'Duplicate business name not allowed')
 
 
-
 class TestUserCase (unittest.TestCase):
     def setUp (self):
         self.user_data = user_data
@@ -111,10 +59,8 @@ class TestUserCase (unittest.TestCase):
     def test_create_user (self):
         user = self.new_user
         first_name = self.user_data['username']
-
         data_correct = user.username
         self.assertTrue (data_correct)
-
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises(ValueError):
             self.new_user.mobile = '254725k00000'
@@ -136,10 +82,8 @@ class TestBusinessCase (unittest.TestCase):
         business = self.new_business
         name = self.data['name']
         owner = self.data['owner']
-
         data_correct = business.name == name and business.owner == owner
         self.assertTrue (data_correct)
-
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises(ValueError):
             business.mobile = '254725k000000'
@@ -157,7 +101,6 @@ class TestReviewCase (unittest.TestCase):
         review = self.new_review
         message = self.data['message']
         author = self.data['author']
-
         data_correct = review.author == author and review.message == message
         self.assertTrue(data_correct)
 
