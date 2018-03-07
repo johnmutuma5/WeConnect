@@ -1,19 +1,19 @@
 import unittest
 from app.models import Business, User, Review
-from . import BaseAPITestSetUp, TestHelpers
+from . import BaseAPITestSetUp
 from .dummies import user_data, business_data, invalid_credentials, login_data, businesses_data
 import re
 
 
-class TestAPICase (BaseAPITestSetUp, TestHelpers):
+class TestAPICase (BaseAPITestSetUp):
     def test_duplicate_username_disallowed (self):
         # register user with similar data as used in setUp
-        res = self.register_user (user_data)
+        res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate username not allowed')
 
     def test_user_can_login (self):
-        res = self.login_user (login_data)
+        res = self.testHelper.login_user (login_data)
         msg = (res.json())['msg']
 
         pattern = r"logged in (?P<username>.+)"
@@ -24,37 +24,37 @@ class TestAPICase (BaseAPITestSetUp, TestHelpers):
         self.assertEqual (login_data['username'], logged_user)
 
     def test_validates_credentials (self):
-        res = self.login_user (invalid_credentials)
+        res = self.testHelper.login_user (invalid_credentials)
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Invalid username or password')
 
     def test_user_can_logout (self):
         # login user
-        self.login_user (login_data)
+        self.testHelper.login_user (login_data)
         # logout user
-        res = self.logout_user ()
+        res = self.testHelper.logout_user ()
         msg = (res.json())['msg']
         self.assertEqual (msg, "logged out successfully!")
 
     def test_User_can_register_business (self):
-        self.login_user (login_data)
-        res = self.register_business (business_data)
+        self.testHelper.login_user (login_data)
+        res = self.testHelper.register_business (business_data)
         msg = (res.json())['msg']
 
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
 
     def test_duplicate_businessname_disallowed (self):
-        res = self.register_business (business_data)
+        res = self.testHelper.register_business (business_data)
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate business name not allowed')
 
     def test_users_retrieve_all_businesses (self):
         # register a number of businesses
         for business_data in businesses_data:
-            self.register_business (business_data)
+            self.testHelper.register_business (business_data)
         # get all businesses info
-        res = self.get_businesses ()
+        res = self.testHelper.get_businesses ()
         businesses = (res.json())["businesses"]
         # assert that every piece of information we have sent has been returned
         for data in businesses_data:
