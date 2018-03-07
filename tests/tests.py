@@ -1,7 +1,7 @@
 import unittest
 from app.models import Business, User, Review
 from . import BaseAPITestSetUp, TestHelpers
-from .dummies import user_data, business_data, invalid_credentials, login_data
+from .dummies import user_data, business_data, invalid_credentials, login_data, businesses_data
 import re
 
 
@@ -41,7 +41,7 @@ class TestAPICase (BaseAPITestSetUp, TestHelpers):
         res = self.register_business (business_data)
         msg = (res.json())['msg']
 
-        pattern = r"^SUCCESS: (?P<business>.+) \w+!$"
+        pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
 
     def test_duplicate_businessname_disallowed (self):
@@ -49,6 +49,14 @@ class TestAPICase (BaseAPITestSetUp, TestHelpers):
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate business name not allowed')
 
+    def test_users_retrieve_all_businesses (self):
+        # register a number of businesses
+        for business_data in businesses_data:
+            self.register_business (business_data)
+        # get all businesses
+        res = self.get_businesses ()
+        businesses = (res.json())["businesses"]
+        self.assertEqual (businesses, "businesses list")
 
 class TestUserCase (unittest.TestCase):
     def setUp (self):

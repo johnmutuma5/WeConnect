@@ -30,3 +30,7 @@ class TestHelpers ():
     def register_business (self, bizdata):
         url = self.base_url + '/api/v1/businesses'
         return requests.post(url, data = json.dumps(bizdata), headers = self.headers)
+
+    def get_businesses (self):
+        url = self.base_url + '/api/v1/businesses'
+        return requests.get(url)

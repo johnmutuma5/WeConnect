@@ -22,3 +22,24 @@ business_data = {
     "location": "TRM, Thika Road",
     "mobile": "254700020020"
 }
+
+businesses_data = [
+    {
+        "name": "Andela Kenya",
+        "owner": "Alice Doe",
+        "location": "TRM, Thika Road",
+        "mobile": "254700020020"
+    },
+    {
+        "name": "Google",
+        "owner": "John Doe",
+        "location": "Nairobi",
+        "mobile": "2547009820052"
+    },
+    {
+        "name": "Crafters Inc.",
+        "owner": "Mike Main",
+        "location": "Ridgeways, Kiambu Road",
+        "mobile": "254750020625"
+    }
+]
