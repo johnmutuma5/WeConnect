@@ -1,6 +1,7 @@
 import unittest
 import json, requests
 from .dummies import user_data
+from app import store
 
 
 requests = requests.Session() #persist cookies across requests
@@ -48,4 +49,7 @@ class TestHelper ():
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):
         self.testHelper = TestHelper ()
-        self.testHelper.register_user (user_data)
+
+    @classmethod
+    def tearDownClass (cls):
+        store.clear ()

@@ -6,6 +6,17 @@ import re
 
 
 class TestAPICase (BaseAPITestSetUp):
+    def test_a_user_can_register (self):
+        res = self.testHelper.register_user (user_data)
+        msg = (res.json())['msg']
+        pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
+        self.assertRegexpMatches (msg, pattern)
+        # extract username from regular expression
+        match = re.search (pattern, msg)
+        user_in_response_msg = match.group ('username')
+        # assert same as username in data sent
+        self.assertEqual (user_in_response_msg, user_data['username'])
+
     def test_duplicate_username_disallowed (self):
         # register user with similar data as used in setUp
         res = self.testHelper.register_user (user_data)
