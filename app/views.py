@@ -26,7 +26,7 @@ def login ():
     target_user = store.users.get(username)
 
     if not target_user or not target_user.password == login_data['password']:
-        return jsonify ('Invalid username or password'), 401
+        return jsonify ({"msg": "Invalid username or password"}), 401
 
     session['user'] = username
     msg = "logged in {}".format(username)

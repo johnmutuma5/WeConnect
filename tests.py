@@ -5,16 +5,27 @@ import requests, json, re
 
 
 user_data = {
-    "'first_name'": 'John',
-    'last_name': 'Doe',
-    'gender': 'Male',
-    'mobile': '254720000000',
-    'email': 'johndoe@gmail.com',
+    "'first_name'": "John",
+    "last_name": "Doe",
+    "gender": "Male",
+    "mobile": "254720000000",
+    "email": "johndoe@gmail.com",
     "username": "john_doe",
     "password": "pass",
 }
-login_data = {'username': 'john_doe', 'password': 'pass'}
-requests = requests.Session() #perssist cookies across requests
+login_data = {
+    "username": "john_doe",
+    "password": "pass"
+}
+invalid_credentials = {"username": "alice_doe", "password": "pass2"}
+business_data = {
+    "name": "Andela Kenya",
+    "owner": "Alice Doe",
+    "location": "TRM, Thika Road",
+    "mobile": "254700020020"
+}
+
+requests = requests.Session() #persist cookies across requests
 
 
 class TestAPICase (unittest.TestCase):
@@ -37,7 +48,7 @@ class TestAPICase (unittest.TestCase):
         # register user with similar data as used in setUp
         res = self.register_user (user_data)
         msg = (res.json())['msg']
-        self.assertEqual (msg, 'Duplicates username not allowed')
+        self.assertEqual (msg, 'Duplicate username not allowed')
 
     def test_user_can_login (self):
         res = self.login_user (login_data)
@@ -50,6 +61,11 @@ class TestAPICase (unittest.TestCase):
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
 
+    def test_validates_credentials (self):
+        res = self.login_user (invalid_credentials)
+        msg = (res.json())['msg']
+        self.assertEqual (msg, 'Invalid username or password')
+
     def test_user_can_logout (self):
         # login user
         self.login_user (login_data)
@@ -60,10 +76,14 @@ class TestAPICase (unittest.TestCase):
         msg = (res.json())['msg']
         self.assertEqual (msg, "logged out successfully!")
 
+    def test_user_can_register_business (self):
+        self.login_user (login_data):
+        url = self.base_url + '/api/v1/businesses'
+        res = requests.post(url, data = json.dumps(business_data), headers = self.headers)
+        msg = (res.json())['msg']
 
-
-
-
+        pattern = r"^SUCSSESS: (?P<business>.+) \w+!$"
+        self.assertRegexpMatches (msg, pattern)
 
 
 class TestUserCase (unittest.TestCase):
