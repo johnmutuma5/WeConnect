@@ -77,13 +77,14 @@ class TestAPICase (unittest.TestCase):
         self.assertEqual (msg, "logged out successfully!")
 
     def test_user_can_register_business (self):
-        self.login_user (login_data):
+        self.login_user (login_data)
         url = self.base_url + '/api/v1/businesses'
         res = requests.post(url, data = json.dumps(business_data), headers = self.headers)
         msg = (res.json())['msg']
 
-        pattern = r"^SUCSSESS: (?P<business>.+) \w+!$"
+        pattern = r"^SUCCESS: (?P<business>.+) \w+!$"
         self.assertRegexpMatches (msg, pattern)
+
 
 
 class TestUserCase (unittest.TestCase):

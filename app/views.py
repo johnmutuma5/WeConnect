@@ -41,5 +41,8 @@ def logout ():
     return jsonify({"msg": "unsuccessfully!"}), 500
 
 @app.route ('/api/v1/businesses', methods = ['POST'])
-def register_business ()
-    print (json.loads(request.data.decode('utf-8')))
+def register_business ():
+    business_data = json.loads(request.data.decode('utf-8'))
+    business = Business.create_business (business_data)
+    msg = store.add_business (business)
+    return jsonify ({"msg": "SUCCESS: Andela created!"})
