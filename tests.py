@@ -28,13 +28,16 @@ business_data = {
 requests = requests.Session() #persist cookies across requests
 
 
-class TestAPICase (unittest.TestCase):
+
+class BaseTestSetUp (unittest.TestCase):
     def setUp (self):
         self.base_url = 'http://0.0.0.0:8080'
         self.headers = {'content-type': 'application/json'}
         self.register_user (user_data)
 
-    def register_user (self, data):
+
+class TestHelpers ():
+    def register_user (self, user_data):
         url = self.base_url + '/api/v1/auth/register'
         res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
         return res
@@ -44,6 +47,16 @@ class TestAPICase (unittest.TestCase):
         res = requests.post(url, data = json.dumps(login_data), headers = self.headers)
         return res
 
+    def logout_user (self):
+        url = self.base_url + '/api/v1/auth/logout'
+        return requests.post(url)
+
+    def register_business (self, bizdata):
+        url = self.base_url + '/api/v1/businesses'
+        return requests.post(url, data = json.dumps(bizdata), headers = self.headers)
+
+
+class TestAPICase (BaseTestSetUp, TestHelpers):    
     def test_duplicate_username_disallowed (self):
         # register user with similar data as used in setUp
         res = self.register_user (user_data)
@@ -69,21 +82,23 @@ class TestAPICase (unittest.TestCase):
     def test_user_can_logout (self):
         # login user
         self.login_user (login_data)
-
         # logout user
-        url = self.base_url + '/api/v1/auth/logout'
-        res = requests.post(url)
+        res = self.logout_user ()
         msg = (res.json())['msg']
         self.assertEqual (msg, "logged out successfully!")
 
-    def test_user_can_register_business (self):
+    def test_User_can_register_business (self):
         self.login_user (login_data)
-        url = self.base_url + '/api/v1/businesses'
-        res = requests.post(url, data = json.dumps(business_data), headers = self.headers)
+        res = self.register_business (business_data)
         msg = (res.json())['msg']
 
         pattern = r"^SUCCESS: (?P<business>.+) \w+!$"
         self.assertRegexpMatches (msg, pattern)
+
+    def test_duplicate_businessname_disallowed (self):
+        res = self.register_business (business_data)
+        msg = (res.json())['msg']
+        self.assertEqual (msg, 'Duplicate business name not allowed')
 
 
 
