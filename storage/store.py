@@ -53,4 +53,4 @@ class Storage ():
 
         self.__class__.businesses[businessname] = business_obj
         new_business = self.__class__.businesses[businessname]
-        return 'SUCCESS: buiness {} created!'.format(new_business.name)
+        return 'SUCCESS: business {} created!'.format(new_business.name)

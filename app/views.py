@@ -36,19 +36,24 @@ def login ():
 @app.route ('/api/v1/auth/logout', methods = ['POST'])
 def logout ():
     if session.get('user'):
+        session.pop('user')
         return jsonify({"msg": "logged out successfully!"}), 200
 
-    return jsonify({"msg": "unsuccessfully!"}), 500
+    return jsonify({"msg": "Unsuccessful!"}), 500
 
 
-@app.route ('/api/v1/businesses', methods = ['POST'])
-def register_business ():
-    business_data = json.loads(request.data.decode('utf-8'))
-    business = Business.create_business (business_data)
+@app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
+def businesses ():
+    if request.method == 'POST':
+        business_data = json.loads(request.data.decode('utf-8'))
+        business = Business.create_business (business_data)
 
-    try:
-        msg = store.add (business)
-    except DuplicationError as e:
-        return jsonify ({"msg": e.msg}), 401
+        try:
+            msg = store.add (business)
+        except DuplicationError as e:
+            return jsonify ({"msg": e.msg}), 401
 
-    return jsonify ({"msg": msg}), 200
+        return jsonify ({"msg": msg}), 200
+
+    # Handle GET
+    return jsonify ({"businesses": "businesses list"}), 200
