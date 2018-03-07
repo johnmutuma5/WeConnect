@@ -32,8 +32,8 @@ class Storage ():
             "Business": self.add_business
         }[obj_class]
 
-        # call method with argument
-        _add (obj)
+        # call method with argument and return it's output
+        return _add (obj)
 
     def add_user (self, user_obj):
         users = self.__class__.users
@@ -53,4 +53,4 @@ class Storage ():
 
         self.__class__.businesses[businessname] = business_obj
         new_business = self.__class__.businesses[businessname]
-        return 'SUCCESS: user {} created!'.format(new_user.username)
+        return 'SUCCESS: buiness {} created!'.format(new_business.businessname)
