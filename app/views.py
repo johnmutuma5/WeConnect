@@ -39,7 +39,7 @@ def logout ():
         session.pop('user')
         return jsonify({"msg": "logged out successfully!"}), 200
 
-    return jsonify({"msg": "Unsuccessful!"}), 500
+    return jsonify({"msg": "Unsuccessful!"}), 400
 
 
 @app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
@@ -53,7 +53,7 @@ def businesses ():
         except DuplicationError as e:
             return jsonify ({"msg": e.msg}), 401
 
-        return jsonify ({"msg": msg}), 200
+        return jsonify ({"msg": msg}), 201
 
     # Handle GET
     return jsonify ({"businesses": "businesses list"}), 200
