@@ -11,7 +11,7 @@ def register ():
     user = User.create_user (data)
 
     try:
-        msg = store.add_user (user)
+        msg = store.add (user)
     except DuplicationError as e:
         return jsonify({'msg': e.msg}), 401
 
@@ -39,3 +39,16 @@ def logout ():
         return jsonify({"msg": "logged out successfully!"}), 200
 
     return jsonify({"msg": "unsuccessfully!"}), 500
+
+
+@app.route ('/api/v1/businesses', methods = ['POST'])
+def register_business ():
+    business_data = json.loads(request.data.decode('utf-8'))
+    business = Business.create_business (business_data)
+
+    try:
+        msg = store.add (business)
+    except DuplicationError as e:
+        return jsonify ({"msg": e.msg}), 401
+
+    return jsonify ({"msg": msg}), 200
