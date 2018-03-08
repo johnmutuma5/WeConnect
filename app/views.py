@@ -10,7 +10,8 @@ def login_required (func):
         logged_user = session.get('user_id')
         if logged_user:
             return func (*args, **kwargs)
-        return {"msg": "You need to log in to perform this operation"}, 401
+        return jsonify ({"msg": "You need to log in to perform this operation"}), 401
+        
     wrapper.__name__ = func.__name__
     wrapper.__doc__ = func.__doc__
     return wrapper
@@ -23,8 +24,10 @@ def register_a_business (business_data, owner):
         msg = store.add (business)
     except DuplicationError as e:
         business.handback_unused_id () # class Business auto generates ids
-        return e.msg, 401
-    return msg, 201
+        return jsonify ({"msg": e.msg}), 401
+
+    return jsonify({"msg": msg}), 201
+
 
 @login_required
 def update_business_info (business_id, update_data, issuer_id):
@@ -35,9 +38,22 @@ def update_business_info (business_id, update_data, issuer_id):
             status_code = 404
         else:
             status_code = 401
-        return e.msg, status_code
-    return msg, 201
+        return jsonify({"msg": e.msg}), status_code
 
+    return jsonify({"msg": msg}), 201
+
+
+@login_required
+def delete_business (business_id, issuer_id):
+    try:
+        msg = store.delete_business (business_id, issuer_id)
+    except (DataNotFoundError, PermissionDeniedError) as e:
+        if type (e) == DataNotFoundError:
+            status_code = 404
+        else:
+            status_code = 401
+        return e.msg, status_code
+    return jsonify({"msg": msg}), 201
 
 @app.route('/api/v1/auth/register', methods = ['POST'])
 def register ():
@@ -69,23 +85,18 @@ def login ():
 
 
 @app.route ('/api/v1/auth/logout', methods = ['POST'])
+@login_required
 def logout ():
-    if session.get('user_id'):
-        session.pop('user_id')
-        return jsonify({"msg": "logged out successfully!"}), 200
-
-    return jsonify({"msg": "Unsuccessful!"}), 400
-
+    session.pop('user_id')
+    return jsonify({"msg": "logged out successfully!"}), 200
 
 @app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
 def businesses ():
     if request.method == 'POST':
         business_data = json.loads (request.data.decode('utf-8'))
         owner = session.get ('user_id')
-        resp = register_a_business (business_data, owner) # this method is decorated with login required
-        msg = resp[0]
-        status_code = resp[1]
-        return jsonify ({"msg": msg}), status_code
+        response = register_a_business (business_data, owner) # this method is decorated with login required
+        return response
 
     businesses_info = store.get_businesses_info ()
     return jsonify ({"businesses": businesses_info}), 200
@@ -94,6 +105,7 @@ def businesses ():
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
     business_id = Business.gen_id_string (business_id)
+    issuer_id = session.get ('user_id')
     if request.method == 'GET':
         try:
             business_info = store.get_business_info (business_id)
@@ -104,10 +116,9 @@ def business (business_id):
 
     elif request.method == 'PUT':
         update_data = json.loads (request.data.decode('utf-8'))
-        issuer_id = session.get ('user_id')
-        resp = update_business_info (business_id, update_data, issuer_id) # this method is decorated with login_required
-        msg = resp[0]
-        status_code = resp[1]
-        return jsonify ({"msg": msg}), status_code
+        response = update_business_info (business_id, update_data, issuer_id) # this method is decorated with login_required
+        return response
 
-    return jsonify ({"msg": "Yet to handle DELETE"}), 501
+    # handle DELETE
+    response = delete_business (business_id, issuer_id)
+    return response
