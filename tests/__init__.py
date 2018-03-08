@@ -5,14 +5,27 @@ from .dummies import user_data
 
 requests = requests.Session() #persist cookies across requests
 
-class BaseAPITestSetUp (unittest.TestCase):
-    def setUp (self):
+class TestHelper ():
+    '''
+        methods:
+            login_user
+                params: dict::login_data
+            register_user:
+                params: dict::user_data
+            logout_user:
+                params: None
+            register_business:
+                params: dict::bizdata
+            get_businesses:
+                params: None
+            get_business:
+                params: int::raw_id
+    '''
+
+    def __init__ (self):
         self.base_url = 'http://0.0.0.0:8080'
         self.headers = {'content-type': 'application/json'}
-        self.register_user (user_data)
 
-
-class TestHelpers ():
     def register_user (self, user_data):
         url = self.base_url + '/api/v1/auth/register'
         res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
@@ -34,3 +47,13 @@ class TestHelpers ():
     def get_businesses (self):
         url = self.base_url + '/api/v1/businesses'
         return requests.get(url)
+
+    def get_business (self, raw_id):
+        url = self.base_url + '/api/v1/businesses/raw_id'
+        return requests.get(url)
+
+
+
+class BaseAPITestSetUp (unittest.TestCase):
+    def setUp (self):
+        self.testHelper = TestHelper ()

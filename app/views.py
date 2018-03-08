@@ -15,7 +15,7 @@ def register ():
     except DuplicationError as e:
         return jsonify({'msg': e.msg}), 401
 
-    return jsonify (msg), 200
+    return jsonify ({"msg": msg}), 200
 
 
 @app.route ('/api/v1/auth/login', methods = ['POST'])
