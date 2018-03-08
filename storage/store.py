@@ -121,8 +121,8 @@ class Storage ():
             if business.id == business_id:
                 target_business = business
 
-        issuer_is_owner = target_business.owner_id == issuer_id
         if target_business:
+            issuer_is_owner = target_business.owner_id == issuer_id
             if issuer_is_owner:
                 self.clerk.update_business (target_business, update_data)
                 return "Changes recorded successfully"

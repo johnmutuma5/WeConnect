@@ -2,8 +2,8 @@ import unittest
 from app.models import Business, User, Review
 from app import store
 from . import BaseAPITestSetUp
-from .dummies import (user_data, business_data,
-                        invalid_credentials, login_data,
+from .dummies import (user_data, user_data2, business_data,
+                        invalid_credentials, login_data, login_data2,
                         businesses_data, update_data)
 import re
 
@@ -103,6 +103,15 @@ class TestAPICase (BaseAPITestSetUp):
 
         for key, value in update_data.items():
             self.assertEqual (update_data['location'], res_business_info['location'])
+
+    def test_users_can_only_update_their_business (self):
+        # logout the current user
+        self.testHelper.logout_user ()
+        # create a second user`
+        self.testHelper.register_user (user_data)
+        # try to update one of the three businesses created by the just logged out user
+        resp = self.testHelper.update_business (1, update_data)
+        self.assertEqual (resp.status_code, 401)
 
 
 class TestUserCase (unittest.TestCase):
