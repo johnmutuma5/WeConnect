@@ -1,7 +1,7 @@
 from app import app, store
 from .models import User, Business, Review
 from flask import jsonify, request, session
-from .exceptions import DuplicationError
+from .exceptions import DuplicationError, DataNotFoundError
 import json
 
 
@@ -62,5 +62,10 @@ def businesses ():
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
     business_id = Business.gen_id_string (business_id)
-    business_info = store.get_business_info (business_id)
+
+    try:
+        business_info = store.get_business_info (business_id)
+    except DataNotFoundError as e:
+        return jsonify ({"msg": e.msg}), 404
+
     return jsonify ({"business": business_info}), 200

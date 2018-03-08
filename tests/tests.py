@@ -84,6 +84,14 @@ class TestAPICase (BaseAPITestSetUp):
         sent_id = Business.gen_id_string (raw_id)
         self.assertEqual (res_business_id, sent_id)
 
+    def test_users_retrieve_only_avail_business (self):
+        raw_id = 1000000
+        res = self.testHelper.get_business (raw_id)
+        res_msg= (res.json())["msg"]
+        # test message to match regex
+        pattern = r"^UNSUCCESSFUL:.+$"
+        self.assertRegexpMatches (res_msg, pattern)
+
 
 class TestUserCase (unittest.TestCase):
     def setUp (self):
