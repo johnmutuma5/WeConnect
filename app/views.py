@@ -70,13 +70,11 @@ def business (business_id):
         except DataNotFoundError as e:
             # if need be, we can log e.expression here
             return jsonify ({"msg": e.msg}), 404
-        return jsonify ({"business": business_info}), 200
+        return jsonify ({"business_info": business_info}), 200
 
     elif request.method == 'PUT':
-        # request.data 
-        return jsonify ({
-            "location": "Marurui, Northern Bypass Rd.",
-            "mobile": "254728655088"
-        }), 201
+        update_data = json.loads (request.data.decode('utf-8'))
+        msg = store.update_business (business_id, update_data)
+        return jsonify ({"msg": msg}), 201
 
     return jsonify ({"msg": "Yet to handle DELETE"}), 501
