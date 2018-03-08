@@ -62,5 +62,5 @@ def businesses ():
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
     business_id = Business.gen_id_string (business_id)
-    business = store.get_business (business_id)
-    return jsonify ({"business": business}), 200
+    business_info = store.get_business_info (business_id)
+    return jsonify ({"business": business_info}), 200
