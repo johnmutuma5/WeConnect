@@ -15,6 +15,11 @@ class StoreHelper ():
 
         return business_data
 
+    @staticmethod
+    def update_business (target_business, update_data):
+        for key, value in update_data.items ():
+            setattr(target_business, key, update_data[key])
+
 
 class Storage ():
     '''
@@ -95,7 +100,8 @@ class Storage ():
         businesses = [business for business in self.__class__.businesses.values ()]
         target_business = None
         for business in businesses:
-            if business.id == business_id: target_business = business
+            if business.id == business_id:
+                target_business = business
         if target_business:
             business_info = self.clerk.extract_business_data (target_business)
             return business_info
@@ -104,7 +110,20 @@ class Storage ():
         expression = "Storage::get_business_info ({})".format (business_id)
         raise DataNotFoundError (expression, msg)
 
+    def update_business (self, business_id, update_data):
+        businesses = [business for business in self.__class__.businesses.values ()]
+        target_business = None
+        for business in businesses:
+            if business.id == business_id:
+                target_business = business
 
+        if target_business:
+            self.clerk.update_business (target_business, update_data)
+            return
+
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_business_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
 
     def clear (self):
         self.__class__.users.clear ()

@@ -80,7 +80,7 @@ class TestAPICase (BaseAPITestSetUp):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
         raw_id = 2
         res = self.testHelper.get_business (raw_id)
-        res_business_info = (res.json())["business"]
+        res_business_info = (res.json())["business_info"]
         res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
         sent_id = Business.gen_id_string (raw_id)
@@ -99,11 +99,10 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.update_business (raw_id, update_data)
         # get the business's info in it's new state
         res = self.testHelper.get_business (raw_id)
-        res_business_info = (res.json())["business"]
+        res_business_info = (res.json())["business_info"]
 
-        for key, value in update_data:
-            info_consistent = update_data[key] == res_business_info[key]
-            self.assertTrue (info_consistent)
+        for key, value in update_data.items():
+            self.assertEqual (update_data['location'], res_business_info['location'])
 
 
 class TestUserCase (unittest.TestCase):
