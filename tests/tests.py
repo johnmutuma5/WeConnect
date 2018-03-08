@@ -10,7 +10,7 @@ import re
 
 class TestAPICase (BaseAPITestSetUp):
 
-    def test_a_user_can_register (self):
+    def test_1a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
@@ -27,7 +27,7 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate username not allowed')
 
-    def test_user_can_login (self):
+    def test_User_can_login (self):
         res = self.testHelper.login_user (login_data)
         msg = (res.json())['msg']
 
@@ -127,16 +127,17 @@ class TestBusinessCase (unittest.TestCase):
             'name': 'Andela',
             'mobile': '254720000000',
             'location': 'TRM',
-            'owner': 'John'
+            'owner': 'John',
         }
-        self.new_business = Business.create_business (self.data)
+        self.test_id = 'TST00001'
+        self.new_business = Business.create_business (self.data, self.test_id)
 
 
     def test_create_business (self):
         business = self.new_business
         name = self.data['name']
-        owner = self.data['owner']
-        data_correct = business.name == name and business.owner == owner
+        owner_id = self.test_id
+        data_correct = business.name == name and business.owner_id == owner_id
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises (ValueError):
