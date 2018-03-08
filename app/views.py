@@ -57,3 +57,10 @@ def businesses ():
 
     businesses_info = store.get_businesses_info ()
     return jsonify ({"businesses": businesses_info}), 200
+
+@app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
+def business (business_id):
+    business = {
+        "id": "BUS00005"
+    }
+    return jsonify ({"business": business}), 200

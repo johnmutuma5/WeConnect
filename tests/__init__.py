@@ -49,7 +49,7 @@ class TestHelper ():
         return requests.get(url)
 
     def get_business (self, raw_id):
-        url = self.base_url + '/api/v1/businesses/raw_id'
+        url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
         return requests.get(url)
 
 

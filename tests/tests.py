@@ -74,7 +74,7 @@ class TestAPICase (BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn (data['name'], res_business_names)
 
-    def test_users_can_retrieve_one_business (self):
+    def test_users_retrieve_one_business (self):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
         raw_id = 5
         res = self.testHelper.get_business (raw_id)
