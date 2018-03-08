@@ -9,8 +9,23 @@ user_data = {
     "password": "pass",
 }
 
+user_data2 = {
+    "'first_name'": "John",
+    "last_name": "Doe",
+    "gender": "Male",
+    "mobile": "254720000000",
+    "email": "johndoe@gmail.com",
+    "username": "john_doe2",
+    "password": "pass",
+}
+
 login_data = {
     "username": "john_doe",
+    "password": "pass"
+}
+
+login_data2 = {
+    "username": "john_doe2",
     "password": "pass"
 }
 
