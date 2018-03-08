@@ -102,8 +102,7 @@ class TestAPICase (BaseAPITestSetUp):
         res_business_info = (res.json())["business_info"]
 
         for key, value in update_data.items():
-            info_consistent = update_data['location'] == res_business_info['location']
-            self.assertTrue (info_consistent)
+            self.assertEqual (update_data['location'], res_business_info['location'])
 
 
 class TestUserCase (unittest.TestCase):

@@ -62,9 +62,9 @@ def businesses ():
 
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
-    if request.method == 'GET':
-        business_id = Business.gen_id_string (business_id)
 
+    business_id = Business.gen_id_string (business_id)
+    if request.method == 'GET':
         try:
             business_info = store.get_business_info (business_id)
         except DataNotFoundError as e:
