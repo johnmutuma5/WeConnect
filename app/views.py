@@ -52,7 +52,7 @@ def delete_business (business_id, issuer_id):
             status_code = 404
         else:
             status_code = 401
-        return jsonify{"msg": e.msg}, status_code
+        return jsonify({"msg": e.msg}), status_code
     return jsonify({"msg": msg}), 201
 
 @app.route('/api/v1/auth/register', methods = ['POST'])
