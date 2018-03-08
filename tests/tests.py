@@ -1,11 +1,13 @@
 import unittest
 from app.models import Business, User, Review
+from app import store
 from . import BaseAPITestSetUp
 from .dummies import user_data, business_data, invalid_credentials, login_data, businesses_data
 import re
 
 
 class TestAPICase (BaseAPITestSetUp):
+
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
@@ -88,7 +90,6 @@ class TestUserCase (unittest.TestCase):
             self.new_user.mobile = '254725k00000'
 
 
-
 class TestBusinessCase (unittest.TestCase):
     def setUp (self):
         self.data = {
@@ -109,6 +110,7 @@ class TestBusinessCase (unittest.TestCase):
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises(ValueError):
             business.mobile = '254725k000000'
+
 
 class TestReviewCase (unittest.TestCase):
     def setUp (self):

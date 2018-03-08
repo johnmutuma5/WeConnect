@@ -1,5 +1,6 @@
 from app.exceptions import DuplicationError
 
+
 class Storage ():
     '''
     Simulates a database:
@@ -69,3 +70,8 @@ class Storage ():
 
             businesses_info.append (business_data)
         return businesses_info
+
+    def clear (self):
+        self.__class__.users.clear ()
+        self.__class__.businesses.clear ()
+        return 'cleared'
