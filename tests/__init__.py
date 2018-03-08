@@ -57,6 +57,11 @@ class TestHelper ():
         url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
         return requests.put (url, data = json.dumps(update_data))
 
+    def delete_business (self, raw_id):
+        url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
+        return requests.delete (url)
+
+
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):
         self.testHelper = TestHelper ()

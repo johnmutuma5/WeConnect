@@ -99,13 +99,17 @@ class Storage ():
 
         return businesses_info
 
+    def find_by_id (self, _id, iterable_list):
+        target_obj = None
+        for obj in iterable_list:
+            if obj.id == _id:
+                target_obj = obj
+        return target_obj
 
     def get_business_info (self, business_id):
         businesses = [business for business in self.__class__.businesses.values ()]
-        target_business = None
-        for business in businesses:
-            if business.id == business_id:
-                target_business = business
+        target_business = self.find_by_id (business_id, businesses)
+        
         if target_business:
             business_info = self.clerk.extract_business_data (target_business)
             return business_info
@@ -116,10 +120,7 @@ class Storage ():
 
     def update_business (self, business_id, update_data, issuer_id):
         businesses = [business for business in self.__class__.businesses.values ()]
-        target_business = None
-        for business in businesses:
-            if business.id == business_id:
-                target_business = business
+        target_business = self.find_by_id (business_id, businesses)
 
         if target_business:
             issuer_is_owner = target_business.owner_id == issuer_id

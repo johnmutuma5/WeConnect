@@ -108,10 +108,14 @@ class TestAPICase (BaseAPITestSetUp):
         # logout the current user
         self.testHelper.logout_user ()
         # create a second user`
-        self.testHelper.register_user (user_data)
+        self.testHelper.register_user (user_data2)
+        self.testHelper.login_user (login_data2)
         # try to update one of the three businesses created by the just logged out user
         resp = self.testHelper.update_business (1, update_data)
         self.assertEqual (resp.status_code, 401)
+
+    # def test_users_can_delete_business (self):
+
 
 
 class TestUserCase (unittest.TestCase):

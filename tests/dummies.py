@@ -25,7 +25,7 @@ login_data = {
 }
 
 login_data2 = {
-    "username": "john_doe",
+    "username": "john_doe2",
     "password": "pass"
 }
 
