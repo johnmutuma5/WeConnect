@@ -68,10 +68,21 @@ class TestAPICase (BaseAPITestSetUp):
             self.testHelper.register_business (business_data)
         # get all businesses info
         res = self.testHelper.get_businesses ()
-        businesses = (res.json())["businesses"]
+        res_businesses = (res.json())["businesses"]
+        res_business_names = [business_info['name'] for business_info in res_businesses]
         # assert that every piece of information we have sent has been returned
         for data in businesses_data:
-            self.assertIn (data, businesses)
+            self.assertIn (data['name'], res_business_names)
+
+    def test_user_can_retrieve_one_business (self):
+        # we have already stored 3 businesses in a previous test, let's test retrieving one
+        raw_id = 5
+        res = self.testHelper.get_business (raw_id)
+        res_business = (res.json())["business"]
+        res_business_id = res_business['id']
+        # assert that the response business id equals the url variable
+        sent_id = Business.gen_id_string (raw_id)
+        self.assertEqual (res_business_id, sent_id)               
 
 
 class TestUserCase (unittest.TestCase):
