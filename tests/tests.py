@@ -114,7 +114,14 @@ class TestAPICase (BaseAPITestSetUp):
         resp = self.testHelper.update_business (1, update_data)
         self.assertEqual (resp.status_code, 401)
 
-    # def test_users_can_delete_business (self):
+    def test_users_can_delete_business (self):
+        # login the first user
+        self.testHelper.logout_user ()
+        self.testHelper.login_user (login_data)
+        # delete business 
+        resp = self.testHelper.delete_business (1)
+        msg = (resp.json())["msg"]
+
 
 
 

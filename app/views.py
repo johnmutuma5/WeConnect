@@ -102,12 +102,17 @@ def business (business_id):
             return jsonify ({"msg": e.msg}), 404
         return jsonify ({"business_info": business_info}), 200
 
+    issuer_id = session.get ('user_id')
     elif request.method == 'PUT':
         update_data = json.loads (request.data.decode('utf-8'))
-        issuer_id = session.get ('user_id')
         resp = update_business_info (business_id, update_data, issuer_id) # this method is decorated with login_required
         msg = resp[0]
         status_code = resp[1]
         return jsonify ({"msg": msg}), status_code
+    # handle DELETE
+    try:
+        msg = store.delete_business (business_id, issuer_id)
+    except DataNotFoundError as e:
+        return jsonify ({"msg": e.msg}), 401
 
-    return jsonify ({"msg": "Yet to handle DELETE"}), 501
+    return jsonify ({"msg": msg}), 501
