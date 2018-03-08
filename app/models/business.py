@@ -49,3 +49,8 @@ class Business ():
         self.__class__.business_count += 1
         self._id = 'BUS{:0>5}'.format(id)
         return
+
+
+
+    def handback_unused_id (self):
+        self.__class__.business_count -= 1

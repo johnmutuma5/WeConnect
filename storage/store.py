@@ -1,5 +1,4 @@
-from app.exceptions import DuplicationError
-
+from app.exceptions import DuplicationError, DataNotFoundError
 class StoreHelper ():
     def __init__ (self):
         ...
@@ -97,9 +96,14 @@ class Storage ():
         target_business = None
         for business in businesses:
             if business.id == business_id: target_business = business
+        if target_business:
+            business_info = self.clerk.extract_business_data (target_business)
+            return business_info
 
-        business_info = self.clerk.extract_business_data (target_business)
-        return business_info
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_business_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
+
 
 
     def clear (self):

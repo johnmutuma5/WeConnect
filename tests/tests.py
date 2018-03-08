@@ -2,7 +2,9 @@ import unittest
 from app.models import Business, User, Review
 from app import store
 from . import BaseAPITestSetUp
-from .dummies import user_data, business_data, invalid_credentials, login_data, businesses_data
+from .dummies import (user_data, business_data,
+                        invalid_credentials, login_data,
+                        businesses_data, update_data)
 import re
 
 
@@ -76,13 +78,32 @@ class TestAPICase (BaseAPITestSetUp):
 
     def test_users_retrieve_one_business (self):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
-        raw_id = 5
+        raw_id = 2
         res = self.testHelper.get_business (raw_id)
-        res_business = (res.json())["business"]
-        res_business_id = res_business['id']
+        res_business_info = (res.json())["business"]
+        res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
         sent_id = Business.gen_id_string (raw_id)
         self.assertEqual (res_business_id, sent_id)
+
+    def test_users_retrieve_only_avail_business (self):
+        raw_id = 1000000
+        res = self.testHelper.get_business (raw_id)
+        res_msg= (res.json())["msg"]
+        # test message to match regex
+        pattern = r"^UNSUCCESSFUL:.+$"
+        self.assertRegexpMatches (res_msg, pattern)
+
+    def test_users_update_a_business (self):
+        raw_id = 2
+        self.testHelper.update_business (raw_id, update_data)
+        # get the business's info in it's new state
+        res = self.testHelper.get_business (raw_id)
+        res_business_info = (res.json())["business"]
+
+        for key, value in update_data:
+            info_consistent = update_data[key] == res_business_info[key]
+            self.assertTrue (info_consistent)
 
 
 class TestUserCase (unittest.TestCase):
@@ -119,7 +140,7 @@ class TestBusinessCase (unittest.TestCase):
         data_correct = business.name == name and business.owner == owner
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
-        with self.assertRaises(ValueError):
+        with self.assertRaises (ValueError):
             business.mobile = '254725k000000'
 
 
