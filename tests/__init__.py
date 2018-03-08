@@ -52,7 +52,9 @@ class TestHelper ():
         url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
         return requests.get(url)
 
-
+    def update_business (self, update_data):
+        url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
+        return requests.put (url, data = json.dumps(update_data))
 
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):
