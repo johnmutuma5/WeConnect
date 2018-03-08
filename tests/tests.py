@@ -74,7 +74,7 @@ class TestAPICase (BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn (data['name'], res_business_names)
 
-    def test_user_can_retrieve_one_business (self):
+    def test_users_can_retrieve_one_business (self):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
         raw_id = 5
         res = self.testHelper.get_business (raw_id)
@@ -82,7 +82,7 @@ class TestAPICase (BaseAPITestSetUp):
         res_business_id = res_business['id']
         # assert that the response business id equals the url variable
         sent_id = Business.gen_id_string (raw_id)
-        self.assertEqual (res_business_id, sent_id)               
+        self.assertEqual (res_business_id, sent_id)
 
 
 class TestUserCase (unittest.TestCase):
