@@ -1,4 +1,4 @@
-import unittest
+import unittest, pytest
 from app.models import Business, User, Review
 from app import store
 from . import BaseAPITestSetUp
@@ -9,8 +9,8 @@ import re
 
 
 class TestAPICase (BaseAPITestSetUp):
-
-    def test_1a_user_can_register (self):
+    @pytest.mark.run(order = 1)
+    def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
@@ -21,13 +21,15 @@ class TestAPICase (BaseAPITestSetUp):
         # assert same as username in data sent
         self.assertEqual (user_in_response_msg, user_data['username'])
 
+    @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed (self):
         # register user with similar data as used in setUp
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
-        self.assertEqual (msg, 'Duplicate username not allowed')
+        self.assertEqual (msg, 'Username already exists')
 
-    def test_User_can_login (self):
+    @pytest.mark.run(order = 3)
+    def test_user_can_login (self):
         res = self.testHelper.login_user (login_data)
         msg = (res.json())['msg']
 
@@ -38,11 +40,13 @@ class TestAPICase (BaseAPITestSetUp):
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
 
+    @pytest.mark.run(order = 4)
     def test_validates_credentials (self):
         res = self.testHelper.login_user (invalid_credentials)
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Invalid username or password')
 
+    @pytest.mark.run(order = 5)
     def test_user_can_logout (self):
         # login user
         self.testHelper.login_user (login_data)
@@ -51,7 +55,8 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (res.json())['msg']
         self.assertEqual (msg, "logged out successfully!")
 
-    def test_User_can_register_business (self):
+    @pytest.mark.run(order = 6)
+    def test_user_can_register_business (self):
         self.testHelper.login_user (login_data)
         res = self.testHelper.register_business (business_data)
         msg = (res.json())['msg']
@@ -59,11 +64,13 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
 
+    @pytest.mark.run(order = 7)
     def test_duplicate_businessname_disallowed (self):
         res = self.testHelper.register_business (business_data)
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate business name not allowed')
 
+    @pytest.mark.run(order = 8)
     def test_users_retrieve_all_businesses (self):
         # register a number of businesses
         for business_data in businesses_data:
@@ -76,6 +83,7 @@ class TestAPICase (BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn (data['name'], res_business_names)
 
+    @pytest.mark.run(order = 9)
     def test_users_retrieve_one_business (self):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
         raw_id = 2
@@ -86,6 +94,7 @@ class TestAPICase (BaseAPITestSetUp):
         sent_id = Business.gen_id_string (raw_id)
         self.assertEqual (res_business_id, sent_id)
 
+    @pytest.mark.run(order = 10)
     def test_users_retrieve_only_avail_business (self):
         raw_id = 1000000
         res = self.testHelper.get_business (raw_id)
@@ -94,6 +103,7 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches (res_msg, pattern)
 
+    @pytest.mark.run(order = 11)
     def test_users_update_a_business (self):
         raw_id = 2
         self.testHelper.update_business (raw_id, update_data)
@@ -104,6 +114,7 @@ class TestAPICase (BaseAPITestSetUp):
         for key, value in update_data.items():
             self.assertEqual (update_data['location'], res_business_info['location'])
 
+    @pytest.mark.run(order = 12)
     def test_users_can_only_update_their_business (self):
         # logout the current user
         self.testHelper.logout_user ()
@@ -114,13 +125,15 @@ class TestAPICase (BaseAPITestSetUp):
         resp = self.testHelper.update_business (1, update_data)
         self.assertEqual (resp.status_code, 401)
 
+    @pytest.mark.run(order = 13)
     def test_users_can_delete_business (self):
         # login the first user
         self.testHelper.logout_user ()
         self.testHelper.login_user (login_data)
-        # delete business 
+        # delete business
         resp = self.testHelper.delete_business (1)
         msg = (resp.json())["msg"]
+        self.assertEqual (msg, "SUCCESS: business deleted")
 
 
 

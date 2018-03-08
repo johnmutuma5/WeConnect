@@ -63,7 +63,7 @@ class Storage ():
         username = user_obj.username
 
         if users.get(username): raise DuplicationError ('Storage::add_user',
-                                                        'Duplicate username not allowed')
+                                                        'Username already exists')
 
         self.__class__.users[username] = user_obj
         new_user = self.__class__.users[username]
@@ -109,7 +109,7 @@ class Storage ():
     def get_business_info (self, business_id):
         businesses = [business for business in self.__class__.businesses.values ()]
         target_business = self.find_by_id (business_id, businesses)
-        
+
         if target_business:
             business_info = self.clerk.extract_business_data (target_business)
             return business_info
@@ -134,6 +134,26 @@ class Storage ():
         msg = "UNSUCCESSFUL: Could not find the requested information"
         expression = "Storage::get_business_info ({})".format (business_id)
         raise DataNotFoundError (expression, msg)
+
+    def delete_business (self, business_id, issuer_id):
+        businesses = [business for business in self.__class__.businesses.values ()]
+        target_business = self.find_by_id (business_id, businesses)
+        if target_business:
+            issuer_is_owner = target_business.owner_id == issuer_id
+            if issuer_is_owner:
+                # delete the business
+                key = target_business.name
+                del self.__class__.businesses[key]
+                return "SUCCESS: business deleted"
+
+            msg = "UNSUCCESSFUL: The business is registered to another user"
+            expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
+            raise PermissionDeniedError (expression, msg)
+
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
+        raise DataNotFoundError (expression, msg)
+
 
     def clear (self):
         self.__class__.users.clear ()
