@@ -76,7 +76,7 @@ class TestAPICase (BaseAPITestSetUp):
 
     def test_users_retrieve_one_business (self):
         # we have already stored 3 businesses in a previous test, let's test retrieving one
-        raw_id = 5
+        raw_id = 2
         res = self.testHelper.get_business (raw_id)
         res_business = (res.json())["business"]
         res_business_id = res_business['id']
@@ -127,7 +127,7 @@ class TestBusinessCase (unittest.TestCase):
         data_correct = business.name == name and business.owner == owner
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
-        with self.assertRaises(ValueError):
+        with self.assertRaises (ValueError):
             business.mobile = '254725k000000'
 
 
