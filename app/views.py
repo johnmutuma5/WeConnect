@@ -11,7 +11,7 @@ def login_required (func):
         if logged_user:
             return func (*args, **kwargs)
         return jsonify ({"msg": "You need to log in to perform this operation"}), 401
-        
+
     wrapper.__name__ = func.__name__
     wrapper.__doc__ = func.__doc__
     return wrapper
@@ -52,7 +52,7 @@ def delete_business (business_id, issuer_id):
             status_code = 404
         else:
             status_code = 401
-        return e.msg, status_code
+        return jsonify{"msg": e.msg}, status_code
     return jsonify({"msg": msg}), 201
 
 @app.route('/api/v1/auth/register', methods = ['POST'])
