@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+
+
+make venv
+source ./venv/bin/activate
+make install
+make freeze
