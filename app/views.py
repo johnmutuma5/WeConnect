@@ -66,6 +66,7 @@ def business (business_id):
     try:
         business_info = store.get_business_info (business_id)
     except DataNotFoundError as e:
+        # if need be, we can log e.expression here
         return jsonify ({"msg": e.msg}), 404
 
     return jsonify ({"business": business_info}), 200
