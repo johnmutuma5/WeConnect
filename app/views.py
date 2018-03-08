@@ -62,12 +62,21 @@ def businesses ():
 
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
-    business_id = Business.gen_id_string (business_id)
+    if request.method == 'GET':
+        business_id = Business.gen_id_string (business_id)
 
-    try:
-        business_info = store.get_business_info (business_id)
-    except DataNotFoundError as e:
-        # if need be, we can log e.expression here
-        return jsonify ({"msg": e.msg}), 404
+        try:
+            business_info = store.get_business_info (business_id)
+        except DataNotFoundError as e:
+            # if need be, we can log e.expression here
+            return jsonify ({"msg": e.msg}), 404
+        return jsonify ({"business": business_info}), 200
 
-    return jsonify ({"business": business_info}), 200
+    elif request.method == 'PUT':
+        # request.data 
+        return jsonify ({
+            "location": "Marurui, Northern Bypass Rd.",
+            "mobile": "254728655088"
+        }), 201
+
+    return jsonify ({"msg": "Yet to handle DELETE"}), 501
