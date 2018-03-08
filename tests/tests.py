@@ -1,11 +1,13 @@
 import unittest
 from app.models import Business, User, Review
+from app import store
 from . import BaseAPITestSetUp
 from .dummies import user_data, business_data, invalid_credentials, login_data, businesses_data
 import re
 
 
 class TestAPICase (BaseAPITestSetUp):
+
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
@@ -66,10 +68,21 @@ class TestAPICase (BaseAPITestSetUp):
             self.testHelper.register_business (business_data)
         # get all businesses info
         res = self.testHelper.get_businesses ()
-        businesses = (res.json())["businesses"]
+        res_businesses = (res.json())["businesses"]
+        res_business_names = [business_info['name'] for business_info in res_businesses]
         # assert that every piece of information we have sent has been returned
         for data in businesses_data:
-            self.assertIn (data, businesses)
+            self.assertIn (data['name'], res_business_names)
+
+    def test_users_retrieve_one_business (self):
+        # we have already stored 3 businesses in a previous test, let's test retrieving one
+        raw_id = 5
+        res = self.testHelper.get_business (raw_id)
+        res_business = (res.json())["business"]
+        res_business_id = res_business['id']
+        # assert that the response business id equals the url variable
+        sent_id = Business.gen_id_string (raw_id)
+        self.assertEqual (res_business_id, sent_id)
 
 
 class TestUserCase (unittest.TestCase):
@@ -86,7 +99,6 @@ class TestUserCase (unittest.TestCase):
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises(ValueError):
             self.new_user.mobile = '254725k00000'
-
 
 
 class TestBusinessCase (unittest.TestCase):
@@ -109,6 +121,7 @@ class TestBusinessCase (unittest.TestCase):
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises(ValueError):
             business.mobile = '254725k000000'
+
 
 class TestReviewCase (unittest.TestCase):
     def setUp (self):

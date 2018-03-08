@@ -45,7 +45,7 @@ def logout ():
 @app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
 def businesses ():
     if request.method == 'POST':
-        business_data = json.loads(request.data.decode('utf-8'))
+        business_data = json.loads (request.data.decode('utf-8'))
         business = Business.create_business (business_data)
 
         try:
@@ -57,3 +57,10 @@ def businesses ():
 
     businesses_info = store.get_businesses_info ()
     return jsonify ({"businesses": businesses_info}), 200
+
+
+@app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
+def business (business_id):
+    business_id = Business.gen_id_string (business_id)
+    business = store.get_business (business_id)
+    return jsonify ({"business": business}), 200
