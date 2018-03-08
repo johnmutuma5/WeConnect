@@ -2,15 +2,15 @@ import unittest
 from app.models import Business, User, Review
 from app import store
 from . import BaseAPITestSetUp
-from .dummies import (user_data, business_data,
-                        invalid_credentials, login_data,
+from .dummies import (user_data, user_data2, business_data,
+                        invalid_credentials, login_data, login_data2,
                         businesses_data, update_data)
 import re
 
 
 class TestAPICase (BaseAPITestSetUp):
 
-    def test_a_user_can_register (self):
+    def test_1a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (res.json())['msg']
         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
@@ -27,7 +27,7 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (res.json())['msg']
         self.assertEqual (msg, 'Duplicate username not allowed')
 
-    def test_user_can_login (self):
+    def test_User_can_login (self):
         res = self.testHelper.login_user (login_data)
         msg = (res.json())['msg']
 
@@ -102,8 +102,20 @@ class TestAPICase (BaseAPITestSetUp):
         res_business_info = (res.json())["business_info"]
 
         for key, value in update_data.items():
-            info_consistent = update_data['location'] == res_business_info['location']
-            self.assertTrue (info_consistent)
+            self.assertEqual (update_data['location'], res_business_info['location'])
+
+    def test_users_can_only_update_their_business (self):
+        # logout the current user
+        self.testHelper.logout_user ()
+        # create a second user`
+        self.testHelper.register_user (user_data2)
+        self.testHelper.login_user (login_data2)
+        # try to update one of the three businesses created by the just logged out user
+        resp = self.testHelper.update_business (1, update_data)
+        self.assertEqual (resp.status_code, 401)
+
+    # def test_users_can_delete_business (self):
+
 
 
 class TestUserCase (unittest.TestCase):
@@ -128,16 +140,17 @@ class TestBusinessCase (unittest.TestCase):
             'name': 'Andela',
             'mobile': '254720000000',
             'location': 'TRM',
-            'owner': 'John'
+            'owner': 'John',
         }
-        self.new_business = Business.create_business (self.data)
+        self.test_id = 'TST00001'
+        self.new_business = Business.create_business (self.data, self.test_id)
 
 
     def test_create_business (self):
         business = self.new_business
         name = self.data['name']
-        owner = self.data['owner']
-        data_correct = business.name == name and business.owner == owner
+        owner_id = self.test_id
+        data_correct = business.name == name and business.owner_id == owner_id
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises (ValueError):

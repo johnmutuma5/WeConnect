@@ -13,19 +13,19 @@ class Business ():
 
 
     @classmethod
-    def create_business (cls, data):
-        return cls (data)
+    def create_business (cls, data, owner_id):
+        return cls (data, owner_id)
 
     @staticmethod
     def gen_id_string (num):
         return 'BUS{:0>5}'.format(num)
 
-    def __init__ (self, data):
+    def __init__ (self, data, owner_id):
         self._id = None
         self._mobile = data['mobile']
         self.id = self.__class__.business_count + 1 # a property set to a formated string
         self.name = data['name']
-        self.owner = data['owner']
+        self.owner_id = owner_id
         self.location = data ['location']
 
     @property

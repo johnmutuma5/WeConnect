@@ -1,6 +1,6 @@
 import unittest
 import json, requests
-from .dummies import user_data
+from .dummies import user_data, login_data
 
 
 requests = requests.Session() #persist cookies across requests
@@ -41,6 +41,7 @@ class TestHelper ():
         return requests.post(url)
 
     def register_business (self, bizdata):
+        self.login_user (login_data)
         url = self.base_url + '/api/v1/businesses'
         return requests.post(url, data = json.dumps(bizdata), headers = self.headers)
 
@@ -55,6 +56,11 @@ class TestHelper ():
     def update_business (self, raw_id, update_data):
         url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
         return requests.put (url, data = json.dumps(update_data))
+
+    def delete_business (self, raw_id):
+        url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
+        return requests.delete (url)
+
 
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):

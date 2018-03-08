@@ -1,4 +1,4 @@
-from app.exceptions import DuplicationError, DataNotFoundError
+from app.exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
 class StoreHelper ():
     def __init__ (self):
         ...
@@ -8,12 +8,17 @@ class StoreHelper ():
         business_data = {}
 
         business_data["name"] = business.name
-        business_data["owner"] = business.owner
+        business_data["owner_id"] = business.owner_id
         business_data["location"] = business.location
         business_data["mobile"] = business.mobile
         business_data["id"] = business.id
 
         return business_data
+
+    @staticmethod
+    def update_business (target_business, update_data):
+        for key, value in update_data.items ():
+            setattr(target_business, key, update_data[key])
 
 
 class Storage ():
@@ -81,6 +86,10 @@ class Storage ():
         businesses = self.__class__.businesses
         return len(businesses)
 
+    def get_user_count (self):
+        users = self.__class__.users
+        return len(users)
+
 
     def get_businesses_info (self):
         businesses_info = []
@@ -90,12 +99,17 @@ class Storage ():
 
         return businesses_info
 
+    def find_by_id (self, _id, iterable_list):
+        target_obj = None
+        for obj in iterable_list:
+            if obj.id == _id:
+                target_obj = obj
+        return target_obj
 
     def get_business_info (self, business_id):
         businesses = [business for business in self.__class__.businesses.values ()]
-        target_business = None
-        for business in businesses:
-            if business.id == business_id: target_business = business
+        target_business = self.find_by_id (business_id, businesses)
+        
         if target_business:
             business_info = self.clerk.extract_business_data (target_business)
             return business_info
@@ -104,7 +118,22 @@ class Storage ():
         expression = "Storage::get_business_info ({})".format (business_id)
         raise DataNotFoundError (expression, msg)
 
+    def update_business (self, business_id, update_data, issuer_id):
+        businesses = [business for business in self.__class__.businesses.values ()]
+        target_business = self.find_by_id (business_id, businesses)
 
+        if target_business:
+            issuer_is_owner = target_business.owner_id == issuer_id
+            if issuer_is_owner:
+                self.clerk.update_business (target_business, update_data)
+                return "Changes recorded successfully"
+            msg = "UNSUCCESSFUL: The business is registered to another user"
+            expression = "Storage::get_business_info ({}, {})".format (business_id, issuer_id)
+            raise PermissionDeniedError (expression, msg)
+
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_business_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
 
     def clear (self):
         self.__class__.users.clear ()
