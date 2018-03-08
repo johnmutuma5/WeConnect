@@ -1,5 +1,21 @@
 from app.exceptions import DuplicationError
 
+class StoreHelper ():
+    def __init__ (self):
+        ...
+
+    @staticmethod
+    def extract_business_data (business):
+        business_data = {}
+
+        business_data["name"] = business.name
+        business_data["owner"] = business.owner
+        business_data["location"] = business.location
+        business_data["mobile"] = business.mobile
+        business_data["id"] = business.id
+
+        return business_data
+
 
 class Storage ():
     '''
@@ -22,7 +38,8 @@ class Storage ():
     businesses = {}
 
     def __init__ (self):
-        ...
+        self.clerk = StoreHelper ()
+
 
     def add (self, obj):
         obj_class = obj.__class__.__name__
@@ -36,6 +53,7 @@ class Storage ():
         # call method with argument and return it's output
         return _add (obj)
 
+
     def add_user (self, user_obj):
         users = self.__class__.users
         username = user_obj.username
@@ -46,6 +64,7 @@ class Storage ():
         self.__class__.users[username] = user_obj
         new_user = self.__class__.users[username]
         return 'SUCCESS: user {} created!'.format(new_user.username)
+
 
     def add_business (self, business_obj):
         businesses = self.__class__.businesses
@@ -58,23 +77,30 @@ class Storage ():
         new_business = self.__class__.businesses[businessname]
         return 'SUCCESS: business {} created!'.format(new_business.name)
 
+
     def get_business_count (self):
         businesses = self.__class__.businesses
         return len(businesses)
 
+
     def get_businesses_info (self):
         businesses_info = []
         for business in self.__class__.businesses.values():
-            business_data = {}
-
-            business_data["name"] = business.name
-            business_data["owner"] = business.owner
-            business_data["location"] = business.location
-            business_data["mobile"] = business.mobile
-            business_data["id"] = business.id
-
+            business_data = self.clerk.extract_business_data (business)
             businesses_info.append (business_data)
+
         return businesses_info
+
+
+    def get_business_info (self, business_id):
+        businesses = [business for business in self.__class__.businesses.values ()]
+        target_business = None
+        for business in businesses:
+            if business.id == business_id: target_business = business
+
+        business_info = self.clerk.extract_business_data (target_business)
+        return business_info
+
 
     def clear (self):
         self.__class__.users.clear ()
