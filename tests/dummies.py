@@ -43,3 +43,9 @@ businesses_data = [
         "mobile": "254750020625"
     }
 ]
+
+
+update_data = {
+    "location": "Marurui, Northern Bypass Rd.",
+    "mobile": "254728655088"
+}
