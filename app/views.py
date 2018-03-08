@@ -51,6 +51,7 @@ def businesses ():
         try:
             msg = store.add (business)
         except DuplicationError as e:
+            business.handback_unused_id ()
             return jsonify ({"msg": e.msg}), 401
 
         return jsonify ({"msg": msg}), 201
