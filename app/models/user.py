@@ -13,8 +13,10 @@ class User ():
         # self.first_name = data['first_name']
         # self.last_name = data['last_name']
         # self.gender = data['gender']
-        # self._mobile = data['mobile']
+        # self._mobile = None
+        # self.mobile = data['mobile']
         # self.email = data['email']
+        self._id = None
         self.id = self.__class__.user_count + 1
         self.username = data['username']
         self.password = data['password']
