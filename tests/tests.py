@@ -135,7 +135,7 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (resp.json())["msg"]
         self.assertEqual (msg, "SUCCESS: business deleted")
 
-
+    @pytest.mark.run(order = 14)
     def test_users_can_make_a_review (self):
         # login a user
         self.testHelper.login_user (login_data)
@@ -148,6 +148,25 @@ class TestAPICase (BaseAPITestSetUp):
         posted_review_heading = match.group ("heading")
         self.assertEqual (posted_review_heading, review_data[0]['heading'])
         self.testHelper.logout_user ()
+
+    @pytest.mark.run(order = 15)
+    def test_user_can_get_reviews (self):
+        # make reviews for business 3
+        self.testHelper.login_user (login_data)
+        self.testHelper.make_review (3, review_data[0])
+        self.testHelper.logout_user ()
+        #login another user
+        self.testHelper.login_user (login_data2)
+        self.testHelper.make_review (3, review_data[1])
+        resp = self.testHelper.get_all_reviews (3)
+        reviews_info = (resp.json())['reviews_info']
+        resp_review_headings = [review_info['heading'] for review_info in reviews_info]
+        # check that all review heading have been returned
+        for data in review_data:
+            self.assertIn (data['heading'], resp_review_headings)
+
+
+
 
 
 class TestUserCase (unittest.TestCase):
