@@ -1,7 +1,8 @@
 from app import app, store
 from .models import User, Business, Review
 from flask import jsonify, request, session
-from .exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
+from .exceptions import (DuplicationError, DataNotFoundError,
+                            PermissionDeniedError, InvalidUserInputError)
 import json
 
 
@@ -75,7 +76,11 @@ def add_a_review (business_id, author_id, review_data):
 @app.route('/api/v1/auth/register', methods = ['POST'])
 def register ():
     data = json.loads(request.data.decode('utf-8'))
-    user = User.create_user (data)
+
+    try:
+        user = User.create_user (data)
+    except InvalidUserInputError as e:
+        return jsonify ({"msg": e.msg})
 
     try:
         msg = store.add (user)
@@ -145,7 +150,7 @@ def business (business_id):
 @app.route ('/api/v1/businesses/<int:business_id>/reviews', methods = ['GET', 'POST'])
 def reviews (business_id):
     business_id = Business.gen_id_string (business_id)
-    if request.method == 'GET':        
+    if request.method == 'GET':
         try:
             reviews_info = store.get_reviews_info (business_id)
         except DataNotFoundError as e:
@@ -158,3 +163,7 @@ def reviews (business_id):
     author_id = session.get ('user_id')
     response = add_a_review (business_id, author_id, review_data)
     return response
+
+@app.route ('/api/v1/auth/reset-password', methods = ['POST'])
+def reset_password ():
+    return jsonify ({"msg": "Under construction"}), 501
