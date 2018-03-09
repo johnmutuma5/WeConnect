@@ -4,7 +4,7 @@ from app import store
 from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
                         invalid_credentials, login_data, login_data2,
-                        businesses_data, update_data)
+                        businesses_data, update_data, review_data)
 import re
 
 
@@ -136,7 +136,22 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual (msg, "SUCCESS: business deleted")
 
 
+    def test_users_can_make_a_review (self):
+        # login a user
+        self.testHelper.login_user (login_data)
+        # make a review on business 2
+        resp = self.testHelper.make_review (2, review_data[0])
+        posted_review_heading = (resp.json())["heading"]
+        self.assertEqual (posted_review_heading, review_data[0]['heading'])
+        self.testHelper.logout_user ()
 
+        # login a second user
+        self.testHelper.login_user (login_data2)
+        # make a review on business 3
+        resp = self.testHelper.make_review (3, review_data[1])
+        posted_review_heading = (resp.json())["heading"]
+        self.assertEqual (posted_review_heading, review_data[1]['heading'])
+        self.testHelper.logout_user ()
 
 class TestUserCase (unittest.TestCase):
     def setUp (self):
