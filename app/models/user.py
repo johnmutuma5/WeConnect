@@ -1,4 +1,5 @@
 from app import store
+import re
 
 class User ():
     '''
@@ -18,6 +19,7 @@ class User ():
         # self.email = data['email']
         self._id = None
         self.id = self.__class__.user_count + 1
+        self._username = None
         self.username = data['username']
         self.password = data['password']
 
@@ -43,6 +45,20 @@ class User ():
         self.__class__.user_count += 1
         self._id = 'USR{:0>5}'.format(id)
         return
+
+    @property
+    def username (self):
+        return self._username
+
+    @username.setter
+    def username (self, name):
+        pattern = r'\w+'
+        match = re.search (pattern, name)
+        if match:
+            self._username = name
+            return
+        self._username = None
+        assert 0, 'Invalid username'
 
     def handback_unused_id (self):
         self.__class__.user_count -= 1
