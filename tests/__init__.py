@@ -65,6 +65,10 @@ class TestHelper ():
         url = self.base_url + '/api/v1/businesses/{id:}/reviews'.format(id = raw_id)
         return requests.post (url, data = json.dumps(review_data), headers = self.headers)
 
+    def get_all_reviews (self, raw_id):
+        url = self.base_url + '/api/v1/businesses/{id:}/reviews'.format(id = raw_id)
+        return requests.get (url)
+
 
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):
