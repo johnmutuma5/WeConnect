@@ -9,7 +9,7 @@ class Review ():
     review_count = store.get_review_count ()
 
     @classmethod
-    def creat_review (cls, business_id, author_id, data):
+    def create_review (cls, business_id, author_id, data):
         return cls (business_id, author_id, data)
 
     @staticmethod
@@ -22,7 +22,7 @@ class Review ():
         self.author_id = author_id
         self.business_id = business_id
         self._id = None
-        self.id = self.__class__.business_count + 1 # a property set to a formated string
+        self.id = self.__class__.review_count + 1 # a property set to a formated string
 
     @property
     def id (self):
