@@ -144,10 +144,15 @@ def business (business_id):
 
 @app.route ('/api/v1/businesses/<int:business_id>/reviews', methods = ['GET', 'POST'])
 def reviews (business_id):
-    if request.method == 'GET':
-        reviews_info = store.get_reviews (business_id)
-        return jsonify ()
-        
+    business_id = Business.gen_id_string (business_id)
+    if request.method == 'GET':        
+        try:
+            reviews_info = store.get_reviews_info (business_id)
+        except DataNotFoundError as e:
+            return jsonify ({"msg": e.msg}), 404
+
+        return jsonify ({"reviews_info": reviews_info}), 200
+
     review_data = json.loads(request.data.decode ('utf-8'))
     # get logged in user
     author_id = session.get ('user_id')
