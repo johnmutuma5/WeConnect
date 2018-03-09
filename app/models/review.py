@@ -35,6 +35,3 @@ class Review ():
         self.__class__.review_count += 1
         self._id = 'REV{:0>5}'.format(id)
         return
-
-    def handback_unused_id (self):
-        self.__class__.review_count -= 1
