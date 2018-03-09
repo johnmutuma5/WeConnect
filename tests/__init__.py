@@ -55,11 +55,15 @@ class TestHelper ():
 
     def update_business (self, raw_id, update_data):
         url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
-        return requests.put (url, data = json.dumps(update_data))
+        return requests.put (url, data = json.dumps(update_data), headers = self.headers)
 
     def delete_business (self, raw_id):
         url = self.base_url + '/api/v1/businesses/{id:}'.format(id = raw_id)
         return requests.delete (url)
+
+    def make_review (self, raw_id, review_data):
+        url = self.base_url + '/api/v1/businesses/{id:}/reviews'.format(id = raw_id)
+        return requests.post (url, data = json.dumps(review_data), headers = self.headers)
 
 
 class BaseAPITestSetUp (unittest.TestCase):
