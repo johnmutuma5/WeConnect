@@ -22,7 +22,8 @@ class Business ():
 
     def __init__ (self, data, owner_id):
         self._id = None
-        self._mobile = data['mobile']
+        self._mobile = None
+        self.mobile = data['mobile']
         self.id = self.__class__.business_count + 1 # a property set to a formated string
         self.name = data['name']
         self.owner_id = owner_id
