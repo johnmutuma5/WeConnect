@@ -141,17 +141,14 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.login_user (login_data)
         # make a review on business 2
         resp = self.testHelper.make_review (2, review_data[0])
-        posted_review_heading = (resp.json())["heading"]
+        msg = (resp.json())["msg"]
+        #extract posted review heading from message
+        pattern = r"\w+:\[(?P<heading>.+)\] "
+        match = re.search (pattern, msg)
+        posted_review_heading = match.group ("heading")
         self.assertEqual (posted_review_heading, review_data[0]['heading'])
         self.testHelper.logout_user ()
 
-        # login a second user
-        self.testHelper.login_user (login_data2)
-        # make a review on business 3
-        resp = self.testHelper.make_review (3, review_data[1])
-        posted_review_heading = (resp.json())["heading"]
-        self.assertEqual (posted_review_heading, review_data[1]['heading'])
-        self.testHelper.logout_user ()
 
 class TestUserCase (unittest.TestCase):
     def setUp (self):
@@ -195,17 +192,17 @@ class TestBusinessCase (unittest.TestCase):
 class TestReviewCase (unittest.TestCase):
     def setUp (self):
         self.data = {
-            'author': 'Alice Doe',
-            'business': 'Andela',
-            'message': 'They create progressive technology products',
+            'body': 'They create progressive technology products',
+            'heading': 'Wonderful'
         }
-        self.new_review = Review (self.data)
+        self.test_author_id = 'TST00001'
+        self.test_bss_id = 'BUS00001'
+        self.new_review = Review (self.test_bss_id, self.test_author_id, self.data)
 
     def test_create_review (self):
         review = self.new_review
-        message = self.data['message']
-        author = self.data['author']
-        data_correct = review.author == author and review.message == message
+        heading = self.data['heading']
+        data_correct = review.author_id == self.test_author_id and review.heading == heading
         self.assertTrue(data_correct)
 
 

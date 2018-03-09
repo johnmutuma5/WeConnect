@@ -71,7 +71,7 @@ review_data = [
         "heading": "Wonderful"
     },
     {
-        "body": "I was there yesterday and it was good"
+        "body": "I was there yesterday and it was good",
         "heading": "Generally Good"
     }
 ]
