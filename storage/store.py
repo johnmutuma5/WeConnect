@@ -29,6 +29,7 @@ class Storage ():
         fields:
             users: a dict of users (key:value) equivalent (username: user_obj)
             businesses: a dict o businesses (key:value) equivalent (businessname: business_obj)
+            reviews: a dict o reviews (key:value) equivalent (reviewid: review_obj)
         methods:
             add: adds any class of object
                 params: obj
@@ -36,10 +37,13 @@ class Storage ():
                 params: user_obj
             add_business:
                 params: business_obj
+            add_review:
+                params: review_obj
 
     '''
     users = {}
     businesses = {}
+    reviews = {}
 
     def __init__ (self):
         self.clerk = StoreHelper ()
@@ -51,11 +55,18 @@ class Storage ():
         # get appropriate method to call: a switch-like dict operation
         _add = {
             "User": self.add_user,
-            "Business": self.add_business
+            "Business": self.add_business,
+            "Review": self.add_review
         }[obj_class]
 
         # call method with argument and return it's output
         return _add (obj)
+
+    def add_review (self, review_obj):
+        review_id = review_obj.id
+        self.__class__.reviews[review_id] = review_obj
+        new_review = self.__class__.reviews[review_id]
+        return 'SUCCESS: review heading:[{}] created!'.format(new_review.heading)
 
 
     def add_user (self, user_obj):
@@ -89,6 +100,10 @@ class Storage ():
     def get_user_count (self):
         users = self.__class__.users
         return len(users)
+
+    def get_review_count (self):
+        reviews = self.__class__.reviews
+        return len(reviews)
 
 
     def get_businesses_info (self):
