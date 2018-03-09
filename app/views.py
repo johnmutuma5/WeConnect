@@ -5,6 +5,10 @@ from .exceptions import DuplicationError, DataNotFoundError, PermissionDeniedErr
 import json
 
 
+''''''
+# DECORATE FUNCTIONALITIES THAT REQUIRE ACTIVE SESSIONS
+''''''
+
 def login_required (func):
     def wrapper (*args, **kwargs):
         logged_user = session.get('user_id')
@@ -54,6 +58,19 @@ def delete_business (business_id, issuer_id):
             status_code = 401
         return jsonify({"msg": e.msg}), status_code
     return jsonify({"msg": msg}), 201
+
+
+@login_required
+def add_a_review (business_id, author_id, review_data):
+    new_review = Review.create_review (business_id, author_id, review_data)
+    # store the review
+    msg = store.add_review (new_review)
+    return jsonify ({'msg': msg}), 200
+
+
+''''''
+# BEGINNING OF ENDOPOINTS
+''''''
 
 @app.route('/api/v1/auth/register', methods = ['POST'])
 def register ():
@@ -124,12 +141,15 @@ def business (business_id):
     return response
 
 
+
 @app.route ('/api/v1/businesses/<int:business_id>/reviews', methods = ['GET', 'POST'])
 def reviews (business_id):
+    if request.method == 'GET':
+        reviews_info = store.get_reviews (business_id)
+        return jsonify ()
+        
     review_data = json.loads(request.data.decode ('utf-8'))
     # get logged in user
     author_id = session.get ('user_id')
-    new_review = Review.create_review (business_id, author_id, review_data)
-    # store the review
-    msg = store.add_review (new_review)
-    return jsonify ({'msg': msg}), 200
+    response = add_a_review (business_id, author_id, review_data)
+    return response
