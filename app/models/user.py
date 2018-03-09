@@ -1,4 +1,5 @@
 from app import store
+from ..exceptions import InvalidUserInputError
 import re
 
 class User ():
@@ -58,7 +59,8 @@ class User ():
             self._username = name
             return
         self._username = None
-        assert 0, 'Invalid username'
+        # assert 0, 'Invalid username'
+        raise InvalidUserInputError ("User::namesetter", "Invalid username!")
 
     def handback_unused_id (self):
         self.__class__.user_count -= 1

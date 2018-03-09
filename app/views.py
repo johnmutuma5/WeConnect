@@ -1,7 +1,8 @@
 from app import app, store
 from .models import User, Business, Review
 from flask import jsonify, request, session
-from .exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
+from .exceptions import (DuplicationError, DataNotFoundError,
+                            PermissionDeniedError, InvalidUserInputError)
 import json
 
 
@@ -78,8 +79,8 @@ def register ():
 
     try:
         user = User.create_user (data)
-    except AssertionError as e:
-        return jsonify ({"msg": "Invalid username"})
+    except InvalidUserInputError as e:
+        return jsonify ({"msg": e.msg})
 
     try:
         msg = store.add (user)
