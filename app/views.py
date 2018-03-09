@@ -122,3 +122,14 @@ def business (business_id):
     # handle DELETE
     response = delete_business (business_id, issuer_id)
     return response
+
+
+@app.route ('/api/v1/businesses/<int:business_id>/reviews', methods = ['GET', 'POST'])
+def reviews (business_id):
+    review_data = json.loads(request.data.decode ('utf-8'))
+    # get logged in user
+    author_id = session.get ('user_id')
+    new_review = Review.create_review (business_id, author_id, review_data)
+    # store the review
+    msg = store.add_review (new_review)
+    return jsonify ({'msg': msg}), 200

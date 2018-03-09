@@ -4,7 +4,7 @@ from app import store
 from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
                         invalid_credentials, login_data, login_data2,
-                        businesses_data, update_data)
+                        businesses_data, update_data, review_data)
 import re
 
 
@@ -136,6 +136,18 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual (msg, "SUCCESS: business deleted")
 
 
+    def test_users_can_make_a_review (self):
+        # login a user
+        self.testHelper.login_user (login_data)
+        # make a review on business 2
+        resp = self.testHelper.make_review (2, review_data[0])
+        msg = (resp.json())["msg"]
+        #extract posted review heading from message
+        pattern = r"\w+:\[(?P<heading>.+)\] "
+        match = re.search (pattern, msg)
+        posted_review_heading = match.group ("heading")
+        self.assertEqual (posted_review_heading, review_data[0]['heading'])
+        self.testHelper.logout_user ()
 
 
 class TestUserCase (unittest.TestCase):
@@ -180,17 +192,17 @@ class TestBusinessCase (unittest.TestCase):
 class TestReviewCase (unittest.TestCase):
     def setUp (self):
         self.data = {
-            'author': 'Alice Doe',
-            'business': 'Andela',
-            'message': 'They create progressive technology products',
+            'body': 'They create progressive technology products',
+            'heading': 'Wonderful'
         }
-        self.new_review = Review (self.data)
+        self.test_author_id = 'TST00001'
+        self.test_bss_id = 'BUS00001'
+        self.new_review = Review (self.test_bss_id, self.test_author_id, self.data)
 
     def test_create_review (self):
         review = self.new_review
-        message = self.data['message']
-        author = self.data['author']
-        data_correct = review.author == author and review.message == message
+        heading = self.data['heading']
+        data_correct = review.author_id == self.test_author_id and review.heading == heading
         self.assertTrue(data_correct)
 
 
