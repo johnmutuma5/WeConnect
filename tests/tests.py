@@ -150,7 +150,7 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.logout_user ()
 
     @pytest.mark.run(order = 15)
-    def test_user_can_get_reviews ():
+    def test_user_can_get_reviews (self):
         # make reviews for business 3
         self.testHelper.login_user (login_data)
         self.testHelper.make_review (3, review_data[0])
