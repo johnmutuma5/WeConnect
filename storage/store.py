@@ -20,6 +20,17 @@ class StoreHelper ():
         for key, value in update_data.items ():
             setattr(target_business, key, update_data[key])
 
+    @staticmethod
+    def extract_review_info (target_id, review):
+        review_info = {}
+
+        review_info["heading"] = review.heading
+        review_info["body"] = review.body
+        review_info["author_id"] = review.author_id
+        review_info["business_id"] = review.business_id
+        review_info["id"] = review.id
+
+        return review_info
 
 class Storage ():
     '''
@@ -120,6 +131,22 @@ class Storage ():
             if obj.id == _id:
                 target_obj = obj
         return target_obj
+
+    def get_reviews_info (self, business_id):
+        businesses = [business for business in self.__class__.businesses.values ()]
+        target_business = self.find_by_id (business_id, businesses)
+        reviews_info = []
+        if target_business:
+            target_id = target_business.id
+            for review in self.__class__.reviews.values():
+                if review.business_id == target_id:
+                    review_info = self.clerk.extract_review_info (target_id, review)
+                    reviews_info.append (review_info)
+
+            return reviews_info
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_reviews_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
 
     def get_business_info (self, business_id):
         businesses = [business for business in self.__class__.businesses.values ()]
