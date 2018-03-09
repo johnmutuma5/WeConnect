@@ -64,3 +64,14 @@ update_data = {
     "location": "Marurui, Northern Bypass Rd.",
     "mobile": "254728655088"
 }
+
+review_data = [
+    {
+        "body": "The have wonderful products and warm customer-facing stuff",
+        "heading": "Wonderful"
+    },
+    {
+        "body": "I was there yesterday and it was good"
+        "heading": "Generally Good"
+    }
+]
