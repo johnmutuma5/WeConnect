@@ -34,17 +34,21 @@ def register_a_business (business_data, owner):
     return jsonify({"msg": msg}), 201
 
 
+def find_code (err):
+    if type (err) == DataNotFoundError:
+        status_code = 404
+    else:
+        status_code = 401
+    return status_code
+
+
 @login_required
 def update_business_info (business_id, update_data, issuer_id):
     try:
         msg = store.update_business (business_id, update_data, issuer_id)
     except (DataNotFoundError, PermissionDeniedError) as e:
-        if type (e) == DataNotFoundError:
-            status_code = 404
-        else:
-            status_code = 401
+        status_code = find_code (e)
         return jsonify({"msg": e.msg}), status_code
-
     return jsonify({"msg": msg}), 201
 
 
@@ -53,10 +57,7 @@ def delete_business (business_id, issuer_id):
     try:
         msg = store.delete_business (business_id, issuer_id)
     except (DataNotFoundError, PermissionDeniedError) as e:
-        if type (e) == DataNotFoundError:
-            status_code = 404
-        else:
-            status_code = 401
+        status_code = find_code (e)
         return jsonify({"msg": e.msg}), status_code
     return jsonify({"msg": msg}), 201
 
@@ -85,7 +86,7 @@ def register ():
     try:
         msg = store.add (user)
     except DuplicationError as e:
-        user.handback_unused_id ()
+        # user.handback_unused_id ()
         return jsonify({'msg': e.msg}), 401
 
     return jsonify ({"msg": msg}), 200
