@@ -102,7 +102,7 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.register_business (business_data)
         raw_id = 1
         res = self.testHelper.get_business (raw_id)
-        res_business_info = (json.loads(res.data.decode("utf-8")))["business_info"]
+        res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
         print(res_business_info)
         res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
@@ -127,7 +127,7 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.update_business (raw_id, update_data)
         # get the business's info in it's new state
         res = self.testHelper.get_business (raw_id)
-        res_business_info = (json.loads(res.data.decode("utf-8")))["business_info"]
+        res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
 
         for key, value in update_data.items():
             self.assertEqual (update_data[key], res_business_info[key])
@@ -189,7 +189,7 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.login_user (login_data2)
         self.testHelper.make_review (1, review_data[1])
         resp = self.testHelper.get_all_reviews (1)
-        reviews_info = (json.loads(resp.data.decode("utf-8")))['reviews_info']
+        reviews_info = (json.loads(resp.data.decode("utf-8")))['info']
         resp_review_headings = [review_info['heading'] for review_info in reviews_info]
         # check that all review heading have been returned
         for data in review_data:

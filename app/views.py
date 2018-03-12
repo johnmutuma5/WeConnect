@@ -70,6 +70,25 @@ def add_a_review (business_id, author_id, review_data):
     return jsonify ({'msg': msg}), 200
 
 
+
+def get_info_response (business_id, info_type):
+    '''
+        Loads GET info of a single business i.e. reviews, or the business's info
+    '''
+    _call = {
+        "business": store.get_business_info,
+        "reviews": store.get_reviews_info
+    }[info_type]
+
+    try:
+        info =  _call (business_id)
+    except DataNotFoundError as err:
+        # if need be, we can log e.expression here
+        return jsonify ({"msg": err.msg}), 404
+    return jsonify ({"info": info}), 200
+
+    
+
 ''''''
 # BEGINNING OF ENDOPOINTS
 ''''''
@@ -127,19 +146,14 @@ def businesses ():
     return jsonify ({"businesses": businesses_info}), 200
 
 
+
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
-    for bs in store.businesses.values():
-        print (bs.id)
     business_id = Business.gen_id_string (business_id)
     issuer_id = session.get ('user_id')
     if request.method == 'GET':
-        try:
-            business_info = store.get_business_info (business_id)
-        except DataNotFoundError as err:
-            # if need be, we can log e.expression here
-            return jsonify ({"msg": err.msg}), 404
-        return jsonify ({"business_info": business_info}), 200
+        response = get_info_response (business_id, info_type = 'business')
+        return response
 
     elif request.method == 'PUT':
         update_data = json.loads (request.data.decode('utf-8'))
@@ -156,12 +170,8 @@ def business (business_id):
 def reviews (business_id):
     business_id = Business.gen_id_string (business_id)
     if request.method == 'GET':
-        try:
-            reviews_info = store.get_reviews_info (business_id)
-        except DataNotFoundError as rev_err:
-            return jsonify ({"msg": rev_err.msg}), 404
-
-        return jsonify ({"reviews_info": reviews_info}), 200
+        response = get_info_response (business_id, 'reviews')
+        return response
 
     review_data = json.loads(request.data.decode ('utf-8'))
     # get logged in user
