@@ -97,12 +97,13 @@ def login ():
     username = login_data['username']
 
     target_user = store.users.get(username)
+    no_password_match = not target_user.password == login_data['password']
 
-    if not target_user or not target_user.password == login_data['password']:
+    if not target_user or no_password_match:
         return jsonify ({"msg": "Invalid username or password"}), 401
 
     session['user_id'] = target_user.id
-    msg = "logged in {}".format(username)
+    msg = "Logged in {}".format(username)
     return jsonify({'msg': msg}), 200
 
 
@@ -110,7 +111,7 @@ def login ():
 @login_required
 def logout ():
     session.pop('user_id')
-    return jsonify({"msg": "logged out successfully!"}), 200
+    return jsonify({"msg": "Logged out successfully!"}), 200
 
 @app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
 def businesses ():

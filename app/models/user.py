@@ -53,7 +53,7 @@ class User ():
 
     @username.setter
     def username (self, name):
-        pattern = r'\w+[0-9]+'
+        pattern = r'^[a-zA-Z_]+[\d\w]{3,}'
         match = re.search (pattern, name)
         if match:
             self._username = name
