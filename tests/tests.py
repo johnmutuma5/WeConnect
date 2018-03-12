@@ -33,7 +33,7 @@ class TestAPICase (BaseAPITestSetUp):
         res = self.testHelper.login_user (login_data)
         msg = (res.json())['msg']
 
-        pattern = r"logged in (?P<username>.+)"
+        pattern = r"Logged in (?P<username>.+)"
         self.assertRegexpMatches (msg, pattern)
         # extract username from regular expression
         match = re.search(pattern, msg)
@@ -53,7 +53,7 @@ class TestAPICase (BaseAPITestSetUp):
         # logout user
         res = self.testHelper.logout_user ()
         msg = (res.json())['msg']
-        self.assertEqual (msg, "logged out successfully!")
+        self.assertEqual (msg, "Logged out successfully!")
 
     @pytest.mark.run(order = 6)
     def test_user_can_register_business (self):

@@ -23,7 +23,7 @@ class TestHelper ():
     '''
 
     def __init__ (self):
-        self.base_url = 'http://0.0.0.0:8080'
+        self.base_url = 'http://127.0.0.1:8080'
         self.headers = {'content-type': 'application/json'}
 
     def register_user (self, user_data):
