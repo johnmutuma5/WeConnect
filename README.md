@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/johnmutuma5/WeConnect.svg?branch=master)](https://travis-ci.org/johnmutuma5/WeConnect)
+[![Coverage Status](https://coveralls.io/repos/github/johnmutuma5/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/johnmutuma5/WeConnect?branch=master)
 ![license](https://img.shields.io/github/license/mashape/apistatus.svg)
 
 
