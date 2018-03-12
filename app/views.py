@@ -139,6 +139,7 @@ def business (business_id):
         return jsonify ({"business_info": business_info}), 200
 
     elif request.method == 'PUT':
+        print ('Updating')
         update_data = json.loads (request.data.decode('utf-8'))
         response = update_business_info (business_id, update_data, issuer_id) # this method is decorated with login_required
         return response
