@@ -5,10 +5,11 @@ import re
 class User ():
     '''
     '''
-    user_count = store.get_user_count ()
+    user_count = 0
 
     @classmethod
     def create_user (cls, data):
+        cls.user_count = store.get_user_count ()
         return cls(data)
 
     def __init__ (self, data):
@@ -43,7 +44,7 @@ class User ():
     def id (self, id):
         '''generates an 8-character commnet id e.g. USR00001
         '''
-        self.__class__.user_count += 1
+        # self.__class__.user_count += 1
         self._id = 'USR{:0>5}'.format(id)
         return
 
@@ -63,4 +64,5 @@ class User ():
         raise InvalidUserInputError ("User::namesetter", "Invalid username!")
 
     def handback_unused_id (self):
-        self.__class__.user_count -= 1
+        # self.__class__.user_count -= 1
+        pass

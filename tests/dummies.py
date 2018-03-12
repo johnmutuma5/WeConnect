@@ -49,7 +49,7 @@ businesses_data = [
         "name": "Google",
         "owner": "John Doe",
         "location": "Nairobi",
-        "mobile": "2547009820052"
+        "mobile": "254700982005"
     },
     {
         "name": "Crafters Inc.",

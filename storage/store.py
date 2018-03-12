@@ -200,4 +200,5 @@ class Storage ():
     def clear (self):
         self.__class__.users.clear ()
         self.__class__.businesses.clear ()
+        print(self.__class__.businesses)
         return 'cleared'

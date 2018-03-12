@@ -1,5 +1,6 @@
 import unittest, pytest, json
 from app.models import Business, User, Review
+from app.exceptions import InvalidUserInputError
 from app import store
 from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
@@ -9,7 +10,7 @@ import re
 
 
 class TestAPICase (BaseAPITestSetUp):
-    @pytest.mark.run(order = 1)
+    # @pytest.mark.run(order = 1)
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
@@ -21,15 +22,17 @@ class TestAPICase (BaseAPITestSetUp):
         # assert same as username in data sent
         self.assertEqual (user_in_response_msg, user_data['username'])
 
-    @pytest.mark.run(order = 2)
+    # @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed (self):
+        res = self.testHelper.register_user (user_data)
         # register user with similar data as used in setUp
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Username already exists')
     #
-    @pytest.mark.run(order = 3)
+    # @pytest.mark.run(order = 3)
     def test_user_can_login (self):
+        res = self.testHelper.register_user (user_data)
         res = self.testHelper.login_user (login_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
 
@@ -40,38 +43,46 @@ class TestAPICase (BaseAPITestSetUp):
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
     #
-    @pytest.mark.run(order = 4)
+    # @pytest.mark.run(order = 4)
     def test_validates_credentials (self):
         res = self.testHelper.login_user (invalid_credentials)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Invalid username or password')
-
-    @pytest.mark.run(order = 5)
+    #
+    # @pytest.mark.run(order = 5)
     def test_user_can_logout (self):
+        # register user
+        self.testHelper.register_user (user_data)
         # login user
         self.testHelper.login_user (login_data)
         # logout user
         res = self.testHelper.logout_user ()
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, "Logged out successfully!")
-    #
-    @pytest.mark.run(order = 6)
+    # #
+    # @pytest.mark.run(order = 6)
     def test_user_can_register_business (self):
+        self.testHelper.register_user (user_data)
         self.testHelper.login_user (login_data)
         res = self.testHelper.register_business (business_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
 
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
-    #
-    @pytest.mark.run(order = 7)
+    # #
+    # @pytest.mark.run(order = 7)
     def test_duplicate_businessname_disallowed (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
         res = self.testHelper.register_business (business_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Duplicate business name not allowed')
-    #
-    @pytest.mark.run(order = 8)
+    # #
+    # @pytest.mark.run(order = 8)
     def test_users_retrieve_all_businesses (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
         # register a number of businesses
         for business_data in businesses_data:
             self.testHelper.register_business (business_data)
@@ -83,18 +94,22 @@ class TestAPICase (BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn (data['name'], res_business_names)
     #
-    @pytest.mark.run(order = 9)
+    # @pytest.mark.run(order = 9)
     def test_users_retrieve_one_business (self):
-        # we have already stored 3 businesses in a previous test, let's test retrieving one
-        raw_id = 2
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        # register a number of businesses
+        self.testHelper.register_business (business_data)
+        raw_id = 1
         res = self.testHelper.get_business (raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["business_info"]
+        print(res_business_info)
         res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
         sent_id = Business.gen_id_string (raw_id)
         self.assertEqual (res_business_id, sent_id)
     #
-    @pytest.mark.run(order = 10)
+    # @pytest.mark.run(order = 10)
     def test_users_retrieve_only_avail_business (self):
         raw_id = 1000000
         res = self.testHelper.get_business (raw_id)
@@ -103,20 +118,25 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches (res_msg, pattern)
     #
-    @pytest.mark.run(order = 11)
+    # @pytest.mark.run(order = 11)
     def test_users_update_a_business (self):
         raw_id = 1
+        self.testHelper.register_user (user_data)
         self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
         self.testHelper.update_business (raw_id, update_data)
         # get the business's info in it's new state
         res = self.testHelper.get_business (raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["business_info"]
 
         for key, value in update_data.items():
-            self.assertEqual (update_data['location'], res_business_info['location'])
+            self.assertEqual (update_data[key], res_business_info[key])
     #
-    @pytest.mark.run(order = 12)
+    # @pytest.mark.run(order = 12)
     def test_users_can_only_update_their_business (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
         # logout the current user
         self.testHelper.logout_user ()
         # create a second user`
@@ -126,22 +146,29 @@ class TestAPICase (BaseAPITestSetUp):
         resp = self.testHelper.update_business (1, update_data)
         self.assertEqual (resp.status_code, 401)
     #
-    @pytest.mark.run(order = 13)
+    # @pytest.mark.run(order = 13)
     def test_users_can_delete_business (self):
+        self.testHelper.register_user (user_data)
         # login the first user
-        self.testHelper.logout_user ()
         self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
         # delete business
         resp = self.testHelper.delete_business (1)
         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
         self.assertEqual (msg, "SUCCESS: business deleted")
     #
-    @pytest.mark.run(order = 14)
+    # @pytest.mark.run(order = 14)
     def test_users_can_make_a_review (self):
-        # login a user
+        self.testHelper.register_user (user_data)
+        self.testHelper.register_user (user_data2)
+        # login the first user
         self.testHelper.login_user (login_data)
-        # make a review on business 2
-        resp = self.testHelper.make_review (2, review_data[0])
+        self.testHelper.register_business (business_data)
+        self.testHelper.logout_user ()
+        # login second user
+        self.testHelper.login_user (login_data2)
+        # second user make a review
+        resp = self.testHelper.make_review (1, review_data[0])
         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
         #extract posted review heading from message
         pattern = r"\w+:\[(?P<heading>.+)\] "
@@ -150,42 +177,28 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual (posted_review_heading, review_data[0]['heading'])
         self.testHelper.logout_user ()
     #
-    @pytest.mark.run(order = 15)
+    # @pytest.mark.run(order = 15)
     def test_user_can_get_reviews (self):
-        # make reviews for business 3
+        self.testHelper.register_user (user_data)
+        self.testHelper.register_user (user_data2)
         self.testHelper.login_user (login_data)
-        self.testHelper.make_review (3, review_data[0])
+        self.testHelper.register_business (business_data)
+        self.testHelper.make_review (1, review_data[0])
         self.testHelper.logout_user ()
         #login another user
         self.testHelper.login_user (login_data2)
-        self.testHelper.make_review (3, review_data[1])
-        resp = self.testHelper.get_all_reviews (3)
+        self.testHelper.make_review (1, review_data[1])
+        resp = self.testHelper.get_all_reviews (1)
         reviews_info = (json.loads(resp.data.decode("utf-8")))['reviews_info']
         resp_review_headings = [review_info['heading'] for review_info in reviews_info]
         # check that all review heading have been returned
         for data in review_data:
             self.assertIn (data['heading'], resp_review_headings)
-    #
-    #
 
 
 
-class TestUserCase (unittest.TestCase):
-    def setUp (self):
-        self.user_data = user_data
-        self.new_user = User.create_user (self.user_data)
 
-
-    def test_create_user (self):
-        user = self.new_user
-        first_name = self.user_data['username']
-        data_correct = user.username
-        self.assertTrue (data_correct)
-        #edge case: raises AssertionError for mobile with non int characters
-        with self.assertRaises(ValueError):
-            self.new_user.mobile = '254725k00000'
-
-
+#
 class TestBusinessCase (unittest.TestCase):
     def setUp (self):
         self.data = {
@@ -205,7 +218,7 @@ class TestBusinessCase (unittest.TestCase):
         data_correct = business.name == name and business.owner_id == owner_id
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
-        with self.assertRaises (ValueError):
+        with self.assertRaises (InvalidUserInputError):
             business.mobile = '254725k000000'
 
 

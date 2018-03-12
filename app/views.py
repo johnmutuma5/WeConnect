@@ -128,6 +128,8 @@ def businesses ():
 
 @app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
+    for bs in store.businesses.values():
+        print (bs.id)
     business_id = Business.gen_id_string (business_id)
     issuer_id = session.get ('user_id')
     if request.method == 'GET':
@@ -139,7 +141,6 @@ def business (business_id):
         return jsonify ({"business_info": business_info}), 200
 
     elif request.method == 'PUT':
-        print ('Updating')
         update_data = json.loads (request.data.decode('utf-8'))
         response = update_business_info (business_id, update_data, issuer_id) # this method is decorated with login_required
         return response
