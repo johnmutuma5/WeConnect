@@ -97,7 +97,8 @@ def login ():
     username = login_data['username']
 
     target_user = store.users.get(username)
-    no_password_match = not target_user.password == login_data['password']
+    if target_user:
+        no_password_match = not target_user.password == login_data['password']
 
     if not target_user or no_password_match:
         return jsonify ({"msg": "Invalid username or password"}), 401
