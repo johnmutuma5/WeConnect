@@ -34,7 +34,7 @@ def register_a_business (business_data, owner):
     return jsonify({"msg": msg}), 201
 
 
-def find_code (err):
+def find_status_code (err):
     if type (err) == DataNotFoundError:
         status_code = 404
     else:
@@ -46,9 +46,9 @@ def find_code (err):
 def update_business_info (business_id, update_data, issuer_id):
     try:
         msg = store.update_business (business_id, update_data, issuer_id)
-    except (DataNotFoundError, PermissionDeniedError) as e:
-        status_code = find_code (e)
-        return jsonify({"msg": e.msg}), status_code
+    except (DataNotFoundError, PermissionDeniedError) as put_err:
+        status_code = find_status_code (put_err)
+        return jsonify({"msg": put_err.msg}), status_code
     return jsonify({"msg": msg}), 201
 
 
@@ -56,9 +56,9 @@ def update_business_info (business_id, update_data, issuer_id):
 def delete_business (business_id, issuer_id):
     try:
         msg = store.delete_business (business_id, issuer_id)
-    except (DataNotFoundError, PermissionDeniedError) as e:
-        status_code = find_code (e)
-        return jsonify({"msg": e.msg}), status_code
+    except (DataNotFoundError, PermissionDeniedError) as del_err:
+        status_code = find_status_code (del_err)
+        return jsonify({"msg": del_err.msg}), status_code
     return jsonify({"msg": msg}), 201
 
 
@@ -136,9 +136,9 @@ def business (business_id):
     if request.method == 'GET':
         try:
             business_info = store.get_business_info (business_id)
-        except DataNotFoundError as e:
+        except DataNotFoundError as err:
             # if need be, we can log e.expression here
-            return jsonify ({"msg": e.msg}), 404
+            return jsonify ({"msg": err.msg}), 404
         return jsonify ({"business_info": business_info}), 200
 
     elif request.method == 'PUT':
@@ -158,8 +158,8 @@ def reviews (business_id):
     if request.method == 'GET':
         try:
             reviews_info = store.get_reviews_info (business_id)
-        except DataNotFoundError as e:
-            return jsonify ({"msg": e.msg}), 404
+        except DataNotFoundError as rev_err:
+            return jsonify ({"msg": rev_err.msg}), 404
 
         return jsonify ({"reviews_info": reviews_info}), 200
 
