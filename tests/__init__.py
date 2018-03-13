@@ -72,6 +72,13 @@ class TestHelper ():
         url = self.base_url + '/api/v1/businesses/{id:}/reviews'.format(id = raw_id)
         return self.app.get (url)
 
+    def reset_password (self, reset_data, token):
+        if token:
+            url = self.base_url + '/api/v1/auth/reset-password?t={}'.format(token)
+        else:
+            url = self.base_url + '/api/v1/auth/reset-password'
+        return self.app.post (url, data = json.dumps(reset_data), headers = self.headers)
+
 
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):

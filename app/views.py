@@ -1,9 +1,10 @@
 from app import app, store
 from .models import User, Business, Review
+from .helpers import generate_token
 from flask import jsonify, request, session
 from .exceptions import (DuplicationError, DataNotFoundError,
                             PermissionDeniedError, InvalidUserInputError)
-import json, os, random
+import json
 
 
 ''''''
@@ -179,20 +180,27 @@ def reviews (business_id):
     response = add_a_review (business_id, author_id, review_data)
     return response
 
-def generate_token ():
-    chars = ""
-    for i in range(26):
-        chars += chr (65+i)
-        chars += chr (97+i)
-
-    token = ""
-    for i in range(96):
-        rand_index = random.randint(0, 51)
-        token += chars[rand_index]
-    return token
-
 
 @app.route ('/api/v1/auth/reset-password', methods = ['POST'])
 def reset_password ():
-    token = generate_token ()
-    return jsonify ({"t": token}), 501
+    username = (json.loads(request.data.decode('utf-8'))).get('username')
+    new_password = (json.loads(request.data.decode('utf-8'))).get('new_password')
+    token_in_request = request.args.get('t')
+    # user initiates request with their username
+    if username:
+        target_user = store.users.get (username)
+        if target_user:
+            token = generate_token ()
+            store.add_token (token, username)
+            return jsonify ({"t": token}), 200
+        return jsonify ({"msg": "Username is unknown"}), 404
+
+    if token_in_request:
+        token_bearer_name = store.tokens.get (token_in_request)
+        if token_bearer_name:
+            target_user = store.users.get (token_bearer_name)
+            target_user.password = new_password # more appropriate to redirect to url for change password
+            return jsonify ({"msg": "Password updated successfully"})
+        return jsonify ({"msg": "Invalid token"}), 401
+
+    return jsonify ({"msg": "No username"}), 401

@@ -41,6 +41,7 @@ class Storage ():
             users: a dict of users (key:value) equivalent (username: user_obj)
             businesses: a dict o businesses (key:value) equivalent (businessname: business_obj)
             reviews: a dict o reviews (key:value) equivalent (reviewid: review_obj)
+            tokens: a dict of tokens (key:value) equivalent (token_string: bearer_name)
         methods:
             add: adds any class of object
                 params: obj
@@ -55,6 +56,7 @@ class Storage ():
     users = {}
     businesses = {}
     reviews = {}
+    tokens = {}
 
     def __init__ (self):
         self.clerk = StoreHelper ()
@@ -103,6 +105,8 @@ class Storage ():
         new_business = self.__class__.businesses[businessname]
         return 'SUCCESS: business {} created!'.format(new_business.name)
 
+    def add_token (self, token, bearer_name):
+        self.__class__.tokens [token] = bearer_name
 
     def get_business_count (self):
         businesses = self.__class__.businesses
