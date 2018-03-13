@@ -25,7 +25,7 @@ class TestAPICase (BaseAPITestSetUp):
     # @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed (self):
         res = self.testHelper.register_user (user_data)
-        # register user with similar data as used in setUp
+        # register user with similar data as used above
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Username already exists')
