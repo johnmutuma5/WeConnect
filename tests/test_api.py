@@ -211,8 +211,7 @@ class TestAPICase (BaseAPITestSetUp):
         # use username to send password reset request
         username = user_data['username']
         reset_data = {"username": username}
-        token = None
-        resp = self.testHelper.reset_password (reset_data, token)
+        resp = self.testHelper.reset_password (reset_data)
         token = (json.loads(resp.data.decode ('utf-8')))['t']
         # supply a new password
         reset_data = {'new_password': "changed"}

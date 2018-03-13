@@ -135,6 +135,7 @@ def logout ():
     session.pop('user_id')
     return jsonify({"msg": "Logged out successfully!"}), 200
 
+
 @app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
 def businesses ():
     if request.method == 'POST':

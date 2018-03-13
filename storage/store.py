@@ -6,12 +6,9 @@ class StoreHelper ():
     @staticmethod
     def extract_business_data (business):
         business_data = {}
-
-        business_data["name"] = business.name
-        business_data["owner_id"] = business.owner_id
-        business_data["location"] = business.location
-        business_data["mobile"] = business.mobile
-        business_data["id"] = business.id
+        fields = ["name", "owner_id", "location", "mobile", "id"]
+        for field in fields:
+            business_data[field] = getattr (business, field)
 
         return business_data
 
@@ -21,14 +18,11 @@ class StoreHelper ():
             setattr(target_business, key, update_data[key])
 
     @staticmethod
-    def extract_review_info (target_id, review):
+    def extract_review_info (review):
         review_info = {}
-
-        review_info["heading"] = review.heading
-        review_info["body"] = review.body
-        review_info["author_id"] = review.author_id
-        review_info["business_id"] = review.business_id
-        review_info["id"] = review.id
+        fields = ["heading", "body", "author_id", "business_id", "id"]
+        for field in fields:
+            review_info[field] = getattr (review, field)
 
         return review_info
 
@@ -144,7 +138,7 @@ class Storage ():
             target_id = target_business.id
             for review in self.__class__.reviews.values():
                 if review.business_id == target_id:
-                    review_info = self.clerk.extract_review_info (target_id, review)
+                    review_info = self.clerk.extract_review_info (review)
                     reviews_info.append (review_info)
 
             return reviews_info

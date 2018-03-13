@@ -27,4 +27,4 @@ HOW TO:
     * run python run.py
 
   Test:
-    * run pytest tests.py
+    * run py.test -vv
