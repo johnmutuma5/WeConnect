@@ -161,6 +161,12 @@ class Storage ():
         raise DataNotFoundError (expression, msg)
 
     def update_business (self, business_id, update_data, issuer_id):
+        new_name = update_data.get ('name')
+        if new_name:
+            if self.__class__.businesses.get (new_name):
+                raise DuplicationError ("Storage::update_business",
+                                        'Duplicate business name not allowed')
+
         businesses = [business for business in self.__class__.businesses.values ()]
         target_business = self.find_by_id (business_id, businesses)
 
