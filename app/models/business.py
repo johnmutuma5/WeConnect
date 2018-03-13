@@ -45,7 +45,8 @@ class Business ():
         if match:
             self._mobile = num
         else:
-            raise InvalidUserInputError ("Business::mobile.setter", "Invalid mobile number")
+            raise InvalidUserInputError ("Business::mobile.setter",
+                                            "Invalid mobile number")
 
     @property
     def id (self):

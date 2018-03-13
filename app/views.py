@@ -16,7 +16,9 @@ def login_required (func):
         logged_user = session.get('user_id')
         if logged_user:
             return func (*args, **kwargs)
-        return jsonify ({"msg": "You need to log in to perform this operation"}), 401
+        return jsonify ({
+                            "msg": "You need to log in to perform this operation"
+                        }), 401
 
     wrapper.__name__ = func.__name__
     wrapper.__doc__ = func.__doc__
@@ -105,7 +107,6 @@ def register ():
     try:
         msg = store.add (user)
     except DuplicationError as e:
-        # user.handback_unused_id ()
         return jsonify({'msg': e.msg}), 401
 
     return jsonify ({"msg": msg}), 200
@@ -148,7 +149,8 @@ def businesses ():
 
 
 
-@app.route ('/api/v1/businesses/<int:business_id>', methods = ['GET', 'PUT', 'DELETE'])
+@app.route ('/api/v1/businesses/<int:business_id>',
+            methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
     business_id = Business.gen_id_string (business_id)
     issuer_id = session.get ('user_id')
@@ -167,7 +169,8 @@ def business (business_id):
 
 
 
-@app.route ('/api/v1/businesses/<int:business_id>/reviews', methods = ['GET', 'POST'])
+@app.route ('/api/v1/businesses/<int:business_id>/reviews',
+            methods = ['GET', 'POST'])
 def reviews (business_id):
     business_id = Business.gen_id_string (business_id)
     if request.method == 'GET':
@@ -192,7 +195,8 @@ def reset_password ():
         if target_user:
             token = generate_token ()
             store.add_token (token, username)
-            return jsonify ({"t": token}), 200
+            # to email link with token url parameter to user's email address
+            return jsonify ({"t": token}), 200 # for testing
         return jsonify ({"msg": "Username is unknown"}), 404
 
     if token_in_request:
