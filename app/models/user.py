@@ -10,19 +10,21 @@ class User ():
     @classmethod
     def create_user (cls, data):
         cls.user_count = store.get_user_count ()
-        return cls(data)
+        new_user = cls (data)
+        # assign to property fields
+        new_user.id = cls.user_count + 1
+        new_user.username = data['username']
+        new_user.mobile = data['mobile']
+        return new_user
 
     def __init__ (self, data):
         # self.first_name = data['first_name']
         # self.last_name = data['last_name']
         # self.gender = data['gender']
-        # self._mobile = None
-        # self.mobile = data['mobile']
         # self.email = data['email']
+        self._mobile = None
         self._id = None
-        self.id = self.__class__.user_count + 1
         self._username = None
-        self.username = data['username']
         self.password = data['password']
 
     @property
@@ -31,9 +33,13 @@ class User ():
 
     @mobile.setter
     def mobile (self, num):
-        # should raise ValueError for non-int characters
-        num = int(num)
-        self._mobile = num
+        # should raise InvalidUserInputError with invalid chars in mobille numbers
+        pattern = r"^[0-9]{12}$"
+        match = re.match (pattern, num)
+        if match:
+            self._mobile = num
+        else:
+            raise InvalidUserInputError ("User::mobile.setter", "Invalid mobile number")
 
     # user id property
     @property

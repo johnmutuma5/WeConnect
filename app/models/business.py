@@ -17,7 +17,10 @@ class Business ():
     @classmethod
     def create_business (cls, data, owner_id):
         cls.business_count = store.get_business_count ()
-        return cls (data, owner_id)
+        new_business = cls (data, owner_id)
+        new_business.mobile = data['mobile']
+        new_business.id = cls.business_count + 1
+        return new_business
 
     @staticmethod
     def gen_id_string (num):
@@ -26,8 +29,6 @@ class Business ():
     def __init__ (self, data, owner_id):
         self._id = None
         self._mobile = None
-        self.mobile = data['mobile']
-        self.id = self.__class__.business_count + 1 # a property set to a formated string
         self.name = data['name']
         self.owner_id = owner_id
         self.location = data ['location']
@@ -38,13 +39,13 @@ class Business ():
 
     @mobile.setter
     def mobile (self, num):
-        # should raise ValueError with invalid chars in mobille numbers
+        # should raise InvalidUserInputError with invalid chars in mobille numbers
         pattern = r"^[0-9]{12}$"
         match = re.match (pattern, num)
         if match:
             self._mobile = num
         else:
-            raise InvalidUserInputError ("Business::mobile.setter", "Invalid characters in mobile")
+            raise InvalidUserInputError ("Business::mobile.setter", "Invalid mobile number")
 
     @property
     def id (self):
@@ -54,12 +55,5 @@ class Business ():
     def id (self, id):
         '''generates an 8-character commnet id e.g. BUS00001
         '''
-        # self.__class__.business_count += 1
         self._id = 'BUS{:0>5}'.format(id)
         return
-
-
-
-    def handback_unused_id (self):
-        # self.__class__.business_count -= 1
-        pass

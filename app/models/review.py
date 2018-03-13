@@ -2,15 +2,19 @@ from app import store
 
 class Review ():
     '''
+    To create a review, use Review.create_review method to ensure propery fields are set 
     Review
-    Params: None
+    Params: business_id, author_id, data
     '''
 
     review_count = store.get_review_count ()
 
     @classmethod
     def create_review (cls, business_id, author_id, data):
-        return cls (business_id, author_id, data)
+        new_review = cls (business_id, author_id, data)
+        # assign to property fields
+        new_review.id = cls.review_count + 1
+        return new_review
 
     @staticmethod
     def gen_id_string (num):
@@ -22,7 +26,6 @@ class Review ():
         self.author_id = author_id
         self.business_id = business_id
         self._id = None
-        self.id = self.__class__.review_count + 1 # a property set to a formated string
 
     @property
     def id (self):

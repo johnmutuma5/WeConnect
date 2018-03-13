@@ -29,7 +29,6 @@ def register_a_business (business_data, owner):
     try:
         msg = store.add (business)
     except DuplicationError as e:
-        business.handback_unused_id () # class Business auto generates ids
         return jsonify ({"msg": e.msg}), 401
 
     return jsonify({"msg": msg}), 201
