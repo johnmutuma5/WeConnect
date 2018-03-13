@@ -46,7 +46,7 @@ def find_status_code (err):
 def update_business_info (business_id, update_data, issuer_id):
     try:
         msg = store.update_business (business_id, update_data, issuer_id)
-    except (DataNotFoundError, PermissionDeniedError) as put_err:
+    except (DataNotFoundError, PermissionDeniedError, DuplicationError) as put_err:
         status_code = find_status_code (put_err)
         return jsonify({"msg": put_err.msg}), status_code
     return jsonify({"msg": msg}), 201
