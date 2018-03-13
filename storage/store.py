@@ -163,6 +163,7 @@ class Storage ():
     def update_business (self, business_id, update_data, issuer_id):
         new_name = update_data.get ('name')
         if new_name:
+            print (new_name)
             if self.__class__.businesses.get (new_name):
                 raise DuplicationError ("Storage::update_business",
                                         'Duplicate business name not allowed')
@@ -173,12 +174,17 @@ class Storage ():
         if target_business:
             issuer_is_owner = target_business.owner_id == issuer_id
             if issuer_is_owner:
+                old_key = target_business.name
                 self.clerk.update_business (target_business, update_data)
+                if new_name:
+                    self.__class__.businesses[new_name] = target_business
+                    del self.__class__.businesses[old_key]
                 return "Changes recorded successfully"
+            # if instruction issuer is not owner
             msg = "UNSUCCESSFUL: The business is registered to another user"
             expression = "Storage::get_business_info ({}, {})".format (business_id, issuer_id)
             raise PermissionDeniedError (expression, msg)
-
+        # if a business with the business_id is not found
         msg = "UNSUCCESSFUL: Could not find the requested information"
         expression = "Storage::get_business_info ({})".format (business_id)
         raise DataNotFoundError (expression, msg)
