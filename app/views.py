@@ -3,7 +3,7 @@ from .models import User, Business, Review
 from flask import jsonify, request, session
 from .exceptions import (DuplicationError, DataNotFoundError,
                             PermissionDeniedError, InvalidUserInputError)
-import json
+import json, os, random
 
 
 ''''''
@@ -179,7 +179,20 @@ def reviews (business_id):
     response = add_a_review (business_id, author_id, review_data)
     return response
 
+def generate_token ():
+    chars = ""
+    for i in range(26):
+        chars += chr (65+i)
+        chars += chr (97+i)
+
+    token = ""
+    for i in range(96):
+        rand_index = random.randint(0, 51)
+        token += chars[rand_index]
+    return token
+
 
 @app.route ('/api/v1/auth/reset-password', methods = ['POST'])
 def reset_password ():
-    return jsonify ({"msg": "Under construction"}), 501
+    token = generate_token ()
+    return jsonify ({"t": token}), 501

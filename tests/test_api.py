@@ -206,6 +206,9 @@ class TestAPICase (BaseAPITestSetUp):
         for data in review_data:
             self.assertIn (data['heading'], resp_review_headings)
 
+    def test_users_can_reset_password (self):
+        ...
+
 
 
 
