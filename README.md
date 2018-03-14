@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/johnmutuma5/WeConnect.svg?branch=master)](https://travis-ci.org/johnmutuma5/WeConnect)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
+[![Coverage Status](https://coveralls.io/repos/github/johnmutuma5/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/johnmutuma5/WeConnect?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 
