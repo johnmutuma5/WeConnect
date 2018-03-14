@@ -50,6 +50,11 @@ class Storage ():
     users = {}
     businesses = {}
     reviews = {}
+    counts = {
+        'users': 0,
+        'businesses': 0,
+        'reviews': 0
+    }
     tokens = {}
 
     def __init__ (self):
@@ -72,6 +77,8 @@ class Storage ():
     def add_review (self, review_obj):
         review_id = review_obj.id
         self.__class__.reviews[review_id] = review_obj
+        # increment count of reviews ever stored
+        self.__class__.counts['reviews'] += 1
         new_review = self.__class__.reviews[review_id]
         return 'SUCCESS: review heading:[{}] created!'.format(new_review.heading)
 
@@ -84,6 +91,8 @@ class Storage ():
                                                         'Username already exists')
 
         self.__class__.users[username] = user_obj
+        # increment the cont of users ever stored
+        self.__class__.counts['users'] += 1
         new_user = self.__class__.users[username]
         return 'SUCCESS: user {} created!'.format(new_user.username)
 
@@ -96,23 +105,25 @@ class Storage ():
                                                                     'Duplicate business name not allowed')
 
         self.__class__.businesses[businessname] = business_obj
+        # increment the count of businesses ever stored
+        self.__class__.counts['businesses'] += 1
         new_business = self.__class__.businesses[businessname]
         return 'SUCCESS: business {} created!'.format(new_business.name)
 
     def add_token (self, token, bearer_name):
         self.__class__.tokens [token] = bearer_name
 
-    def get_business_count (self):
-        businesses = self.__class__.businesses
-        return len(businesses)
+    def get_business_index (self):
+        index = self.__class__.counts['businesses']
+        return index
 
-    def get_user_count (self):
-        users = self.__class__.users
-        return len(users)
+    def get_user_index (self):
+        index = self.__class__.counts['users']
+        return index
 
-    def get_review_count (self):
-        reviews = self.__class__.reviews
-        return len(reviews)
+    def get_review_index (self):
+        index = self.__class__.counts['reviews']
+        return index
 
 
     def get_businesses_info (self):
@@ -161,7 +172,6 @@ class Storage ():
     def update_business (self, business_id, update_data, issuer_id):
         new_name = update_data.get ('name')
         if new_name:
-            print (new_name)
             if self.__class__.businesses.get (new_name):
                 raise DuplicationError ("Storage::update_business",
                                         'Duplicate business name not allowed')
@@ -210,4 +220,8 @@ class Storage ():
     def clear (self):
         self.__class__.users.clear ()
         self.__class__.businesses.clear ()
+        self.__class__.reviews.clear ()
+        self.__class__.counts['users'] = 0
+        self.__class__.counts['businesses'] = 0
+        self.__class__.counts['reviews'] = 0
         return 'cleared'

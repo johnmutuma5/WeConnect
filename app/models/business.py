@@ -11,15 +11,16 @@ class Business ():
                     generates a valid business id given an integer
                     params: int::num
     '''
-    business_count = 0
+    business_index = 0
 
 
     @classmethod
     def create_business (cls, data, owner_id):
-        cls.business_count = store.get_business_count ()
+        cls.business_index = store.get_business_index ()
+        # assign to property fields
         new_business = cls (data, owner_id)
         new_business.mobile = data['mobile']
-        new_business.id = cls.business_count + 1
+        new_business.id = cls.business_index + 1
         return new_business
 
     @staticmethod

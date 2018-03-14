@@ -5,14 +5,14 @@ import re
 class User ():
     '''
     '''
-    user_count = 0
+    user_index = 0
 
     @classmethod
     def create_user (cls, data):
-        cls.user_count = store.get_user_count ()
+        cls.user_index = store.get_user_index ()
         new_user = cls (data)
         # assign to property fields
-        new_user.id = cls.user_count + 1
+        new_user.id = cls.user_index + 1
         new_user.username = data['username']
         new_user.mobile = data['mobile']
         return new_user

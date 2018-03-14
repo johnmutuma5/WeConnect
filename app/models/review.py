@@ -2,18 +2,19 @@ from app import store
 
 class Review ():
     '''
-    To create a review, use Review.create_review method to ensure propery fields are set 
+    To create a review, use Review.create_review method to ensure propery fields are set
     Review
     Params: business_id, author_id, data
     '''
 
-    review_count = store.get_review_count ()
+    review_index = 0
 
     @classmethod
     def create_review (cls, business_id, author_id, data):
+        cls.review_index = store.get_review_index ()
         new_review = cls (business_id, author_id, data)
         # assign to property fields
-        new_review.id = cls.review_count + 1
+        new_review.id = cls.review_index + 1
         return new_review
 
     @staticmethod
@@ -35,6 +36,5 @@ class Review ():
     def id (self, id):
         '''generates an 8-character commnet id e.g. REV00001
         '''
-        self.__class__.review_count += 1
         self._id = 'REV{:0>5}'.format(id)
         return
