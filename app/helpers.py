@@ -13,5 +13,4 @@ def generate_token ():
     for i in range(96):
         rand_index = random.randint(0, 51)
         token += chars[rand_index]
-    print (token)
     return token
