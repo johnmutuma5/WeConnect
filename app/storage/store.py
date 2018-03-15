@@ -1,4 +1,4 @@
-from app.exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
+from ..exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
 class StoreHelper ():
     def __init__ (self):
         ...
