@@ -1,4 +1,4 @@
-from app.v1 import app, store
+from app.v1 import v1, store
 from .models import User, Business, Review
 from .helpers import generate_token
 from flask import jsonify, request, session
@@ -95,7 +95,7 @@ def get_info_response (business_id, info_type):
 # BEGINNING OF ENDOPOINTS
 ''''''
 
-@app.route('/api/v1/auth/register', methods = ['POST'])
+@v1.route('/auth/register', methods = ['POST'])
 def register ():
     data = json.loads(request.data.decode('utf-8'))
 
@@ -112,7 +112,7 @@ def register ():
     return jsonify ({"msg": msg}), 200
 
 
-@app.route ('/api/v1/auth/login', methods = ['POST'])
+@v1.route ('/auth/login', methods = ['POST'])
 def login ():
     login_data = json.loads(request.data.decode('utf-8'))
     username = login_data['username']
@@ -129,14 +129,14 @@ def login ():
     return jsonify({'msg': msg}), 200
 
 
-@app.route ('/api/v1/auth/logout', methods = ['POST'])
+@v1.route ('/auth/logout', methods = ['POST'])
 @login_required
 def logout ():
     session.pop('user_id')
     return jsonify({"msg": "Logged out successfully!"}), 200
 
 
-@app.route ('/api/v1/businesses', methods = ['GET', 'POST'])
+@v1.route ('/businesses', methods = ['GET', 'POST'])
 def businesses ():
     if request.method == 'POST':
         business_data = json.loads (request.data.decode('utf-8'))
@@ -149,7 +149,7 @@ def businesses ():
 
 
 
-@app.route ('/api/v1/businesses/<int:business_id>',
+@v1.route ('/businesses/<int:business_id>',
             methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
     business_id = Business.gen_id_string (business_id)
@@ -169,7 +169,7 @@ def business (business_id):
 
 
 
-@app.route ('/api/v1/businesses/<int:business_id>/reviews',
+@v1.route ('/businesses/<int:business_id>/reviews',
             methods = ['GET', 'POST'])
 def reviews (business_id):
     business_id = Business.gen_id_string (business_id)
@@ -184,7 +184,7 @@ def reviews (business_id):
     return response
 
 
-@app.route ('/api/v1/auth/reset-password', methods = ['POST'])
+@v1.route ('/auth/reset-password', methods = ['POST'])
 def reset_password ():
     username = (json.loads(request.data.decode('utf-8'))).get('username')
     new_password = (json.loads(request.data.decode('utf-8'))).get('new_password')

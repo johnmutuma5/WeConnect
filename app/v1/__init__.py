@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Blueprint
 from .storage import Storage
 
-app = Flask (__name__)
-app.config.from_object ('config.Config')
+v1 = Blueprint ('v1', __name__)
 store = Storage ()
 
-from app.v1 import views
+# from . import views
+from app import common_views
