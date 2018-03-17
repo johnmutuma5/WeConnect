@@ -1,4 +1,4 @@
-from app import store
+from app.v1 import store
 
 class Review ():
     '''

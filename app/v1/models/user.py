@@ -1,4 +1,4 @@
-from app import store
+from app.v1 import store
 from ..exceptions import InvalidUserInputError
 import re
 

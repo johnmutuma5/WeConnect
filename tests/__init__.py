@@ -1,7 +1,7 @@
 import unittest
 import json
 from .dummies import user_data, login_data
-from app import app, store
+from app.v1 import app, store
 
 
 # requests = requests.Session() #persist cookies across requests

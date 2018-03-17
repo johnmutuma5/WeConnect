@@ -1,4 +1,4 @@
-from app import app, store
+from app.v1 import app, store
 from .models import User, Business, Review
 from .helpers import generate_token
 from flask import jsonify, request, session

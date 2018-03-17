@@ -1,7 +1,7 @@
 import unittest, pytest, json
-from app.models import Business, User, Review
-from app.exceptions import InvalidUserInputError
-from app import store
+from app.v1.models import Business, User, Review
+from app.v1.exceptions import InvalidUserInputError
+from app.v1 import store
 from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
                         invalid_credentials, login_data, login_data2,
