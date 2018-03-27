@@ -1,5 +1,6 @@
 from app.v1 import v1, store
-from .models import User, Business, Review
+from app.v2 import v2
+from .v1.models import User, Business, Review
 from .helpers import generate_token
 from flask import jsonify, request, session
 from .exceptions import (DuplicationError, DataNotFoundError,
@@ -136,6 +137,7 @@ def logout ():
     return jsonify({"msg": "Logged out successfully!"}), 200
 
 
+@v2.route ('/businesses', methods = ['GET', 'POST'])
 @v1.route ('/businesses', methods = ['GET', 'POST'])
 def businesses ():
     if request.method == 'POST':
