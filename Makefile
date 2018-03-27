@@ -6,3 +6,9 @@ install:
 
 freeze:
 	pip freeze | grep -v "pkg-resources" > requirements.txt
+
+tables:
+	python tables.py create
+
+drop_tables:
+	python tables.py drop
