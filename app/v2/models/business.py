@@ -18,14 +18,15 @@ class Business (Base):
     )
 
     # tale auto_increment sequence
-    business_id_seq = Sequence ('business_id_seq', start=1000)
+    business_id_seq = Sequence ('business_id_seq', start=1000,
+                                    metadata=Base.metadata)
     # table columns
     _id = Column ('id', Integer, server_default=business_id_seq.next_value(),
                     primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
-    name = Column ('name', String(60), nullable=False)
+    name = Column ('name', String(63), nullable=False)
     owner_id = Column ('owner_id', Integer, nullable=False)
-    location = Column ('location', String(100), nullable=False)
+    location = Column ('location', String(127), nullable=False)
     # relationships
     owner = relationship ('User', back_populates='businesses')
     reviews = relationship ('Review', back_populates='business')

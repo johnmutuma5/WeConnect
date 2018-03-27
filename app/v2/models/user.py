@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 class User (Base):
     __tablename__ = 'users'
     # User id auto_increment sequence
-    user_id_seq = Sequence('user_id_seq', start=1000)
+    user_id_seq = Sequence('user_id_seq', start=1000, metadata=Base.metadata)
     #table columns
     _id = Column ('id', Integer, server_default=user_id_seq.next_value(),
                 primary_key=True)
@@ -17,7 +17,8 @@ class User (Base):
     password = Column (String(255), nullable=False)
     first_name = Column (String(63), nullable=False)
     last_name = Column (String(63), nullable=False)
-    gender = Column (Enum('Male', 'Female'), nullable=False)
+    gender = Column (Enum('Male', 'Female', name='gender_type'),
+                        nullable=False)
     _email = Column ('email', String(127), nullable=False)
     # relationships
     businesses = relationship ('Business', back_populates='owner')

@@ -1,16 +1,16 @@
 from . import Base
-from sqlalchemy import Column, Sequence, ForeignKey, Integer
+from sqlalchemy import Column, Sequence, ForeignKey, Integer, Text, String
 from sqlalchemy.orm import relationship
 
 class Review (Base):
     __tablename__ = 'review'
     # Table auto_increment sequence
-    rev_id_seq = Sequence('rev_id_seq', start=1)
+    rev_id_seq = Sequence('rev_id_seq', start=1, metadata=Base.metadata)
     # Table columns
     _id = Column ('id', Integer, server_default=rev_id_seq.next_value(),
                     primary_key=True)
-    heading = Column ()
-    body = Column ()
+    heading = Column (String(63), nullable=False)
+    body = Column (Text, nullable=False)
     author_id = Column (Integer,
                         ForeignKey('users.id',
                                     ondelete='CASCADE',

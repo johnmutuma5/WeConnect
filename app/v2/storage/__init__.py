@@ -1,1 +1,1 @@
-from .store import Storage
+from .store import DbInterface
