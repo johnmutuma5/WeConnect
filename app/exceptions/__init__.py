@@ -1,37 +1,32 @@
-class DuplicationError (Exception):
+
+class CustomException (Exception):
+    def __init__ (self, expression, msg):
+        self.expression = expression
+        self.msg = msg
+
+
+class DuplicationError (CustomException):
     '''
-        class: DuplicationError
         raised: when storing duplicate data
     '''
-    def __init__ (self, expression, msg):
-        self.expression = expression
-        self.msg = msg
+    ...
 
 
-class DataNotFoundError (Exception):
+class DataNotFoundError (CustomException):
     '''
-        class: DuplicationError
-        raised: when storing duplicate data
+        raised: when retrieving unavailable data
     '''
-    def __init__ (self, expression, msg):
-        self.expression = expression
-        self.msg = msg
+    ...
 
-class PermissionDeniedError (Exception):
+class PermissionDeniedError (CustomException):
     '''
-        class: DuplicationError
         raised: when trying to read/write unauthorised data
     '''
-    def __init__ (self, expression, msg):
-        self.expression = expression
-        self.msg = msg
+    ...
 
 
-class InvalidUserInputError (Exception):
+class InvalidUserInputError (CustomException):
     '''
-        class: DuplicationError
-        raised: when trying to read/write unauthorised data
+        raised: when trying to write invalid data
     '''
-    def __init__ (self, expression, msg):
-        self.expression = expression
-        self.msg = msg
+    ...

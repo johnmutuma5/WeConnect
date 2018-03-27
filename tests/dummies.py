@@ -1,6 +1,6 @@
 
 user_data = {
-    "'first_name'": "John",
+    "first_name": "John",
     "last_name": "Doe",
     "gender": "Male",
     "mobile": "254720000000",

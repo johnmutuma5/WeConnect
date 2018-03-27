@@ -1,12 +1,41 @@
 from ...exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import sessionmaker
 
 class DbInterface ():
 
     def __init__ (self, dbEngine):
         # self.clerk = StoreHelper ()
         self.engine = dbEngine
+        self.Session = sessionmaker (bind=self.engine)
+        self.session = self.Session ()
 
 
+    def add (self, obj):
+        obj_class = obj.__class__.__name__
+
+        # get appropriate method to call: a switch-like dict operation
+        _add = {
+            "User": self.add_user,
+            # "Business": self.add_business,
+            # "Review": self.add_review
+        }[obj_class]
+
+        # call method with argument and return it's output
+        return _add (obj)
+
+
+    def add_user (self, user_obj):
+        username = user_obj.username 
+        try:
+            self.session.add(user_obj)
+            self.session.commit ()
+        except IntegrityError:
+            self.session.rollback ()
+            raise DuplicationError ('Storage::add_user',
+                                    'Username already exists')
+
+        return 'SUCCESS: user {} created!'.format(username)
 
 # class StoreHelper ():
 #     def __init__ (self):

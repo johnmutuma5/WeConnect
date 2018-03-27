@@ -20,14 +20,14 @@ class TestAPICase (BaseAPITestSetUp):
         user_in_response_msg = match.group ('username')
         # assert same as username in data sent
         self.assertEqual (user_in_response_msg, user_data['username'])
-#
-#     # @pytest.mark.run(order = 2)
-#     def test_duplicate_username_disallowed (self):
-#         res = self.testHelper.register_user (user_data)
-#         # register user with similar data as used above
-#         res = self.testHelper.register_user (user_data)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#         self.assertEqual (msg, 'Username already exists')
+
+    # @pytest.mark.run(order = 2)
+    def test_duplicate_username_disallowed (self):
+        res = self.testHelper.register_user (user_data)
+        # register user with similar data as used above
+        res = self.testHelper.register_user (user_data)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual (msg, 'Username already exists')
 #     #
 #     # @pytest.mark.run(order = 3)
 #     def test_user_can_login (self):

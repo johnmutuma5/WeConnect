@@ -13,7 +13,7 @@ class User (Base):
     _id = Column ('id', Integer, server_default=user_id_seq.next_value(),
                 primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
-    _username = Column ('username', String(64), nullable=False)
+    _username = Column ('username', String(64), nullable=False, unique=True)
     password = Column (String(255), nullable=False)
     first_name = Column (String(63), nullable=False)
     last_name = Column (String(63), nullable=False)
