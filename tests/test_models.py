@@ -56,7 +56,7 @@ class TestUserCase (unittest.TestCase):
         self.new_user = User.create_user (self.data)
 
     def test_create_user (self):
-        supplied_name = self.data.first_name
+        supplied_name = self.data['first_name']
         data_correct = self.new_user.first_name == supplied_name
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters

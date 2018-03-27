@@ -15,7 +15,7 @@ class Business (Base):
             ondelete='CASCADE', onupdate='CASCADE'),
         {}
     )
-    
+
     # tale auto_increment sequence
     business_id_seq = Sequence ('business_id_seq', start=1000)
     # table columns
@@ -38,10 +38,11 @@ class Business (Base):
         return new_business
 
     def __init__ (self, data=None, owner_id=None):
-        self.mobile = data['mobile']
-        self.name = data['name']
+        if data:
+            self.mobile = data['mobile']
+            self.name = data['name']
+            self.location = data ['location']
         self.owner_id = owner_id
-        self.location = data ['location']
 
 
     @hybrid_property
