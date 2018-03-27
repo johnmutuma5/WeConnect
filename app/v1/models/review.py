@@ -1,4 +1,4 @@
-from ..storage import store
+from .. import store
 
 class Review ():
     '''
