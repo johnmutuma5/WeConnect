@@ -35,7 +35,10 @@ class TestBusinessCase (unittest.TestCase):
         business = self.new_business
         name = self.data['name']
         owner_id = self.test_id
-        data_correct = business.name == name and business.owner_id == owner_id
+        supplied_mobile = self.data['mobile']
+        data_correct = business.name == name and \
+                        business.owner_id == owner_id and \
+                        business.mobile == supplied_mobile
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises (InvalidUserInputError):
@@ -59,9 +62,12 @@ class TestUserCase (unittest.TestCase):
         supplied_name = self.data['first_name']
         supplied_username = self.data['username']
         supplied_mobile  = self.data['mobile']
+        supplied_email = self.data['email']
+        # check data sent in correctly contained
         data_correct = self.new_user.first_name == supplied_name and \
                         self.new_user.username == supplied_username and \
-                        self.new_user.mobile == supplied_mobile
+                        self.new_user.mobile == supplied_mobile and \
+                        self.new_user.email == supplied_email
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises (InvalidUserInputError):

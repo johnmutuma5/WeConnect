@@ -2,7 +2,7 @@ from .. import store
 from ...exceptions import InvalidUserInputError
 import re
 from . import Base
-from sqlalchemy import Column, Integer, String, Sequence, ForeignKeyConstraint
+from sqlalchemy import Column, Integer, String, Enum, Sequence, ForeignKeyConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
@@ -11,9 +11,13 @@ class User (Base):
 
     #table columns
     id = Column ('id', Integer, primary_key=True)
-    _mobile = Column ()
-    _username = Column ()
-    password = Column ()
+    _mobile = Column ('mobile', String(12), nullable=False)
+    _username = Column ('username', String(64), nullable=False)
+    password = Column (String(255), nullable=False)
+    first_name = Column (String(63), nullable=False)
+    last_name = Column (String(63), nullable=False)
+    gender = Column (Enum('Male', 'Female'), nullable=False)
+    _email = Column ('email', String(127), nullable=False)
     # relationships
     businesses = relationship ('Business', back_populates='owner')
 
@@ -62,3 +66,12 @@ class User (Base):
         self._username = None
         # assert 0, 'Invalid username'
         raise InvalidUserInputError ("User::namesetter", "Invalid username!")
+
+    @hybrid_property
+    def email (self):
+        return self._email
+
+    @email.setter
+    def email (self, email):
+        # to do some format checks
+        self._email = email
