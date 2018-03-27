@@ -9,18 +9,17 @@ from .dummies import (user_data, user_data2, business_data,
 import re
 
 #
-# class TestAPICase (BaseAPITestSetUp):
-#     # @pytest.mark.run(order = 1)
-#     def test_a_user_can_register (self):
-#         res = self.testHelper.register_user (user_data)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
-#         self.assertRegexpMatches (msg, pattern)
-#         # extract username from regular expression
-#         match = re.search (pattern, msg)
-#         user_in_response_msg = match.group ('username')
-#         # assert same as username in data sent
-#         self.assertEqual (user_in_response_msg, user_data['username'])
+class TestAPICase (BaseAPITestSetUp):
+    def test_a_user_can_register (self):
+        res = self.testHelper.register_user (user_data)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
+        self.assertRegexpMatches (msg, pattern)
+        # extract username from regular expression
+        match = re.search (pattern, msg)
+        user_in_response_msg = match.group ('username')
+        # assert same as username in data sent
+        self.assertEqual (user_in_response_msg, user_data['username'])
 #
 #     # @pytest.mark.run(order = 2)
 #     def test_duplicate_username_disallowed (self):
