@@ -43,8 +43,25 @@ class TestBusinessCase (unittest.TestCase):
 
 
 class TestUserCase (unittest.TestCase):
+    def setUp (self):
+        self.data = {
+            'first_name': 'Lazuli',
+            'last_name': 'Murimi',
+            'gender': 'Female',
+            'email': 'lazuli@gmail.com',
+            'mobile': '254728000000',
+            'username': 'laz_doe',
+            'password': 'pass'
+        }
+        self.new_user = User.create_user (self.data)
+
     def test_create_user (self):
-        ...
+        supplied_name = self.data.first_name
+        data_correct = self.new_user.first_name == supplied_name
+        self.assertTrue (data_correct)
+        #edge case: raises AssertionError for mobile with non int characters
+        with self.assertRaises (InvalidUserInputError):
+            self.new_user.mobile = '254725k000000'
 
 
 if __name__ == "__main__":
