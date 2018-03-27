@@ -1,7 +1,7 @@
 from flask import Blueprint
 from .storage import Storage
 
-v1 = Blueprint ('v1', __name__)
+v2 = Blueprint ('v2', __name__)
 store = Storage ()
 
 # from . import views
