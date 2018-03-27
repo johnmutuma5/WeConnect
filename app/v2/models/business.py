@@ -15,7 +15,7 @@ class Business (Base):
             ondelete='CASCADE', onupdate='CASCADE'),
         {}
     )
-
+    
     # tale auto_increment sequence
     business_id_seq = Sequence ('business_id_seq', start=1000)
     # table columns
