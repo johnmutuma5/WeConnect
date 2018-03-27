@@ -10,6 +10,7 @@ from sqlalchemy.orm import relationship
 class Business (Base):
     __tablename__ = 'business'
     __table_args__ = (
+        # we can use a FK at column level, constraint good for composite FKs
         ForeignKeyConstraint(['id'], ['users.id'],
             name='FK_business_user_id',
             ondelete='CASCADE', onupdate='CASCADE'),
@@ -19,7 +20,7 @@ class Business (Base):
     # tale auto_increment sequence
     business_id_seq = Sequence ('business_id_seq', start=1000)
     # table columns
-    id = Column ('id', Integer, server_default=business_id_seq.next_value(),
+    _id = Column ('id', Integer, server_default=business_id_seq.next_value(),
                     primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
     name = Column ('name', String(60), nullable=False)

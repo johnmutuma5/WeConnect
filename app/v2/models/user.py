@@ -7,9 +7,11 @@ from sqlalchemy.orm import relationship
 
 class User (Base):
     __tablename__ = 'users'
-
+    # User id auto_increment sequence
+    user_id_seq = Sequence('user_id_seq', start=1000)
     #table columns
-    id = Column ('id', Integer, primary_key=True)
+    _id = Column ('id', Integer, server_default=user_id_seq.next_value(),
+                primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
     _username = Column ('username', String(64), nullable=False)
     password = Column (String(255), nullable=False)
@@ -23,7 +25,6 @@ class User (Base):
 
     @classmethod
     def create_user (cls, data):
-        cls.user_index = store.get_user_index ()
         new_user = cls (data)
         return new_user
 
