@@ -10,7 +10,7 @@ class TestReviewCase (unittest.TestCase):
         }
         self.test_author_id = 'TST00001'
         self.test_bss_id = 'BUS00001'
-        self.new_review = Review (self.test_bss_id, self.test_author_id, self.data)
+        self.new_review = Review.create_review (self.test_bss_id, self.test_author_id, self.data)
 
     def test_create_review (self):
         review = self.new_review
