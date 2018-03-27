@@ -1,4 +1,3 @@
-from .. import store
 from ...exceptions import InvalidUserInputError
 import re
 from . import Base
@@ -20,6 +19,7 @@ class User (Base):
     _email = Column ('email', String(127), nullable=False)
     # relationships
     businesses = relationship ('Business', back_populates='owner')
+    reviews = relationship ('Review', back_populates='author')
 
     @classmethod
     def create_user (cls, data):

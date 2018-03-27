@@ -10,6 +10,9 @@ class Review (Base):
     body = Column ()
     author_id = Column ()
     business_id = Column ()
+    # relationships
+    author = relationship ('User', back_populates='reviews')
+    business = relationship ('Business', back_populates='reviews')
 
 
 # class Review ():

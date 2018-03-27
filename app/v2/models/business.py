@@ -27,6 +27,7 @@ class Business (Base):
     location = Column ('location', String(100), nullable=False)
     # relationships
     owner = relationship ('User', back_populates='businesses')
+    reviews = relationship ('Review', back_populates='business')
 
     @classmethod
     def create_business (cls, data, owner_id):
