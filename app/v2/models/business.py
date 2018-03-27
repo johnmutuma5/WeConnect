@@ -4,31 +4,29 @@ import re
 from . import Base
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKeyConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import relationship
 
 
 class Business (Base):
     __tablename__ = 'business'
     __table_args__ = (
-        ForeignKeyConstraint(
-            ['id'],
-            ['users.id'],
+        ForeignKeyConstraint(['id'], ['users.id'],
             name='FK_business_user_id',
-            ondelete='CASCADE',
-            onupdate='CASCADE'
-        ),
+            ondelete='CASCADE', onupdate='CASCADE'),
+        {}
     )
 
+    # tale auto_increment sequence
     business_id_seq = Sequence ('business_id_seq', start=1000)
-    id = Column (
-        'id',
-        Integer,
-        server_default=business_id_seq.next_value(),
-        primary_key=True
-    )
+    # table columns
+    id = Column ('id', Integer, server_default=business_id_seq.next_value(),
+                    primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
     name = Column ('name', String(60), nullable=False)
     owner_id = Column ('owner_id', Integer, nullable=False)
     location = Column ('location', String(100), nullable=False)
+    # relationships
+    owner = relationship ('User', back_populates='businesses')
 
     @classmethod
     def create_business (cls, data, owner_id):
