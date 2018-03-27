@@ -57,11 +57,21 @@ class TestUserCase (unittest.TestCase):
 
     def test_create_user (self):
         supplied_name = self.data['first_name']
-        data_correct = self.new_user.first_name == supplied_name
+        supplied_username = self.data['username']
+        supplied_mobile  = self.data['mobile']
+        data_correct = self.new_user.first_name == supplied_name and \
+                        self.new_user.username == supplied_username and \
+                        self.new_user.mobile == supplied_mobile
         self.assertTrue (data_correct)
         #edge case: raises AssertionError for mobile with non int characters
         with self.assertRaises (InvalidUserInputError):
             self.new_user.mobile = '254725k000000'
+
+    def test_validates_username (self):
+        invalid_names = ['000', 'j', '90jdj', 'axc', '    ']
+        for name in invalid_names:
+            with self.assertRaises (InvalidUserInputError):
+                self.new_user.username = name
 
 
 if __name__ == "__main__":
