@@ -1,40 +1,52 @@
 from .. import store
 from ...exceptions import InvalidUserInputError
 import re
+from . import Base
+from sqlalchemy import Column, Integer, String, Sequence, ForeignKeyConstraint
+from sqlalchemy.ext.hybrid import hybrid_property
 
-class Business ():
-    '''
-    Business template:
-        methods:
-            static:
-                gen_id_string:
-                    generates a valid business id given an integer
-                    params: int::num
-    '''
-    business_index = 0
 
+class Business (Base):
+    __tablename__ = 'business'
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['id'],
+            ['users.id'],
+            name='FK_business_user_id',
+            ondelete='CASCADE',
+            onupdate='CASCADE'
+        ),
+    )
+
+    business_id_seq = Sequence ('business_id_seq', start=1000)
+    id = Column (
+        'id',
+        Integer,
+        server_default=business_id_seq.next_value(),
+        primary_key=True
+    )
+    _mobile = Column ('mobile', String(12), nullable=False)
+    name = Column ('name', String(60), nullable=False)
+    owner_id = Column ('owner_id', Integer, nullable=False)
+    location = Column ('location', String(100), nullable=False)
 
     @classmethod
     def create_business (cls, data, owner_id):
-        cls.business_index = store.get_business_index ()
-        # assign to property fields
+        '''
+            An alternative way of instantiating a business object
+            directly with the class
+        '''
         new_business = cls (data, owner_id)
-        new_business.mobile = data['mobile']
-        new_business.id = cls.business_index + 1
         return new_business
 
-    @staticmethod
-    def gen_id_string (num):
-        return 'BUS{:0>5}'.format(num)
-
-    def __init__ (self, data, owner_id):
-        self._id = None
-        self._mobile = None
+    def __init__ (self, data=None, owner_id=None):
+        self.mobile = data['mobile']
         self.name = data['name']
         self.owner_id = owner_id
         self.location = data ['location']
 
-    @property
+
+    @hybrid_property
     def mobile (self):
         return self._mobile
 
@@ -48,14 +60,3 @@ class Business ():
         else:
             raise InvalidUserInputError ("Business::mobile.setter",
                                             "Invalid mobile number")
-
-    @property
-    def id (self):
-        return self._id
-
-    @id.setter
-    def id (self, id):
-        '''generates an 8-character commnet id e.g. BUS00001
-        '''
-        self._id = 'BUS{:0>5}'.format(id)
-        return
