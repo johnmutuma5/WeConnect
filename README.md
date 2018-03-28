@@ -23,8 +23,19 @@ HOW TO:
         - run 'source ./venv/bin/activate'
         - run 'make install' to install dependencies
 
+  Database tables:
+    * Create
+      - run 'python tables.py create'  or
+      - run 'make tables'
+    * Drop
+      - run 'python tables.py drop'  or
+      - run 'make drop_all'
+
   Run:
-    * run python run.py
+    * run 'python run.py'   or
+    * run 'make run'
 
   Test:
-    * run py.test -vv
+    * run 'py.test -vv' or
+    * run 'nosetests --exe -v --with-coverage --cover-package=app'  or
+    * run 'make test' 

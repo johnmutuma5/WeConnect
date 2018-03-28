@@ -12,3 +12,9 @@ tables:
 
 drop_tables:
 	python tables.py drop
+
+run:
+	python run.py
+
+test:
+	nosetests --exe -v --with-coverage --cover-package=app
