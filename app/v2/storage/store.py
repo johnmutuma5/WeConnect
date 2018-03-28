@@ -44,7 +44,7 @@ class DbInterface ():
     def get_user (self, username):
         session = self.Session ()
         target_user = session.query(User)\
-                                .filter(User.username == 'john_doe')\
+                                .filter(User.username == username)\
                                 .one()
         session.close ()
         return target_user
