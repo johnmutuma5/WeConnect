@@ -28,19 +28,19 @@ class TestAPICase (BaseAPITestSetUp):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Username already exists')
-#     #
-#     # @pytest.mark.run(order = 3)
-#     def test_user_can_login (self):
-#         res = self.testHelper.register_user (user_data)
-#         res = self.testHelper.login_user (login_data)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#
-#         pattern = r"Logged in (?P<username>.+)"
-#         self.assertRegexpMatches (msg, pattern)
-#         # extract username from regular expression
-#         match = re.search(pattern, msg)
-#         logged_user = match.group ('username')
-#         self.assertEqual (login_data['username'], logged_user)
+        
+    # @pytest.mark.run(order = 3)
+    def test_user_can_login (self):
+        res = self.testHelper.register_user (user_data)
+        res = self.testHelper.login_user (login_data)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+
+        pattern = r"Logged in (?P<username>.+)"
+        self.assertRegexpMatches (msg, pattern)
+        # extract username from regular expression
+        match = re.search(pattern, msg)
+        logged_user = match.group ('username')
+        self.assertEqual (login_data['username'], logged_user)
 #     #
 #     # @pytest.mark.run(order = 4)
 #     def test_validates_credentials (self):
