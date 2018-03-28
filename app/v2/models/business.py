@@ -11,7 +11,7 @@ class Business (Base):
     __tablename__ = 'business'
     __table_args__ = (
         # we can use a FK at column level, constraint good for composite FKs
-        ForeignKeyConstraint(['id'], ['users.id'],
+        ForeignKeyConstraint(['owner_id'], ['users.id'],
             name='FK_business_user_id',
             ondelete='CASCADE', onupdate='CASCADE'),
         {}

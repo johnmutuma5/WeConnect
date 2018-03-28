@@ -1,7 +1,7 @@
 from ...exceptions import InvalidUserInputError
 import re
 from . import Base
-from sqlalchemy import Column, Integer, String, Enum, Sequence, ForeignKeyConstraint
+from sqlalchemy import Column, Integer, String, Enum, Sequence
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
