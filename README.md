@@ -12,31 +12,30 @@ More guidelines as the project proceeds.
 
 HOW TO:
 
-  Set up environmnet:
-    Inside project folder:
+    Set up environmnet:
+      Inside project folder:
+        * Auto for (Unix):
+          - run 'source ./Configure'
 
-      * Auto for (Unix):
-        - run 'source ./Configure'
+        * Manual:
+          - run 'make venv' to install virtualenv
+          - run 'source ./venv/bin/activate'
+          - run 'make install' to install dependencies
 
-      * Manual:
-        - run 'make venv' to install virtualenv
-        - run 'source ./venv/bin/activate'
-        - run 'make install' to install dependencies
+        Database tables:
 
-    Database tables:
+          * Create
+            - run 'python tables.py create'  or
+            - run 'make tables'
+          * Drop
+            - run 'python tables.py drop'  or
+            - run 'make drop_all'
 
-      * Create
-        - run 'python tables.py create'  or
-        - run 'make tables'
-      * Drop
-        - run 'python tables.py drop'  or
-        - run 'make drop_all'
+        Run:
+          * run 'python run.py'   or
+          * run 'make run'
 
-    Run:
-      * run 'python run.py'   or
-      * run 'make run'
-
-    Test:
-      * run 'py.test -vv' or
-      * run 'nosetests --exe -v --with-coverage --cover-package=app'  or
-      * run 'make test' 
+        Test:
+          * run 'py.test -vv' or
+          * run 'nosetests --exe -v --with-coverage --cover-package=app'  or
+          * run 'make test'
