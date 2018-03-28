@@ -85,6 +85,7 @@ class TestHelper ():
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp (self):
         self.testHelper = TestHelper ()
+        Base.metadata.drop_all (dbEngine)
         Base.metadata.create_all (dbEngine)
 
     def tearDown (self):

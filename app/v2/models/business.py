@@ -1,4 +1,3 @@
-from .. import store
 from ...exceptions import InvalidUserInputError
 import re
 from . import Base

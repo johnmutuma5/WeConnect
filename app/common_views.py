@@ -118,7 +118,7 @@ def login ():
     login_data = json.loads(request.data.decode('utf-8'))
     username = login_data['username']
 
-    target_user = store.users.get(username)
+    target_user = store.get_user (username)
     if target_user:
         no_password_match = not target_user.password == login_data['password']
 

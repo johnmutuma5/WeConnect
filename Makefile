@@ -10,7 +10,7 @@ freeze:
 tables:
 	python tables.py create
 
-drop_tables:
+drop_all:
 	python tables.py drop
 
 run:

@@ -28,7 +28,7 @@ class TestAPICase (BaseAPITestSetUp):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Username already exists')
-        
+    #
     # @pytest.mark.run(order = 3)
     def test_user_can_login (self):
         res = self.testHelper.register_user (user_data)
