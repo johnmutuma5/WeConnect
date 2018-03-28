@@ -13,8 +13,7 @@ before_script:
   - psql -c 'create database weconnect;' -U postgres
 
 script:
-  - nosetests --exe -v
-  - nosetests --exe --with-coverage --cover-package=app
+  - nosetests --exe -v --with-coverage --cover-package=app
 
 after_success:
   - coveralls
