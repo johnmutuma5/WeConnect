@@ -7,7 +7,7 @@ class Review (Base):
     # Table auto_increment sequence
     rev_id_seq = Sequence('rev_id_seq', start=1, metadata=Base.metadata)
     # Table columns
-    _id = Column ('id', Integer, server_default=rev_id_seq.next_value(),
+    id = Column ('id', Integer, server_default=rev_id_seq.next_value(),
                     primary_key=True)
     heading = Column (String(63), nullable=False)
     body = Column (Text, nullable=False)
