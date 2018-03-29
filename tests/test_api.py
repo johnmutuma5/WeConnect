@@ -186,17 +186,17 @@ class TestAPICase (BaseAPITestSetUp):
         # try to update one of the three businesses created by the just logged out user
         resp = self.testHelper.update_business (1000, update_data)
         self.assertEqual (resp.status_code, 401)
-    #
-#     # @pytest.mark.run(order = 13)
-#     def test_users_can_delete_business (self):
-#         self.testHelper.register_user (user_data)
-#         # login the first user
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         # delete business
-#         resp = self.testHelper.delete_business (1)
-#         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
-#         self.assertEqual (msg, "SUCCESS: business deleted")
+
+    # @pytest.mark.run(order = 13)
+    def test_users_can_delete_business (self):
+        self.testHelper.register_user (user_data)
+        # login the first user
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        # delete business
+        resp = self.testHelper.delete_business (1)
+        msg = (json.loads(resp.data.decode("utf-8")))["msg"]
+        self.assertEqual (msg, "SUCCESS: business deleted")
 #     #
 #     # @pytest.mark.run(order = 14)
 #     def test_users_can_make_a_review (self):
