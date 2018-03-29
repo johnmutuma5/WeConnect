@@ -181,6 +181,12 @@ class DbInterface ():
         raise DataNotFoundError (expression, msg)
 
 
+    def add_review (self, review_obj):
+        session = self.Session ()
+        session.add (review_obj)
+        session.commit ()
+        return 'SUCCESS: review posted!'
+
 # class Storage ():
 #     '''
 #     Simulates a database:
