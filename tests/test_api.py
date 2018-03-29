@@ -41,7 +41,7 @@ class TestAPICase (BaseAPITestSetUp):
         match = re.search(pattern, msg)
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
-#     #
+# #     #
 #     # @pytest.mark.run(order = 4)
 #     def test_validates_credentials (self):
 #         res = self.testHelper.login_user (invalid_credentials)
