@@ -57,7 +57,7 @@ class DbInterface ():
             session.add (business_obj)
             session.commit ()
         except IntegrityError:
-            sessoin.rollback ()
+            session.rollback ()
             raise DuplicationError ('Storage::add_business',
                                     'Business name already exists')
         finally:

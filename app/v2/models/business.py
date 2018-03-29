@@ -23,7 +23,7 @@ class Business (Base):
     _id = Column ('id', Integer, server_default=business_id_seq.next_value(),
                     primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
-    name = Column ('name', String(63), nullable=False)
+    name = Column ('name', String(63), nullable=False, unique=True)
     owner_id = Column ('owner_id', Integer, nullable=False)
     location = Column ('location', String(127), nullable=False)
     # relationships
