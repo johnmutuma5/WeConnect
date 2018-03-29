@@ -130,13 +130,15 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual (res_business_id, 1000)
 
     # @pytest.mark.run(order = 10)
-    def test_users_retrieve_only_avail_business (self):
+    def test_users_retrieve_only_avail_business_info_and_reviews (self):
         raw_id = 1000000
-        res = self.testHelper.get_business (raw_id)
-        res_msg= (json.loads(res.data.decode("utf-8")))["msg"]
-        # test message to match regex
-        pattern = r"^UNSUCCESSFUL:.+$"
-        self.assertRegexpMatches (res_msg, pattern)
+        responses = [self.testHelper.get_business (raw_id),
+                     self.testHelper.get_all_reviews(raw_id)]
+        for resp in responses:
+            res_msg= (json.loads(resp.data.decode("utf-8")))["msg"]
+            # test message to match regex
+            pattern = r"^UNSUCCESSFUL:.+$"
+            self.assertRegexpMatches (res_msg, pattern)
 
     # @pytest.mark.run(order = 11)
     def test_users_can_update_business_info (self):
