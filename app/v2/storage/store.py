@@ -169,11 +169,13 @@ class DbInterface ():
                 session.delete(target_business)
                 session.commit()
                 return "SUCCESS: business deleted"
-
+            # if issuer is not owner
+            session.close()
             msg = "UNSUCCESSFUL: The business is registered to another user"
             expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
             raise PermissionDeniedError (expression, msg)
-
+        # if business with id = business_id is not found
+        session.close ()
         msg = "UNSUCCESSFUL: Could not find the requested information"
         expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
         raise DataNotFoundError (expression, msg)
