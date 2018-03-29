@@ -218,25 +218,27 @@ class TestAPICase (BaseAPITestSetUp):
         for resp in responses:
             self.assertEqual (resp.status_code, 401)
 
-#     # @pytest.mark.run(order = 14)
-#     def test_users_can_make_a_review (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.register_user (user_data2)
-#         # login the first user
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         self.testHelper.logout_user ()
-#         # login second user
-#         self.testHelper.login_user (login_data2)
-#         # second user make a review
-#         resp = self.testHelper.make_review (1, review_data[0])
-#         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
-#         #extract posted review heading from message
-#         pattern = r"\w+:\[(?P<heading>.+)\] "
-#         match = re.search (pattern, msg)
-#         posted_review_heading = match.group ("heading")
-#         self.assertEqual (posted_review_heading, review_data[0]['heading'])
-#         self.testHelper.logout_user ()
+    # @pytest.mark.run(order = 14)
+    def test_users_can_make_a_review (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.register_user (user_data2)
+        # login the first user
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        self.testHelper.logout_user ()
+        # login second user
+        self.testHelper.login_user (login_data2)
+        # second user make a review
+        resp = self.testHelper.make_review (1000, review_data[0])
+        # check count of review with sent heading in db
+        posted_heading = review_data[0]['heading']
+        db_count = self.db_object_count (Review, 'heading', posted_heading)
+        self.assertEqual(db_count, 1)
+        # test response message
+        msg = (json.loads(resp.data.decode("utf-8")))["msg"]
+        pattern = r"^SUCCESS:.+$"
+        self.assertRegexpMatches (msg, pattern)
+        self.testHelper.logout_user ()
 #     #
 #     # @pytest.mark.run(order = 15)
 #     def test_user_can_get_reviews (self):
