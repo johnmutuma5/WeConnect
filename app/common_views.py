@@ -69,7 +69,7 @@ def delete_business (business_id, issuer_id):
 def add_a_review (business_id, author_id, review_data):
     new_review = Review.create_review (business_id, author_id, review_data)
     # store the review
-    msg = store.add_review (new_review)
+    msg = store.add (new_review)
     return jsonify ({'msg': msg}), 200
 
 
@@ -80,7 +80,7 @@ def get_info_response (business_id, info_type):
     '''
     _call = {
         "business_data": store.get_business_info,
-        # "business_reviews": store.get_reviews_info
+        "business_reviews": store.get_reviews_info
     }[info_type]
 
     try:
