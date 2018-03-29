@@ -71,7 +71,7 @@ class TestHelper ():
         return self.app.post (url, data = json.dumps(review_data), headers = self.headers)
     #
     def get_all_reviews (self, raw_id):
-        url = self.base_url + '/api/v2/businesses/{id:}/reviews'.format(id = 1)
+        url = self.base_url + '/api/v2/businesses/{id:}/reviews'.format(id = raw_id)
         return self.app.get (url)
 
     def reset_password (self, reset_data, token=None):
