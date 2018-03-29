@@ -173,21 +173,20 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches (res_msg, pattern)
 
-#     #
-#     # @pytest.mark.run(order = 12)
-#     def test_users_can_only_update_their_business (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         # logout the current user
-#         self.testHelper.logout_user ()
-#         # create a second user`
-#         self.testHelper.register_user (user_data2)
-#         self.testHelper.login_user (login_data2)
-#         # try to update one of the three businesses created by the just logged out user
-#         resp = self.testHelper.update_business (1, update_data)
-#         self.assertEqual (resp.status_code, 401)
-#     #
+    # @pytest.mark.run(order = 12)
+    def test_users_can_only_update_their_business (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        # logout the current user
+        self.testHelper.logout_user ()
+        # create a second user`
+        self.testHelper.register_user (user_data2)
+        self.testHelper.login_user (login_data2)
+        # try to update one of the three businesses created by the just logged out user
+        resp = self.testHelper.update_business (1000, update_data)
+        self.assertEqual (resp.status_code, 401)
+    #
 #     # @pytest.mark.run(order = 13)
 #     def test_users_can_delete_business (self):
 #         self.testHelper.register_user (user_data)
