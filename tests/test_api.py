@@ -53,17 +53,17 @@ class TestAPICase (BaseAPITestSetUp):
             msg = (json.loads(res.data.decode("utf-8")))['msg']
             self.assertEqual (msg, 'Invalid username or password')
 
-#     # @pytest.mark.run(order = 5)
-#     def test_user_can_logout (self):
-#         # register user
-#         self.testHelper.register_user (user_data)
-#         # login user
-#         self.testHelper.login_user (login_data)
-#         # logout user
-#         res = self.testHelper.logout_user ()
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#         self.assertEqual (msg, "Logged out successfully!")
-#     # #
+    # @pytest.mark.run(order = 5)
+    def test_user_can_logout (self):
+        # register user
+        self.testHelper.register_user (user_data)
+        # login user
+        self.testHelper.login_user (login_data)
+        # logout user
+        res = self.testHelper.logout_user ()
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual (msg, "Logged out successfully!")
+        
 #     # @pytest.mark.run(order = 6)
 #     def test_user_can_register_business (self):
 #         self.testHelper.register_user (user_data)
