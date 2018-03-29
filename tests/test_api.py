@@ -11,20 +11,21 @@ import re
 
 class TestAPICase (BaseAPITestSetUp):
 
-    def confirm_object_persisted (self, Obj_model, col_name, value):
+    def db_object_count (self, Obj_model, col_name, value):
         session = store.Session ()
         stored_obj = session.query(getattr(Obj_model, col_name))\
                             .filter(getattr(Obj_model, col_name) == value)\
                             .all()
-        self.assertEqual (len(stored_obj), 1)
         session.close ()
+        return len(stored_obj)
 
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         # test actual user from database
         data = user_data['username']
-        self.confirm_object_persisted(User, 'username', data)
+        db_count = self.db_object_count (User, 'username', data)
+        self.assertTrue (db_count == 1)
         # response check
         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
@@ -84,7 +85,8 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         # test actual user from database
         data = business_data['name']
-        self.confirm_object_persisted(Business, 'name', data)
+        db_count = self.db_object_count (Business, 'name', data)
+        self.assertTrue (db_count == 1)
         # response check
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
@@ -194,10 +196,14 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.login_user (login_data)
         self.testHelper.register_business (business_data)
         # delete business
-        resp = self.testHelper.delete_business (1)
+        resp = self.testHelper.delete_business (1000)
+        # count businesses with id = 1000
+        db_count = self.db_object_count (Business, 'id', 1000)
+        self.assertTrue(db_count == 0)
+        #
         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
         self.assertEqual (msg, "SUCCESS: business deleted")
-#     #
+
 #     # @pytest.mark.run(order = 14)
 #     def test_users_can_make_a_review (self):
 #         self.testHelper.register_user (user_data)
