@@ -149,17 +149,18 @@ class TestAPICase (BaseAPITestSetUp):
 
         for key, value in update_data.items():
             self.assertEqual (update_data[key], res_business_info[key])
-#
-#     def test_users_cannot_update_with_existing_business_names (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         # register another businesses
-#         self.testHelper.register_business (businesses_data[1])
-#         name_update_data = {"name": "Google"}
-#         resp = self.testHelper.update_business(1, name_update_data)
-#         msg = (json.loads(resp.data.decode('utf-8')))['msg']
-#         self.assertEqual (msg, "Duplicate business name not allowed")
+
+    def test_users_cannot_update_with_existing_business_names (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        # register another businesses: business_data[1] has name Google
+        self.testHelper.register_business (businesses_data[1])
+        # try to update first business with name Google
+        name_update_data = {"name": "Google"}
+        resp = self.testHelper.update_business(1000, name_update_data)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual (msg, "Duplicate business name not allowed")
 #     #
 #     # @pytest.mark.run(order = 12)
 #     def test_users_can_only_update_their_business (self):
