@@ -17,7 +17,7 @@ class DbInterface ():
         # get appropriate method to call: a switch-like dict operation
         _add = {
             "User": self.add_user,
-            # "Business": self.add_business,
+            "Business": self.add_business,
             # "Review": self.add_review
         }[obj_class]
 
@@ -35,8 +35,8 @@ class DbInterface ():
             session.rollback ()
             raise DuplicationError ('Storage::add_user',
                                     'Username already exists')
-        # finally:
-        #     session.close ()
+        finally:
+            session.close ()
 
         return 'SUCCESS: user {} created!'.format(username)
 
@@ -48,6 +48,21 @@ class DbInterface ():
                                 .first()
         session.close ()
         return target_user
+
+
+    def add_business (self, business_obj):
+        businessname = business_obj.name
+        session = self.Session ()
+        try:
+            session.add (business_obj)
+            session.commit ()
+        except IntegrityError:
+            sessoin.rollback ()
+            raise DuplicationError ('Storage::add_business',
+                                    'Duplicate business name not allowed')
+        finally:
+            session.close ()
+        return 'SUCCESS: business {} created!'.format(businessname)
 
 # class StoreHelper ():
 #     def __init__ (self):
