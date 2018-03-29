@@ -13,10 +13,10 @@ class TestAPICase (BaseAPITestSetUp):
 
     def confirm_object_persisted (self, Obj_model, col_name, value):
         session = store.Session ()
-        stored_user = session.query(getattr(Obj_model, col_name))\
+        stored_obj = session.query(getattr(Obj_model, col_name))\
                             .filter(getattr(Obj_model, col_name) == value)\
                             .all()
-        self.assertEqual (len(stored_user), 1)
+        self.assertEqual (len(stored_obj), 1)
         session.close ()
 
     def test_a_user_can_register (self):
