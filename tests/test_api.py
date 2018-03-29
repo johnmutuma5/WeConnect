@@ -44,10 +44,15 @@ class TestAPICase (BaseAPITestSetUp):
 
     # @pytest.mark.run(order = 4)
     def test_validates_credentials (self):
-        res = self.testHelper.login_user (invalid_credentials)
-        msg = (json.loads(res.data.decode("utf-8")))['msg']
-        self.assertEqual (msg, 'Invalid username or password')
-    
+        # test invalid username and test invalid password
+        invalid_logins = [
+                            invalid_credentials,
+                            {'username': 'john_doe', 'password': 'nopass'}]
+        for invalid_login in invalid_logins:
+            res = self.testHelper.login_user (invalid_login)
+            msg = (json.loads(res.data.decode("utf-8")))['msg']
+            self.assertEqual (msg, 'Invalid username or password')
+
 #     # @pytest.mark.run(order = 5)
 #     def test_user_can_logout (self):
 #         # register user
