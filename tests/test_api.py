@@ -239,24 +239,24 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^SUCCESS:.+$"
         self.assertRegexpMatches (msg, pattern)
         self.testHelper.logout_user ()
-#     #
-#     # @pytest.mark.run(order = 15)
-#     def test_user_can_get_reviews (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.register_user (user_data2)
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         self.testHelper.make_review (1, review_data[0])
-#         self.testHelper.logout_user ()
-#         #login another user
-#         self.testHelper.login_user (login_data2)
-#         self.testHelper.make_review (1, review_data[1])
-#         resp = self.testHelper.get_all_reviews (1)
-#         reviews_info = (json.loads(resp.data.decode("utf-8")))['info']
-#         resp_review_headings = [review_info['heading'] for review_info in reviews_info]
-#         # check that all review heading have been returned
-#         for data in review_data:
-#             self.assertIn (data['heading'], resp_review_headings)
+
+    # @pytest.mark.run(order = 15)
+    def test_user_can_get_reviews (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.register_user (user_data2)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        self.testHelper.make_review (1000, review_data[0])
+        self.testHelper.logout_user ()
+        #login another user
+        self.testHelper.login_user (login_data2)
+        self.testHelper.make_review (1000, review_data[1])
+        resp = self.testHelper.get_all_reviews (1000)
+        reviews_info = (json.loads(resp.data.decode("utf-8")))['info']
+        resp_review_headings = [review_info['heading'] for review_info in reviews_info]
+        # check that all review heading have been returned
+        for data in review_data:
+            self.assertIn (data['heading'], resp_review_headings)
 #
 #     def test_users_can_reset_password (self):
 #         self.testHelper.register_user (user_data)
