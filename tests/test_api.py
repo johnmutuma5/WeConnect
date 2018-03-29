@@ -73,16 +73,16 @@ class TestAPICase (BaseAPITestSetUp):
 
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
-        
-#     # @pytest.mark.run(order = 7)
-#     def test_duplicate_businessname_disallowed (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         res = self.testHelper.register_business (business_data)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#         self.assertEqual (msg, 'Duplicate business name not allowed')
-#     # #
+
+    # @pytest.mark.run(order = 7)
+    def test_duplicate_businessname_disallowed (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        res = self.testHelper.register_business (business_data)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual (msg, 'Business name already exists')
+
 #     # @pytest.mark.run(order = 8)
 #     def test_users_retrieve_all_businesses (self):
 #         self.testHelper.register_user (user_data)

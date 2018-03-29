@@ -59,7 +59,7 @@ class DbInterface ():
         except IntegrityError:
             sessoin.rollback ()
             raise DuplicationError ('Storage::add_business',
-                                    'Duplicate business name not allowed')
+                                    'Business name already exists')
         finally:
             session.close ()
         return 'SUCCESS: business {} created!'.format(businessname)
