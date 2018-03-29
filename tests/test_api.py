@@ -135,20 +135,20 @@ class TestAPICase (BaseAPITestSetUp):
         # test message to match regex
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches (res_msg, pattern)
-#     #
-#     # @pytest.mark.run(order = 11)
-#     def test_users_update_a_business (self):
-#         raw_id = 1
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         self.testHelper.register_business (business_data)
-#         self.testHelper.update_business (raw_id, update_data)
-#         # get the business's info in it's new state
-#         res = self.testHelper.get_business (raw_id)
-#         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
-#
-#         for key, value in update_data.items():
-#             self.assertEqual (update_data[key], res_business_info[key])
+
+    # @pytest.mark.run(order = 11)
+    def test_users_can_update_business_info (self):
+        raw_id = 1000
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        self.testHelper.register_business (business_data)
+        self.testHelper.update_business (raw_id, update_data)
+        # get the business's info in it's new state
+        res = self.testHelper.get_business (raw_id)
+        res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
+
+        for key, value in update_data.items():
+            self.assertEqual (update_data[key], res_business_info[key])
 #
 #     def test_users_cannot_update_with_existing_business_names (self):
 #         self.testHelper.register_user (user_data)
