@@ -112,22 +112,21 @@ class TestAPICase (BaseAPITestSetUp):
         # assert that every piece of information we have sent has been returned
         for data in businesses_data:
             self.assertIn (data['name'], res_business_names)
-#     #
-#     # @pytest.mark.run(order = 9)
-#     def test_users_retrieve_one_business (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         # register a number of businesses
-#         self.testHelper.register_business (business_data)
-#         raw_id = 1
-#         res = self.testHelper.get_business (raw_id)
-#         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
-#         print(res_business_info)
-#         res_business_id = res_business_info['id']
-#         # assert that the response business id equals the url variable
-#         sent_id = Business.gen_id_string (raw_id)
-#         self.assertEqual (res_business_id, sent_id)
-#     #
+
+    @pytest.mark.run(order = 9)
+    def test_users_retrieve_one_business (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        # register a number of businesses
+        self.testHelper.register_business (business_data)
+        raw_id = 1000
+        res = self.testHelper.get_business (raw_id)
+        res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
+        print(res_business_info)
+        res_business_id = res_business_info['id']
+        # assert that the response business id equals the url variable
+        self.assertEqual (res_business_id, 1000)
+
 #     # @pytest.mark.run(order = 10)
 #     def test_users_retrieve_only_avail_business (self):
 #         raw_id = 1000000

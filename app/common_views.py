@@ -80,7 +80,7 @@ def get_info_response (business_id, info_type):
     '''
     _call = {
         "business_data": store.get_business_info,
-        "business_reviews": store.get_reviews_info
+        # "business_reviews": store.get_reviews_info
     }[info_type]
 
     try:
@@ -152,7 +152,7 @@ def businesses ():
 @v2.route ('/businesses/<int:business_id>',
             methods = ['GET', 'PUT', 'DELETE'])
 def business (business_id):
-    business_id = Business.gen_id_string (business_id)
+    # business_id = Business.gen_id_string (business_id)
     issuer_id = session.get ('user_id')
     if request.method == 'GET':
         response = get_info_response (business_id, info_type = 'business_data')

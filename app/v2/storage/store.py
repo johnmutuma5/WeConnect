@@ -40,9 +40,9 @@ class StoreHelper ():
 class DbInterface ():
 
     def __init__ (self, dbEngine):
-        self.clerk = StoreHelper ()
         self.engine = dbEngine
         self.Session = sessionmaker (bind=dbEngine)
+        self.clerk = StoreHelper ()
 
 
     def add (self, obj):
@@ -108,6 +108,22 @@ class DbInterface ():
             business_data = self.clerk.extract_business_data (business)
             businesses_info.append (business_data)
         return businesses_info
+
+
+    def get_business_info (self, business_id):
+        session = self.Session ()
+        target_business = session.query(Business)\
+                                .filter(Business.id == business_id)\
+                                .first()
+        session.close()
+        if target_business:
+            # session.expunge (target_business)
+            business_info = self.clerk.extract_business_data (target_business)
+            return business_info
+
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_business_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
 
 
 
