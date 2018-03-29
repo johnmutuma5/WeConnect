@@ -8,7 +8,7 @@ from .dummies import (user_data, user_data2, business_data,
                         businesses_data, update_data, review_data)
 import re
 
-#
+
 class TestAPICase (BaseAPITestSetUp):
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
@@ -28,7 +28,7 @@ class TestAPICase (BaseAPITestSetUp):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Username already exists')
-    #
+
     # @pytest.mark.run(order = 3)
     def test_user_can_login (self):
         res = self.testHelper.register_user (user_data)
@@ -41,13 +41,13 @@ class TestAPICase (BaseAPITestSetUp):
         match = re.search(pattern, msg)
         logged_user = match.group ('username')
         self.assertEqual (login_data['username'], logged_user)
-# #     #
-#     # @pytest.mark.run(order = 4)
-#     def test_validates_credentials (self):
-#         res = self.testHelper.login_user (invalid_credentials)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#         self.assertEqual (msg, 'Invalid username or password')
-#     #
+
+    # @pytest.mark.run(order = 4)
+    def test_validates_credentials (self):
+        res = self.testHelper.login_user (invalid_credentials)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual (msg, 'Invalid username or password')
+    
 #     # @pytest.mark.run(order = 5)
 #     def test_user_can_logout (self):
 #         # register user
