@@ -10,15 +10,27 @@ import re
 
 
 class TestAPICase (BaseAPITestSetUp):
+
+    def confirm_object_persisted (self, Obj_model, col_name, value):
+        session = store.Session ()
+        stored_user = session.query(getattr(Obj_model, col_name))\
+                            .filter(getattr(Obj_model, col_name) == value)\
+                            .all()
+        self.assertEqual (len(stored_user), 1)
+        session.close ()
+
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
+        # test actual user from database
+        data = user_data['username']
+        self.confirm_object_persisted(User, 'username', data)
+        # response check
         pattern = r"^SUCCESS[: a-z]+ (?P<username>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
-        # extract username from regular expression
+        # response check: confirm correct username
         match = re.search (pattern, msg)
         user_in_response_msg = match.group ('username')
-        # assert same as username in data sent
         self.assertEqual (user_in_response_msg, user_data['username'])
 
     # @pytest.mark.run(order = 2)
@@ -70,7 +82,10 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.login_user (login_data)
         res = self.testHelper.register_business (business_data)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
-
+        # test actual user from database
+        data = business_data['name']
+        self.confirm_object_persisted(Business, 'name', data)
+        # response check
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches (msg, pattern)
 
