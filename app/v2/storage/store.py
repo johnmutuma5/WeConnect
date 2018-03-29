@@ -24,7 +24,7 @@ class StoreHelper ():
 
     @staticmethod
     def update_business (target_business, update_data):
-        for key, value in update_data.items ():
+        for key in update_data.keys ():
             setattr(target_business, key, update_data[key])
 
     @staticmethod
@@ -125,6 +125,33 @@ class DbInterface ():
         expression = "Storage::get_business_info ({})".format (business_id)
         raise DataNotFoundError (expression, msg)
 
+
+    def update_business (self, business_id, update_data, issuer_id):
+        # new_name = update_data.get ('name')
+        # if new_name:
+        #     if self.__class__.businesses.get (new_name):
+        #         raise DuplicationError ("Storage::update_business",
+        #                                 'Duplicate business name not allowed')
+
+        session = self.Session ()
+        target_business = session.query(Business)\
+                            .filter(Business.id == business_id)\
+                            .first()
+
+        if target_business:
+            issuer_is_owner = target_business.owner_id == issuer_id
+            if issuer_is_owner:
+                self.clerk.update_business (target_business, update_data)
+                session.commit ()
+                return "Changes recorded successfully"
+            # if instruction issuer is not owner
+            msg = "UNSUCCESSFUL: The business is registered to another user"
+            expression = "Storage::get_business_info ({}, {})".format (business_id, issuer_id)
+            raise PermissionDeniedError (expression, msg)
+        # if a business with the business_id is not found
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::get_business_info ({})".format (business_id)
+        raise DataNotFoundError (expression, msg)
 
 
 # class Storage ():
