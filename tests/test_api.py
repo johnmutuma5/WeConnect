@@ -127,14 +127,14 @@ class TestAPICase (BaseAPITestSetUp):
         # assert that the response business id equals the url variable
         self.assertEqual (res_business_id, 1000)
 
-#     # @pytest.mark.run(order = 10)
-#     def test_users_retrieve_only_avail_business (self):
-#         raw_id = 1000000
-#         res = self.testHelper.get_business (raw_id)
-#         res_msg= (json.loads(res.data.decode("utf-8")))["msg"]
-#         # test message to match regex
-#         pattern = r"^UNSUCCESSFUL:.+$"
-#         self.assertRegexpMatches (res_msg, pattern)
+    # @pytest.mark.run(order = 10)
+    def test_users_retrieve_only_avail_business (self):
+        raw_id = 1000000
+        res = self.testHelper.get_business (raw_id)
+        res_msg= (json.loads(res.data.decode("utf-8")))["msg"]
+        # test message to match regex
+        pattern = r"^UNSUCCESSFUL:.+$"
+        self.assertRegexpMatches (res_msg, pattern)
 #     #
 #     # @pytest.mark.run(order = 11)
 #     def test_users_update_a_business (self):
