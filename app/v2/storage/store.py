@@ -52,7 +52,7 @@ class DbInterface ():
         _add = {
             "User": self.add_user,
             "Business": self.add_business,
-            # "Review": self.add_review
+            "Review": self.add_review
         }[obj_class]
 
         # call method with argument and return it's output
@@ -186,6 +186,21 @@ class DbInterface ():
         session.add (review_obj)
         session.commit ()
         return 'SUCCESS: review posted!'
+
+
+    def get_reviews_info (self, business_id):
+        session = self.Session ()
+        target_reviews = session.query(Review)\
+                            .filter(Review.business_id == business_id)\
+                            .all()
+        reviews_info = []
+        if len(target_reviews) > 0:
+            for review in target_reviews:
+                session.expunge(review)
+                review_info = self.clerk.extract_review_info (review)
+                reviews_info.append (review_info)
+        session.close ()
+        return reviews_info
 
 # class Storage ():
 #     '''
