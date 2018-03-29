@@ -3,10 +3,44 @@ from app.v2.models import User, Business, Review
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.orm import sessionmaker
 
+
+class StoreHelper ():
+    '''Used to create a clerical helper for the DbInterface:
+        Methods: extract_business_data
+                update_business
+                extract_review_info
+    '''
+    def __init__ (self):
+        ...
+
+    @staticmethod
+    def extract_business_data (business):
+        business_data = {}
+        fields = ["name", "owner_id", "location", "mobile", "id"]
+        for field in fields:
+            business_data[field] = getattr (business, field)
+
+        return business_data
+
+    @staticmethod
+    def update_business (target_business, update_data):
+        for key, value in update_data.items ():
+            setattr(target_business, key, update_data[key])
+
+    @staticmethod
+    def extract_review_info (review):
+        review_info = {}
+        fields = ["heading", "body", "author_id", "business_id", "id"]
+        for field in fields:
+            review_info[field] = getattr (review, field)
+
+        return review_info
+
+
 class DbInterface ():
 
     def __init__ (self, dbEngine):
-        # self.clerk = StoreHelper ()
+        self.clerk = StoreHelper ()
         self.engine = dbEngine
         self.Session = sessionmaker (bind=dbEngine)
 
@@ -64,32 +98,18 @@ class DbInterface ():
             session.close ()
         return 'SUCCESS: business {} created!'.format(businessname)
 
-# class StoreHelper ():
-#     def __init__ (self):
-#         ...
-#
-#     @staticmethod
-#     def extract_business_data (business):
-#         business_data = {}
-#         fields = ["name", "owner_id", "location", "mobile", "id"]
-#         for field in fields:
-#             business_data[field] = getattr (business, field)
-#
-#         return business_data
-#
-#     @staticmethod
-#     def update_business (target_business, update_data):
-#         for key, value in update_data.items ():
-#             setattr(target_business, key, update_data[key])
-#
-#     @staticmethod
-#     def extract_review_info (review):
-#         review_info = {}
-#         fields = ["heading", "body", "author_id", "business_id", "id"]
-#         for field in fields:
-#             review_info[field] = getattr (review, field)
-#
-#         return review_info
+
+    def get_businesses_info (self):
+        businesses_info = []
+        session = self.Session ()
+        businesses = session.query (Business).all ()
+        session.close()
+        for business in businesses:
+            business_data = self.clerk.extract_business_data (business)
+            businesses_info.append (business_data)
+        return businesses_info
+
+
 
 # class Storage ():
 #     '''

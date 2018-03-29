@@ -20,7 +20,7 @@ class Business (Base):
     business_id_seq = Sequence ('business_id_seq', start=1000,
                                     metadata=Base.metadata)
     # table columns
-    _id = Column ('id', Integer, server_default=business_id_seq.next_value(),
+    id = Column ('id', Integer, server_default=business_id_seq.next_value(),
                     primary_key=True)
     _mobile = Column ('mobile', String(12), nullable=False)
     name = Column ('name', String(63), nullable=False, unique=True)
