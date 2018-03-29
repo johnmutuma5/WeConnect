@@ -98,20 +98,20 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, 'Business name already exists')
 
-#     # @pytest.mark.run(order = 8)
-#     def test_users_retrieve_all_businesses (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         # register a number of businesses
-#         for business_data in businesses_data:
-#             self.testHelper.register_business (business_data)
-#         # get all businesses info
-#         res = self.testHelper.get_businesses ()
-#         res_businesses = (json.loads(res.data.decode("utf-8")))["businesses"]
-#         res_business_names = [business_info['name'] for business_info in res_businesses]
-#         # assert that every piece of information we have sent has been returned
-#         for data in businesses_data:
-#             self.assertIn (data['name'], res_business_names)
+    # @pytest.mark.run(order = 8)
+    def test_users_retrieve_all_businesses (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        # register a number of businesses
+        for business_data in businesses_data:
+            self.testHelper.register_business (business_data)
+        # get all businesses info
+        res = self.testHelper.get_businesses ()
+        res_businesses = (json.loads(res.data.decode("utf-8")))["businesses"]
+        res_business_names = [business_info['name'] for business_info in res_businesses]
+        # assert that every piece of information we have sent has been returned
+        for data in businesses_data:
+            self.assertIn (data['name'], res_business_names)
 #     #
 #     # @pytest.mark.run(order = 9)
 #     def test_users_retrieve_one_business (self):
