@@ -63,17 +63,17 @@ class TestAPICase (BaseAPITestSetUp):
         res = self.testHelper.logout_user ()
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual (msg, "Logged out successfully!")
+
+    # @pytest.mark.run(order = 6)
+    def test_user_can_register_business (self):
+        self.testHelper.register_user (user_data)
+        self.testHelper.login_user (login_data)
+        res = self.testHelper.register_business (business_data)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+
+        pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
+        self.assertRegexpMatches (msg, pattern)
         
-#     # @pytest.mark.run(order = 6)
-#     def test_user_can_register_business (self):
-#         self.testHelper.register_user (user_data)
-#         self.testHelper.login_user (login_data)
-#         res = self.testHelper.register_business (business_data)
-#         msg = (json.loads(res.data.decode("utf-8")))['msg']
-#
-#         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
-#         self.assertRegexpMatches (msg, pattern)
-#     # #
 #     # @pytest.mark.run(order = 7)
 #     def test_duplicate_businessname_disallowed (self):
 #         self.testHelper.register_user (user_data)
