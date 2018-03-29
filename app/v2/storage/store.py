@@ -109,6 +109,20 @@ class DbInterface ():
             businesses_info.append (business_data)
         return businesses_info
 
+    def handle_data_not_found (self, session=None):
+        if session:
+            session.close()
+        msg = "UNSUCCESSFUL: Could not find the requested information"
+        expression = "Storage::unavailable info"
+        raise DataNotFoundError (expression, msg)
+
+    def handle_permission_denied (self, session=None):
+        if session:
+            session.close()
+        msg = "UNSUCCESSFUL: The business is registered to another user"
+        expression = "Storage::unauthorised operation"
+        raise PermissionDeniedError (expression, msg)
+
 
     def get_business_info (self, business_id):
         session = self.Session ()
@@ -120,10 +134,7 @@ class DbInterface ():
             # session.expunge (target_business)
             business_info = self.clerk.extract_business_data (target_business)
             return business_info
-
-        msg = "UNSUCCESSFUL: Could not find the requested information"
-        expression = "Storage::get_business_info ({})".format (business_id)
-        raise DataNotFoundError (expression, msg)
+        self.handle_data_not_found ()
 
 
     def update_business (self, business_id, update_data, issuer_id):
@@ -131,7 +142,6 @@ class DbInterface ():
         target_business = session.query(Business)\
                             .filter(Business.id == business_id)\
                             .first()
-
         if target_business:
             issuer_is_owner = target_business.owner_id == issuer_id
             if issuer_is_owner:
@@ -146,15 +156,9 @@ class DbInterface ():
                     session.close()
                 return "Changes recorded successfully"
             # if instruction issuer is not owner
-            session.close ()
-            msg = "UNSUCCESSFUL: The business is registered to another user"
-            expression = "Storage::get_business_info ({}, {})".format (business_id, issuer_id)
-            raise PermissionDeniedError (expression, msg)
+            self.handle_permission_denied(session)
         # if a business with the business_id is not found
-        session.close ()
-        msg = "UNSUCCESSFUL: Could not find the requested information"
-        expression = "Storage::get_business_info ({})".format (business_id)
-        raise DataNotFoundError (expression, msg)
+        self.handle_data_not_found (session)
 
 
     def delete_business (self, business_id, issuer_id):
@@ -170,15 +174,9 @@ class DbInterface ():
                 session.commit()
                 return "SUCCESS: business deleted"
             # if issuer is not owner
-            session.close()
-            msg = "UNSUCCESSFUL: The business is registered to another user"
-            expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
-            raise PermissionDeniedError (expression, msg)
+            self.handle_permission_denied(session)
         # if business with id = business_id is not found
-        session.close ()
-        msg = "UNSUCCESSFUL: Could not find the requested information"
-        expression = "Storage::delete_business ({}, {})".format(business_id, issuer_id)
-        raise DataNotFoundError (expression, msg)
+        self.handle_data_not_found (session)
 
 
     def add_review (self, review_obj):
@@ -190,17 +188,24 @@ class DbInterface ():
 
     def get_reviews_info (self, business_id):
         session = self.Session ()
-        target_reviews = session.query(Review)\
-                            .filter(Review.business_id == business_id)\
-                            .all()
-        reviews_info = []
-        if len(target_reviews) > 0:
-            for review in target_reviews:
-                session.expunge(review)
-                review_info = self.clerk.extract_review_info (review)
-                reviews_info.append (review_info)
-        session.close ()
-        return reviews_info
+        target_business = session.query(Business)\
+                            .filter(Business.id == business_id)\
+                            .first()
+        if target_business:
+            target_reviews = session.query(Review)\
+                                .filter(Review.business_id == business_id)\
+                                .all()
+            reviews_info = []
+            if len(target_reviews) > 0:
+                for review in target_reviews:
+                    session.expunge(review)
+                    review_info = self.clerk.extract_review_info (review)
+                    reviews_info.append (review_info)
+            session.close ()
+            return reviews_info
+        # if business with id business_id is not found
+        self.handle_data_not_found (session)
+
 
 # class Storage ():
 #     '''
