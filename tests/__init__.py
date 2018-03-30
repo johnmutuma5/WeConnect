@@ -1,6 +1,6 @@
 import unittest
 import json
-from .dummies import user_data, login_data
+from .dummies import login_data
 from app import app
 from app.v2.models import Base
 from app.v2 import dbEngine

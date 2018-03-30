@@ -35,6 +35,18 @@ class TestAPICase (BaseAPITestSetUp):
         user_in_response_msg = match.group ('username')
         self.assertEqual (user_in_response_msg, user_data['username'])
 
+
+    def test_user_cannot_register_with_invalid_username(self):
+        invalid_names = ['000', 'j', '90jdj', 'axc', '    ']
+        for invalid_name in invalid_names:
+            # make a copy of valid user_data by unpacking and replace username with invalid_name
+            invalid_user_data = {**user_data, "username": invalid_name}
+            # send request with invalid_user_data
+            res = self.testHelper.register_user (invalid_user_data)
+            msg = (json.loads(res.data.decode("utf-8")))['msg']
+            self.assertEqual (msg, 'Invalid username!')
+
+
     # @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed (self):
         res = self.testHelper.register_user (user_data)
@@ -125,7 +137,6 @@ class TestAPICase (BaseAPITestSetUp):
         raw_id = 1000
         res = self.testHelper.get_business (raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
-        print(res_business_info)
         res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
         self.assertEqual (res_business_id, 1000)
@@ -287,8 +298,6 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual (msg, "Invalid token")
 
 
-
-#
 
 if __name__ == "__main__":
     unittest.main (module = __name__)
