@@ -1,4 +1,5 @@
-import unittest, pytest, json
+import unittest, pytest, json, re
+from sqlalchemy import func
 from app.v2.models import Business, User, Review
 from app.exceptions import InvalidUserInputError
 from app.v2 import store
@@ -6,18 +7,18 @@ from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
                         invalid_credentials, login_data, login_data2,
                         businesses_data, update_data, review_data)
-import re
+
 
 
 class TestAPICase (BaseAPITestSetUp):
 
     def db_object_count (self, Obj_model, col_name, value):
         session = store.Session ()
-        stored_obj = session.query(getattr(Obj_model, col_name))\
+        count = session.query(func.COUNT(getattr(Obj_model, col_name)))\
                             .filter(getattr(Obj_model, col_name) == value)\
-                            .all()
+                            .scalar()
         session.close ()
-        return len(stored_obj)
+        return count
 
     def test_a_user_can_register (self):
         res = self.testHelper.register_user (user_data)
