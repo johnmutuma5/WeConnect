@@ -196,8 +196,9 @@ def reset_password():
     if username:
         target_user = store.get_user(username)
         if target_user:
-            token = generate_token()
-            store.add_token(token, username)
+            token_string = generate_token()
+            token_obj = Token(token_string, username)
+            store.add_token(token_obj, username)
             # to email link with token url parameter to user's email address
             return jsonify({"t": token}), 200  # for testing
         return jsonify({"msg": "Username is unknown"}), 404
