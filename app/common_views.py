@@ -191,7 +191,7 @@ def reset_password ():
     token_in_request = request.args.get('t')
     # user initiates request with their username
     if username:
-        target_user = store.users.get (username)
+        target_user = store.get_user (username)
         if target_user:
             token = generate_token ()
             store.add_token (token, username)
@@ -200,7 +200,7 @@ def reset_password ():
         return jsonify ({"msg": "Username is unknown"}), 404
 
     if token_in_request:
-        token_bearer_name = store.tokens.get (token_in_request)
+        token_bearer_name = store.get_token_bearer (token_in_request)
         if token_bearer_name:
             target_user = store.users.get (token_bearer_name)
             target_user.password = new_password # more appropriate to redirect to url for change password
