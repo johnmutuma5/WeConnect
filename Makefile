@@ -17,4 +17,4 @@ run:
 	python run.py
 
 test:
-	nosetests --exe -v --with-coverage --cover-package=app
+	nosetests --exe -v --nocapture --with-coverage --cover-package=app
