@@ -10,42 +10,42 @@ class StoreHelper ():
                 update_business
                 extract_review_info
     '''
-    def __init__ (self):
+
+    def __init__(self):
         ...
 
     @staticmethod
-    def extract_business_data (business):
+    def extract_business_data(business):
         business_data = {}
         fields = ["name", "owner_id", "location", "mobile", "id"]
         for field in fields:
-            business_data[field] = getattr (business, field)
+            business_data[field] = getattr(business, field)
 
         return business_data
 
     @staticmethod
-    def update_business (target_business, update_data):
-        for key in update_data.keys ():
+    def update_business(target_business, update_data):
+        for key in update_data.keys():
             setattr(target_business, key, update_data[key])
 
     @staticmethod
-    def extract_review_info (review):
+    def extract_review_info(review):
         review_info = {}
         fields = ["heading", "body", "author_id", "business_id", "id"]
         for field in fields:
-            review_info[field] = getattr (review, field)
+            review_info[field] = getattr(review, field)
 
         return review_info
 
 
 class DbInterface ():
 
-    def __init__ (self, dbEngine):
+    def __init__(self, dbEngine):
         self.engine = dbEngine
-        self.Session = sessionmaker (bind=dbEngine)
-        self.clerk = StoreHelper ()
+        self.Session = sessionmaker(bind=dbEngine)
+        self.clerk = StoreHelper()
 
-
-    def add (self, obj):
+    def add(self, obj):
         obj_class = obj.__class__.__name__
 
         # get appropriate method to call: a switch-like dict operation
@@ -56,116 +56,109 @@ class DbInterface ():
         }[obj_class]
 
         # call method with argument and return it's output
-        return _add (obj)
+        return _add(obj)
 
-
-    def add_user (self, user_obj):
-        session = self.Session ()
+    def add_user(self, user_obj):
+        session = self.Session()
         username = user_obj.username
         try:
             session.add(user_obj)
-            session.commit ()
+            session.commit()
         except (IntegrityError):
-            session.rollback ()
-            raise DuplicationError ('Storage::add_user',
-                                    'Username already exists')
+            session.rollback()
+            raise DuplicationError('Storage::add_user',
+                                   'Username already exists')
         finally:
-            session.close ()
+            session.close()
 
         return 'SUCCESS: user {} created!'.format(username)
 
-
-    def get_user (self, username):
-        session = self.Session ()
+    def get_user(self, username):
+        session = self.Session()
         target_user = session.query(User)\
-                                .filter(User.username == username)\
-                                .first()
-        session.close ()
+            .filter(User.username == username)\
+            .first()
+        session.close()
         return target_user
 
-
-    def add_business (self, business_obj):
+    def add_business(self, business_obj):
         businessname = business_obj.name
-        session = self.Session ()
+        session = self.Session()
         try:
-            session.add (business_obj)
-            session.commit ()
+            session.add(business_obj)
+            session.commit()
         except IntegrityError:
-            session.rollback ()
-            raise DuplicationError ('Storage::add_business',
-                                    'Business name already exists')
+            session.rollback()
+            raise DuplicationError('Storage::add_business',
+                                   'Business name already exists')
         finally:
-            session.close ()
+            session.close()
         return 'SUCCESS: business {} created!'.format(businessname)
 
-
-    def get_businesses_info (self):
+    def get_businesses_info(self):
         businesses_info = []
-        session = self.Session ()
-        businesses = session.query (Business).all ()
+        session = self.Session()
+        businesses = session.query(Business).all()
         session.close()
         for business in businesses:
-            business_data = self.clerk.extract_business_data (business)
-            businesses_info.append (business_data)
+            business_data = self.clerk.extract_business_data(business)
+            businesses_info.append(business_data)
         return businesses_info
 
-    def handle_data_not_found (self, session=None):
+    def handle_data_not_found(self, session=None):
         if session:
             session.close()
         msg = "UNSUCCESSFUL: Could not find the requested information"
         expression = "Storage::unavailable info"
-        raise DataNotFoundError (expression, msg)
+        raise DataNotFoundError(expression, msg)
 
-    def handle_permission_denied (self, session=None):
+    def handle_permission_denied(self, session=None):
         if session:
             session.close()
         msg = "UNSUCCESSFUL: The business is registered to another user"
         expression = "Storage::unauthorised operation"
-        raise PermissionDeniedError (expression, msg)
+        raise PermissionDeniedError(expression, msg)
 
-
-    def get_business_info (self, business_id):
-        session = self.Session ()
+    def get_business_info(self, business_id):
+        session = self.Session()
         target_business = session.query(Business)\
-                                .filter(Business.id == business_id)\
-                                .first()
+            .filter(Business.id == business_id)\
+            .first()
         session.close()
         if target_business:
             # session.expunge (target_business)
-            business_info = self.clerk.extract_business_data (target_business)
+            business_info = self.clerk.extract_business_data(target_business)
             return business_info
-        self.handle_data_not_found ()
+        self.handle_data_not_found()
 
-
-    def update_business (self, business_id, update_data, issuer_id):
-        session = self.Session ()
+    def update_business(self, business_id, update_data, issuer_id):
+        session = self.Session()
         target_business = session.query(Business)\
-                            .filter(Business.id == business_id)\
-                            .first()
+            .filter(Business.id == business_id)\
+            .first()
         if target_business:
             issuer_is_owner = target_business.owner_id == issuer_id
             if issuer_is_owner:
                 try:
-                    self.clerk.update_business (target_business, update_data)
+                    self.clerk.update_business(target_business, update_data)
                     session.commit()
                 except IntegrityError:
-                    session.rollback ()
-                    raise DuplicationError ("Storage::update_business",
-                                            'Duplicate business name not allowed')
+                    session.rollback()
+                    raise DuplicationError("Storage::update_business",
+                                           'Duplicate business name not allowed')
                 finally:
                     session.close()
                 return "Changes recorded successfully"
             # if instruction issuer is not owner
             self.handle_permission_denied(session)
         # if a business with the business_id is not found
-        self.handle_data_not_found (session)
+        self.handle_data_not_found(session)
 
-
-    def delete_business (self, business_id, issuer_id):
-        session = self.Session ()
+    def delete_business(self, business_id, issuer_id):
+        session = self.Session()
         target_business = session.query(Business)\
-                            .filter (Business.id == business_id)\
-                            .first()
+            .filter(Business.id == business_id)\
+            .first()
         if target_business:
             issuer_is_owner = target_business.owner_id == issuer_id
             if issuer_is_owner:
@@ -176,35 +169,38 @@ class DbInterface ():
             # if issuer is not owner
             self.handle_permission_denied(session)
         # if business with id = business_id is not found
-        self.handle_data_not_found (session)
+        self.handle_data_not_found(session)
 
-
-    def add_review (self, review_obj):
-        session = self.Session ()
-        session.add (review_obj)
-        session.commit ()
+    def add_review(self, review_obj):
+        session = self.Session()
+        session.add(review_obj)
+        session.commit()
         return 'SUCCESS: review posted!'
 
-
-    def get_reviews_info (self, business_id):
-        session = self.Session ()
+    def get_reviews_info(self, business_id):
+        session = self.Session()
         target_business = session.query(Business)\
-                            .filter(Business.id == business_id)\
-                            .first()
+            .filter(Business.id == business_id)\
+            .first()
         if target_business:
             target_reviews = session.query(Review)\
-                                .filter(Review.business_id == business_id)\
-                                .all()
+                .filter(Review.business_id == business_id)\
+                .all()
             reviews_info = []
             if len(target_reviews) > 0:
                 for review in target_reviews:
                     session.expunge(review)
-                    review_info = self.clerk.extract_review_info (review)
-                    reviews_info.append (review_info)
-            session.close ()
+                    review_info = self.clerk.extract_review_info(review)
+                    reviews_info.append(review_info)
+            session.close()
             return reviews_info
         # if business with id business_id is not found
-        self.handle_data_not_found (session)
+        self.handle_data_not_found(session)
+
+    def add_token(self, token_obj, bearer_name):
+        session = self.Session()
+        session.add(token_obj)
+        session.commit()
 
 
 # class Storage ():

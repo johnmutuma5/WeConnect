@@ -1,6 +1,6 @@
 
 class CustomException (Exception):
-    def __init__ (self, expression, msg):
+    def __init__(self, expression, msg):
         self.expression = expression
         self.msg = msg
 
@@ -17,6 +17,7 @@ class DataNotFoundError (CustomException):
         raised: when retrieving unavailable data
     '''
     ...
+
 
 class PermissionDeniedError (CustomException):
     '''

@@ -1,10 +1,11 @@
 import random
 
-def generate_token ():
+
+def generate_token():
     chars = ""
     for i in range(26):
-        chars += chr (65+i)
-        chars += chr (97+i)
+        chars += chr(65+i)
+        chars += chr(97+i)
         if i > 9:
             continue
         chars += str(i)
