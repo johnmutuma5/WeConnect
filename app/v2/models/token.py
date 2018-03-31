@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from . import Base
 from datetime import datetime, timedelta
+from app import config
 
 
 class Token (Base):
@@ -10,7 +11,9 @@ class Token (Base):
 
     # @staticmethod
     def compute_token_expiry ():
-        return datetime.now()
+        token_lifetime = config['PASSWORD_RESET_TOKEN_LIFETIME']
+        # unpack token_lifetime dict into time_delta
+        return datetime.now() + timedelta(**token_lifetime)
 
     token_id_seq = Sequence('token_id_seq', metadata=Base.metadata, start=1)
     id = Column(Integer, primary_key=True,
