@@ -1,5 +1,5 @@
 from ...exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
-from app.v2.models import User, Business, Review
+from app.v2.models import User, Business, Review, Token
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.orm import sessionmaker
 
@@ -202,23 +202,32 @@ class DbInterface ():
         session.add(token_obj)
         session.commit()
 
-    def get_token_obj(self, token_string):
+    def get_token_tuple(self, token_string):
         session = self.Session()
         token_obj = session.query(Token)\
             .filter(Token.token_string == token_string)\
             .first()
+        bearer = None
+        if token_obj:
+            bearer = token_obj.bearer
         session.close()
+        return token_obj, bearer
 
-    def destroy_token (self, token_string):
+    def destroy_token (self, token_obj):
         session = self.Session()
-        target_token_obj = session.query(Token)\
-            .filter(Token.token_string == token_string)\
-            .first()
-        if target_token_obj:
-            target_token_obj.delete()
-            session.commit()
-        session.close()
+        # target_token = session.query(Token)\
+        #     .filter(Token.token_string)
+        session.delete(token_obj)
+        session.commit()
 
+    def update_user_password (self, token_bearer, new_password):
+        session = self.Session()
+        token_bearer.password = new_password
+        j = session.query(User)\
+            .filter(User.username == token_bearer.username)\
+            .first()
+        j.password = new_password
+        session.commit()
 
 # class Storage ():
 #     '''
