@@ -189,9 +189,6 @@ def reviews(business_id):
 @v2.route('/auth/reset-password', methods=['POST'])
 def reset_password():
     username = (json.loads(request.data.decode('utf-8'))).get('username')
-    new_password = (json.loads(request.data.decode('utf-8'))
-                    ).get('new_password')
-    url_query_token = request.args.get('t')
     # user initiates request with their username
     if username:
         target_user = store.get_user(username)
@@ -202,14 +199,21 @@ def reset_password():
             # to email link with token url parameter to user's email address
             return jsonify({"t": token_string}), 200  # for testing
         return jsonify({"msg": "Username is unknown"}), 404
+    return jsonify({"msg": "No username"}), 401
 
+
+@v2.route('/auth/reset-password/verify', methods=['POST'])
+def update_password():
+    url_query_token = request.args.get('t')
+    new_password = (json.loads(request.data.decode('utf-8')))\
+                        .get('new_password')
     if url_query_token:
-        token_obj = store.get_token(url_query_token)
+        token_obj = store.get_token_obj(url_query_token)
         if token_obj:
             target_user = token_obj.bearer
             # more appropriate to redirect to url for change password
             target_user.password = new_password
+            # ensure tokens are one time use
+            store.destroy_token(url_query_token)
             return jsonify({"msg": "Password updated successfully"})
         return jsonify({"msg": "Invalid token"}), 401
-
-    return jsonify({"msg": "No username"}), 401
