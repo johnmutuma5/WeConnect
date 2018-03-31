@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/johnmutuma5/WeConnect.svg?branch=master)](https://travis-ci.org/johnmutuma5/WeConnect)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 [![codecov](https://codecov.io/gh/johnmutuma5/WeConnect/branch/master/graph/badge.svg)](https://codecov.io/gh/johnmutuma5/WeConnect)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/10f06df2cff940048241583bc272615f)](https://www.codacy.com/app/johnmutuma5/WeConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=johnmutuma5/WeConnect&amp;utm_campaign=Badge_Grade)
+
 
 
 
