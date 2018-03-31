@@ -20,7 +20,7 @@ before_script:
   - ./cc-test-reporter before-build  
 
 script:
-  - nosetests --exe -v --with-coverage --cover-package=app
+  - nosetests --exe -v --with-coverage --cover-package=app --cover-xml app
 
 after_script:
   - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT
