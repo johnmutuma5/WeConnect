@@ -1,6 +1,6 @@
 from app.v2 import v2, store
 # from app.v2 import v2
-from .v2.models import User, Business, Review
+from .v2.models import User, Business, Review, Token
 from .helpers import generate_token
 from flask import jsonify, request, session
 from .exceptions import (DuplicationError, DataNotFoundError,
@@ -191,7 +191,7 @@ def reset_password():
     username = (json.loads(request.data.decode('utf-8'))).get('username')
     new_password = (json.loads(request.data.decode('utf-8'))
                     ).get('new_password')
-    token_in_request = request.args.get('t')
+    url_query_token = request.args.get('t')
     # user initiates request with their username
     if username:
         target_user = store.get_user(username)
@@ -200,13 +200,13 @@ def reset_password():
             token_obj = Token(token_string, username)
             store.add_token(token_obj, username)
             # to email link with token url parameter to user's email address
-            return jsonify({"t": token}), 200  # for testing
+            return jsonify({"t": token_string}), 200  # for testing
         return jsonify({"msg": "Username is unknown"}), 404
 
-    if token_in_request:
-        token_bearer_name = store.get_token_bearer(token_in_request)
-        if token_bearer_name:
-            target_user = store.users.get(token_bearer_name)
+    if url_query_token:
+        token_obj = store.get_token(url_query_token)
+        if token_obj:
+            target_user = token_obj.bearer
             # more appropriate to redirect to url for change password
             target_user.password = new_password
             return jsonify({"msg": "Password updated successfully"})
