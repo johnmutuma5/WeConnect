@@ -205,15 +205,13 @@ def reset_password():
 @v2.route('/auth/reset-password/verify', methods=['POST'])
 def update_password():
     url_query_token = request.args.get('t')
-    new_password = (json.loads(request.data.decode('utf-8')))\
-                        .get('new_password')
+    new_password = (json.loads(request.data.decode('utf-8'))).get('new_password')
     if url_query_token:
-        token_obj = store.get_token_obj(url_query_token)
+        token_obj, token_bearer = store.get_token_tuple(url_query_token)
         if token_obj:
-            target_user = token_obj.bearer
-            # more appropriate to redirect to url for change password
-            target_user.password = new_password
+            # print(token_obj.expired)
+            store.update_user_password(token_bearer, new_password)
             # ensure tokens are one time use
-            store.destroy_token(url_query_token)
+            store.destroy_token(token_obj)
             return jsonify({"msg": "Password updated successfully"})
-        return jsonify({"msg": "Invalid token"}), 401
+    return jsonify({"msg": "Invalid token"}), 401
