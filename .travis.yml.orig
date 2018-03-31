@@ -12,7 +12,6 @@ services:
 
 install:
   - pip install -r requirements.txt
-  - pip install codecov
 
 before_script:
   - psql -c 'create database weconnect;' -U postgres
@@ -28,5 +27,4 @@ after_script:
   - ./cc-test-reporter after-build -t coverage.py < coverage xml
 
 after_success:
-  - coveralls
-  - codecov
+- coveralls
