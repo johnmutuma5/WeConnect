@@ -10,8 +10,9 @@ def generate_token():
             continue
         chars += str(i)
 
-    token = ""
+    token_chars = []
     for i in range(96):
         rand_index = random.randint(0, 51)
-        token += chars[rand_index]
-    return token
+        token_chars.append(chars[rand_index])
+    token_string = ''.join(token_chars)
+    return token_string

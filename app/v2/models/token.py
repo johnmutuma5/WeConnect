@@ -6,14 +6,13 @@ from datetime import datetime, timedelta
 from app import config
 
 
+def compute_token_expiry():
+    token_lifetime = config['PASSWORD_RESET_TOKEN_LIFETIME']
+    # unpack token_lifetime dict into time_delta
+    return datetime.now() + timedelta(**token_lifetime)
+
 class Token (Base):
     __tablename__ = 'token'
-
-    # @staticmethod
-    def compute_token_expiry():
-        token_lifetime = config['PASSWORD_RESET_TOKEN_LIFETIME']
-        # unpack token_lifetime dict into time_delta
-        return datetime.now() + timedelta(**token_lifetime)
 
     token_id_seq = Sequence('token_id_seq', metadata=Base.metadata, start=1)
     id = Column(Integer, primary_key=True,
