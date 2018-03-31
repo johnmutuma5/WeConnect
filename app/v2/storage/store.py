@@ -202,6 +202,23 @@ class DbInterface ():
         session.add(token_obj)
         session.commit()
 
+    def get_token_obj(self, token_string):
+        session = self.Session()
+        token_obj = session.query(Token)\
+            .filter(Token.token_string == token_string)\
+            .first()
+        session.close()
+
+    def destroy_token (self, token_string):
+        session = self.Session()
+        target_token_obj = session.query(Token)\
+            .filter(Token.token_string == token_string)\
+            .first()
+        if target_token_obj:
+            target_token_obj.delete()
+            session.commit()
+        session.close()
+
 
 # class Storage ():
 #     '''
