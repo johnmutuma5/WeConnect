@@ -3,7 +3,6 @@ env:
     - CC_TEST_REPORTER_ID=77b7bee3ddde517dd8962132d655935695e342de483ae9cb8d13449baf56cd30
 
 language: python
-dist: trusty
 sudo: required
 python:
   - 3.6
