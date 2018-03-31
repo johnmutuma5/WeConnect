@@ -24,7 +24,8 @@ class User (Base):
     # relationships
     businesses = relationship('Business', back_populates='owner')
     reviews = relationship('Review', back_populates='author')
-    pass_reset_token = relationship('Token', back_populates='bearer', uselist=False)
+    pass_reset_token = relationship(
+        'Token', back_populates='bearer', uselist=False)
 
     @classmethod
     def create_user(cls, data):

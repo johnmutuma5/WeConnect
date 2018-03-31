@@ -12,6 +12,7 @@ def init_db():
     from app.v2 import dbEngine
     Base.metadata.create_all(bind=dbEngine)
 
+
 def drop_tables():
     from app.v2 import dbEngine
     Base.metadata.drop_all(bind=dbEngine)

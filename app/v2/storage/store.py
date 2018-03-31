@@ -213,14 +213,14 @@ class DbInterface ():
         session.close()
         return token_obj, bearer
 
-    def destroy_token (self, token_obj):
+    def destroy_token(self, token_obj):
         session = self.Session()
         # target_token = session.query(Token)\
         #     .filter(Token.token_string)
         session.delete(token_obj)
         session.commit()
 
-    def update_user_password (self, token_bearer, new_password):
+    def update_user_password(self, token_bearer, new_password):
         session = self.Session()
         token_bearer.password = new_password
         j = session.query(User)\
