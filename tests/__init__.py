@@ -2,8 +2,7 @@ import unittest
 import json
 from .dummies import login_data
 from app import app
-from app.v2.models import Base
-from app.v2 import dbEngine
+from app.v2.models import init_db, drop_tables
 
 
 # requests = requests.Session() #persist cookies across requests
@@ -98,7 +97,7 @@ class TestHelper ():
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp(self):
         self.testHelper = TestHelper()
-        Base.metadata.create_all(dbEngine)
+        init_db()
 
     def tearDown(self):
-        Base.metadata.drop_all(dbEngine)
+        drop_tables()
