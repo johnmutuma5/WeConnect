@@ -32,4 +32,7 @@ class Token (Base):
 
     @hybrid_property
     def expired(self):
-        ...
+        expires_at = str(self.expires_at)
+        expiry_time = datetime.strptime(expires_at, '%Y-%m-%d %H:%M:%S.%f')
+        now = datetime.now(tz=None)
+        return now > expiry_time
