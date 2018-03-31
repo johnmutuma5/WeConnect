@@ -86,13 +86,13 @@ class TestHelper ():
         return self.app.get(url)
 
     def reset_password(self, reset_data, token=None):
-        if token:
-            url = self.base_url + \
-                '/api/v2/auth/reset-password?t={}'.format(token)
-        else:
-            url = self.base_url + '/api/v2/auth/reset-password'
+        url = self.base_url + '/api/v2/auth/reset-password'
         return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
 
+    def reset_password_verify(self, token, reset_data):
+        url = self.base_url + \
+            '/api/v2/auth/reset-password/verify?t={}'.format(token)
+        return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
 
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp(self):
