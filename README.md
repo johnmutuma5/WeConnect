@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/04753a5f13644b7dbd6078b82e58edbb)](https://app.codacy.com/app/johnmutuma5/WeConnect?utm_source=github.com&utm_medium=referral&utm_content=johnmutuma5/WeConnect&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/johnmutuma5/WeConnect.svg?branch=master)](https://travis-ci.org/johnmutuma5/WeConnect)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 [![codecov](https://codecov.io/gh/johnmutuma5/WeConnect/branch/master/graph/badge.svg)](https://codecov.io/gh/johnmutuma5/WeConnect)
