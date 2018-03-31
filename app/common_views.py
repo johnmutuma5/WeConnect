@@ -198,8 +198,8 @@ def reset_password():
             store.add_token(token_obj, username)
             # to email link with token url parameter to user's email address
             return jsonify({"t": token_string}), 200  # for testing
-        return jsonify({"msg": "Username is unknown"}), 404
-    return jsonify({"msg": "No username"}), 401
+        return jsonify({"msg": "Invalid Username"}), 404
+    return jsonify({"msg": "Please supply your username"}), 401
 
 
 @v2.route('/auth/reset-password/verify', methods=['POST'])
