@@ -104,6 +104,12 @@ class TestAPICase (BaseAPITestSetUp):
         pattern = r"^SUCCESS[: a-z]+ (?P<business>.+) [a-z!]+$"
         self.assertRegexpMatches(msg, pattern)
 
+
+    def test_only_logged_in_users_can_register_business(self):
+        resp = self.testHelper.register_business(business_data)
+        self.assertEqual(resp.status_code, 401)
+
+
     # @pytest.mark.run(order = 7)
     def test_duplicate_businessname_disallowed(self):
         self.testHelper.register_user(user_data)
@@ -129,7 +135,7 @@ class TestAPICase (BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn(data['name'], res_business_names)
 
-    @pytest.mark.run(order=9)
+    # @pytest.mark.run(order=9)
     def test_users_retrieve_one_business(self):
         self.testHelper.register_user(user_data)
         self.testHelper.login_user(login_data)
@@ -166,6 +172,11 @@ class TestAPICase (BaseAPITestSetUp):
 
         for key, value in update_data.items():
             self.assertEqual(update_data[key], res_business_info[key])
+
+    def test_only_logged_in_users_can_update_business(self):
+        raw_id = 1000
+        resp = self.testHelper.update_business(raw_id, update_data)
+        self.assertEqual(resp.status_code, 401)
 
     def test_users_cannot_update_with_existing_business_names(self):
         self.testHelper.register_user(user_data)
@@ -290,11 +301,26 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         pattern = r"Logged in (?P<username>.+)"
         self.assertRegexpMatches(msg, pattern)
-        # test users cannot use an invalid token
+
+    def test_users_cannot_reset_with_invalid_token(self):
+        self.testHelper.register_user(user_data)
+        reset_data = {'new_password': "changed"}
         token = r"aquitelongstringrepresentingatokentoresetpassword"
         resp = self.testHelper.reset_password_verify(token, reset_data)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Invalid token")
+        # test users can
+
+    def test_users_cannot_reset_password_with_unknown_or_no_username(self):
+        invalid_usernames = ['unknown_doe', None]
+        for username in invalid_usernames:
+            reset_data = {"username": username}
+            resp = self.testHelper.reset_password(reset_data)
+            msg = (json.loads(resp.data.decode('utf-8')))['msg']
+            if username:
+                self.assertEqual(msg, 'Invalid Username')
+            else:
+                self.assertEqual(msg, 'Please supply your username')
 
 
 if __name__ == "__main__":
