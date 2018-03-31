@@ -26,7 +26,7 @@ class Token (Base):
 
     bearer = relationship('User', back_populates='pass_reset_token')
 
-    def __init__ (self, bearer_name, token_string):
+    def __init__ (self, token_string, bearer_name):
         self.bearer_name = bearer_name
         self.token_string = token_string
 
