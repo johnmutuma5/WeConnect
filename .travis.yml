@@ -23,7 +23,8 @@ script:
   - nosetests --exe -v --with-coverage --cover-package=app
 
 after_script:
-  - ./cc-test-reporter after-build -t coverage.py < ./.coverage
+  - coverage xml
+  - ./cc-test-reporter after-build -t coverage.py
 
 after_success:
   - coveralls
