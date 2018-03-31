@@ -1,6 +1,6 @@
 from ...exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
 from app.v2.models import User, Business, Review, Token
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 
@@ -105,14 +105,16 @@ class DbInterface ():
             businesses_info.append(business_data)
         return businesses_info
 
-    def handle_data_not_found(self, session=None):
+    @staticmethod
+    def handle_data_not_found(session=None):
         if session:
             session.close()
         msg = "UNSUCCESSFUL: Could not find the requested information"
         expression = "Storage::unavailable info"
         raise DataNotFoundError(expression, msg)
 
-    def handle_permission_denied(self, session=None):
+    @staticmethod
+    def handle_permission_denied(session=None):
         if session:
             session.close()
         msg = "UNSUCCESSFUL: The business is registered to another user"
