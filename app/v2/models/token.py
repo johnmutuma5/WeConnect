@@ -11,6 +11,7 @@ def compute_token_expiry():
     # unpack token_lifetime dict into time_delta
     return datetime.now() + timedelta(**token_lifetime)
 
+
 class Token (Base):
     __tablename__ = 'token'
 

@@ -205,7 +205,8 @@ def reset_password():
 @v2.route('/auth/reset-password/verify', methods=['POST'])
 def update_password():
     url_query_token = request.args.get('t')
-    new_password = (json.loads(request.data.decode('utf-8'))).get('new_password')
+    new_password = (json.loads(request.data.decode('utf-8'))
+                    ).get('new_password')
     if url_query_token:
         token_obj, token_bearer = store.get_token_tuple(url_query_token)
         if token_obj:

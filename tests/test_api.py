@@ -10,8 +10,8 @@ from .dummies import (user_data, user_data2, business_data,
 
 
 class TestAPICase (BaseAPITestSetUp):
-
-    def db_object_count(self, Obj_model, col_name, value):
+    @staticmethod
+    def db_object_count(Obj_model, col_name, value):
         session = store.Session()
         count = session.query(func.COUNT(getattr(Obj_model, col_name)))\
             .filter(getattr(Obj_model, col_name) == value)\
