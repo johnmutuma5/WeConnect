@@ -1,7 +1,4 @@
-import unittest
-import pytest
-import json
-import re
+import unittest, pytest, json, re, time
 from sqlalchemy import func
 from app.v2.models import Business, User, Review
 from app.exceptions import InvalidUserInputError
@@ -283,16 +280,23 @@ class TestAPICase (BaseAPITestSetUp):
         for data in review_data:
             self.assertIn(data['heading'], resp_review_headings)
 
-    def test_users_can_reset_passwords(self):
+    def get_password_reset_token(self, username):
         self.testHelper.register_user(user_data)
-        # use username to send password reset request
-        username = user_data['username']
         reset_data = {"username": username}
         resp = self.testHelper.reset_password(reset_data)
         token = (json.loads(resp.data.decode('utf-8')))['t']
-        # supply a new password
+        return token
+
+    def supply_new_password(self, token):
         reset_data = {'new_password': "changed"}
         resp = self.testHelper.reset_password_verify(token, reset_data)
+        return resp
+
+    def test_users_can_reset_passwords(self):
+        # use username to send password reset request
+        username = user_data['username']
+        token = self.get_password_reset_token(username)
+        resp = self.supply_new_password(token)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Password updated successfully")
         # login with new password
@@ -301,6 +305,16 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         pattern = r"Logged in (?P<username>.+)"
         self.assertRegexpMatches(msg, pattern)
+
+    def test_user_cannot_reset_password_with_expired_token(self):
+        username = user_data['username']
+        token = self.get_password_reset_token(username)
+        # sleep for 1 second; allows development token to expire
+        time.sleep(1)
+        resp = self.supply_new_password(token)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, "Token expired")
+
 
     def test_users_cannot_reset_with_invalid_token(self):
         self.testHelper.register_user(user_data)
