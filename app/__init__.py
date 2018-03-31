@@ -2,6 +2,7 @@ from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
+config = app.config
 
 # Blueprints
 # from .v1 import v1
