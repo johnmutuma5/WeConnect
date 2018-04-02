@@ -9,5 +9,5 @@ from app import config
 dbEngine = create_engine(config['SQLALCHEMY_DATABASE_URI'])
 store = DbInterface(dbEngine)
 
-# from . import views
-from app import common_views
+from . import views
+# from app import common_views

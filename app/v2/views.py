@@ -1,9 +1,8 @@
-from app.v2 import v2, store
-# from app.v2 import v2
-from .v2.models import User, Business, Review, Token
-from .helpers import generate_token
+from . import v2, store
+from .models import User, Business, Review, Token
+from ..helpers import generate_token
 from flask import jsonify, request, session
-from .exceptions import (DuplicationError, DataNotFoundError,
+from ..exceptions import (DuplicationError, DataNotFoundError,
                          PermissionDeniedError, InvalidUserInputError)
 import json
 
