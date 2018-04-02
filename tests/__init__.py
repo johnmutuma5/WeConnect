@@ -89,9 +89,10 @@ class TestHelper ():
         url = self.base_url + '/api/v2/auth/reset-password'
         return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
 
-    def reset_password_verify(self, token, reset_data):
-        url = self.base_url + \
-            '/api/v2/auth/reset-password/verify?t={}'.format(token)
+    def reset_password_verify(self, reset_link, method=None, reset_data=None):
+        url = reset_link
+        if not method:
+            return self.app.get(url)
         return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
 
 class BaseAPITestSetUp (unittest.TestCase):

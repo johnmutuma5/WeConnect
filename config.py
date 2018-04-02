@@ -3,7 +3,7 @@ import os
 
 class Config():
     SECRET_KEY = os.urandom(24)
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:databasepass@localhost/weconnect"
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:databasepass@localhost:5432/weconnect"
 
 
 class ProductionConfig (Config):

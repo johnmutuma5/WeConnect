@@ -1,7 +1,7 @@
 from . import v2, store
 from .models import User, Business, Review, Token
 from ..helpers import generate_token
-from flask import jsonify, request, session
+from flask import jsonify, request, session, url_for
 from ..exceptions import (DuplicationError, DataNotFoundError,
                          PermissionDeniedError, InvalidUserInputError)
 import json
@@ -195,17 +195,21 @@ def reset_password():
             token_string = generate_token()
             token_obj = Token(token_string, username)
             store.add_token(token_obj, username)
-            # to email link with token url parameter to user's email address
-            return jsonify({"t": token_string}), 200  # for testing
+            reset_link = url_for('.update_password', _external=True, t=token_string)
+            # to email reset_link with token url parameter to user's email address
+            return jsonify({"reset_link": reset_link}), 200  # for testing
         return jsonify({"msg": "Invalid Username"}), 404
     return jsonify({"msg": "Please supply your username"}), 401
 
 
-@v2.route('/auth/reset-password/verify', methods=['POST'])
+@v2.route('/auth/reset-password/verify', methods=['POST', 'GET'])
 def update_password():
+    if request.method == 'GET':
+        return jsonify({'msg': 'Please supply your new password'})
+
     url_query_token = request.args.get('t')
-    new_password = (json.loads(request.data.decode('utf-8'))
-                    ).get('new_password')
+    new_password = (json.loads(request.data.decode('utf-8')))\
+        .get('new_password')
     if url_query_token:
         token_obj, token_bearer = store.get_token_tuple(url_query_token)
         if token_obj:
