@@ -88,4 +88,5 @@ def downgrade():
             if isinstance(col.type, sa.Enum):
                 sa.Enum(name=col.type.name).drop(op.get_bind())
 
+    # Base.metadata.drop_all (bind=op.get_bind()) # can be used too for this downgrade
     # ### end Alembic commands ###
