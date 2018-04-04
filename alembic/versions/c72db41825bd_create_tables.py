@@ -85,6 +85,9 @@ def downgrade():
     # op.execute('''DROP TYPE gender_type''')
     for table in Base.metadata.tables.values():
         for col in table.c:
+            # if isinstance(col.type, sa.String):
+            #     print(col.type.length)
+            #     print(col.name)
             if isinstance(col.type, sa.Enum):
                 sa.Enum(name=col.type.name).drop(op.get_bind())
 
