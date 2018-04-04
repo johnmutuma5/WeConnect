@@ -204,6 +204,9 @@ class DbInterface ():
 
 
     def add_token(self, token_obj, bearer_name):
+        # to write checks for IntegrityError to avoid possibility of users having
+        # multiple password reset tokens and eliminate the slightest possibility
+        # of having the same token_string for different users
         session = self.Session()
         session.add(token_obj)
         session.commit()
