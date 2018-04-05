@@ -6,6 +6,7 @@ from flask import jsonify, request, session, url_for
 from ..exceptions import (DuplicationError, DataNotFoundError,
                          PermissionDeniedError, InvalidUserInputError)
 import json, jwt, re
+from jwt.exceptions import InvalidSignatureError, DecodeError
 
 
 '''
@@ -19,11 +20,13 @@ def handle_invalid_credentials():
 
 def login_required(func):
     def wrapper(*args, **kwargs):
+        access_token = None
         auth = request.headers.get('Authorization')
         if auth:
             auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
             match = re.search(auth_pattern, auth)
-            access_token = match.group('token_string')
+            if match:
+                access_token = match.group('token_string')
             try:
                 token_payload = jwt.decode(access_token, session['secret'])
                 bearer_id = token_payload.get('user_id')
