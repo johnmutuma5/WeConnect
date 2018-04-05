@@ -1,25 +1,38 @@
 from . import v2, store
+from app import config
 from .models import User, Business, Review, Token
 from ..helpers import generate_token
 from flask import jsonify, request, session, url_for
 from ..exceptions import (DuplicationError, DataNotFoundError,
                          PermissionDeniedError, InvalidUserInputError)
-import json
+import json, jwt, re
 
 
 '''
 DECORATE FUNCTIONALITIES THAT REQUIRE ACTIVE SESSIONS
 '''
+def handle_invalid_credentials():
+    return jsonify({
+        "msg": "You need to log in to perform this operation"
+    }), 401
 
 
 def login_required(func):
     def wrapper(*args, **kwargs):
-        logged_user = session.get('user_id')
-        if logged_user:
+        auth = request.headers.get('Authorization')
+        if auth:
+            auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
+            match = re.search(auth_pattern, auth)
+            access_token = match.group('token_string')
+            try:
+                token_payload = jwt.decode(access_token, session['secret'])
+                bearer_id = token_payload.get('user_id')
+                session['user_id'] = bearer_id
+            except (InvalidSignatureError, DecodeError):
+                return handle_invalid_credentials()
             return func(*args, **kwargs)
-        return jsonify({
-            "msg": "You need to log in to perform this operation"
-        }), 401
+        return handle_invalid_credentials()
+
 
     wrapper.__name__ = func.__name__
     wrapper.__doc__ = func.__doc__
@@ -126,8 +139,11 @@ def login():
         return jsonify({"msg": "Invalid username or password"}), 401
 
     session['user_id'] = target_user.id
+    session['secret'] = config['SECRET_KEY']
     msg = "Logged in {}".format(username)
-    return jsonify({'msg': msg}), 200
+    access_token = jwt.encode({'user_id': target_user.id}, session['secret'])
+    access_token = access_token.decode('utf-8')
+    return jsonify({'msg': msg, 'access_token': access_token}), 200
 
 
 @v2.route('/auth/logout', methods=['POST'])
