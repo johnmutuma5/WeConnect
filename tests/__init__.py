@@ -42,9 +42,10 @@ class TestHelper ():
         return res
     #
 
-    def logout_user(self):
+    def logout_user(self, token=None):
         url = self.base_url + '/api/v2/auth/logout'
-        return self.app.post(url)
+        return self.app.post(url,
+            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
     def register_business(self, bizdata, token=None):
@@ -63,20 +64,23 @@ class TestHelper ():
         return self.app.get(url)
     #
 
-    def update_business(self, raw_id, update_data):
+    def update_business(self, raw_id, update_data, token=None):
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
-        return self.app.put(url, data=json.dumps(update_data), headers=self.headers)
+        return self.app.put(url, data=json.dumps(update_data),
+            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
-    def delete_business(self, raw_id):
+    def delete_business(self, raw_id, token=None):
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
-        return self.app.delete(url)
+        return self.app.delete(url,
+            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
-    def make_review(self, raw_id, review_data):
+    def make_review(self, raw_id, review_data, token=None):
         url = self.base_url + \
             '/api/v2/businesses/{id:}/reviews'.format(id=raw_id)
-        return self.app.post(url, data=json.dumps(review_data), headers=self.headers)
+        return self.app.post(url, data=json.dumps(review_data),
+            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
     def get_all_reviews(self, raw_id):

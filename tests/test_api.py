@@ -81,9 +81,10 @@ class TestAPICase (BaseAPITestSetUp):
         # register user
         self.testHelper.register_user(user_data)
         # login user
-        self.testHelper.login_user(login_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # logout user
-        res = self.testHelper.logout_user()
+        res = self.testHelper.logout_user(access_token)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, "Logged out successfully!")
 
@@ -112,19 +113,22 @@ class TestAPICase (BaseAPITestSetUp):
     # @pytest.mark.run(order = 7)
     def test_duplicate_businessname_disallowed(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
-        res = self.testHelper.register_business(business_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        # register business
+        self.testHelper.register_business(business_data, access_token)
+        res = self.testHelper.register_business(business_data, access_token)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Business name already exists')
 
     # @pytest.mark.run(order = 8)
     def test_users_retrieve_all_businesses(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
+        res=self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # register a number of businesses
         for business_data in businesses_data:
-            self.testHelper.register_business(business_data)
+            self.testHelper.register_business(business_data, access_token)
         # get all businesses info
         res = self.testHelper.get_businesses()
         res_businesses = (json.loads(res.data.decode("utf-8")))["businesses"]
@@ -137,9 +141,10 @@ class TestAPICase (BaseAPITestSetUp):
     # @pytest.mark.run(order=9)
     def test_users_retrieve_one_business(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # register a number of businesses
-        self.testHelper.register_business(business_data)
+        self.testHelper.register_business(business_data, access_token)
         raw_id = 1000
         res = self.testHelper.get_business(raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
@@ -162,9 +167,11 @@ class TestAPICase (BaseAPITestSetUp):
     def test_users_can_update_business_info(self):
         raw_id = 1000
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
-        self.testHelper.update_business(raw_id, update_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
+        #update business
+        self.testHelper.update_business(raw_id, update_data, access_token)
         # get the business's info in it's new state
         res = self.testHelper.get_business(raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
@@ -174,32 +181,35 @@ class TestAPICase (BaseAPITestSetUp):
 
     def test_only_logged_in_users_can_update_business(self):
         raw_id = 1000
+        # try update without an access token
         resp = self.testHelper.update_business(raw_id, update_data)
         self.assertEqual(resp.status_code, 401)
 
     def test_users_cannot_update_with_existing_business_names(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
         # register another businesses: business_data[1] has name Google
-        self.testHelper.register_business(businesses_data[1])
+        self.testHelper.register_business(businesses_data[1], access_token)
         # try to update first business with name Google
         name_update_data = {"name": "Google"}
-        resp = self.testHelper.update_business(1000, name_update_data)
+        resp = self.testHelper.update_business(1000, name_update_data, access_token)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Duplicate business name not allowed")
 
     def test_handles_updating_or_deleting_unavailble_business_id(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # update with an unavailable id
         name_update_data = {"name": "Google"}
         responses = []
         responses.extend([
             # update unavailable business
-            self.testHelper.update_business(10001, name_update_data),
+            self.testHelper.update_business(10001, name_update_data, access_token),
             # del unavailable business
-            self.testHelper.delete_business(10001)])
+            self.testHelper.delete_business(10001, access_token)])
         for resp in responses:
             res_msg = (json.loads(resp.data.decode("utf-8")))["msg"]
             # test message to match regex
@@ -210,10 +220,11 @@ class TestAPICase (BaseAPITestSetUp):
     def test_users_can_delete_business(self):
         self.testHelper.register_user(user_data)
         # login the first user
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
         # delete business
-        resp = self.testHelper.delete_business(1000)
+        resp = self.testHelper.delete_business(1000, access_token)
         # count businesses with id = 1000
         db_count = self.db_object_count(Business, 'id', 1000)
         self.assertTrue(db_count == 0)
@@ -224,20 +235,22 @@ class TestAPICase (BaseAPITestSetUp):
     # @pytest.mark.run(order = 12)
     def test_users_can_only_update_or_delete_their_business(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
         # logout the current user
-        self.testHelper.logout_user()
+        self.testHelper.logout_user(access_token)
         # create a second user`
         self.testHelper.register_user(user_data2)
-        self.testHelper.login_user(login_data2)
+        res = self.testHelper.login_user(login_data2)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # try to update and del a business created by the just logged out user
         responses = []
         responses.extend([
             # unauthorised update
-            self.testHelper.update_business(1000, update_data),
+            self.testHelper.update_business(1000, update_data, access_token),
             # unauthorised del
-            self.testHelper.delete_business(1000)])
+            self.testHelper.delete_business(1000, access_token)])
         for resp in responses:
             self.assertEqual(resp.status_code, 401)
 
@@ -246,13 +259,15 @@ class TestAPICase (BaseAPITestSetUp):
         self.testHelper.register_user(user_data)
         self.testHelper.register_user(user_data2)
         # login the first user
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
-        self.testHelper.logout_user()
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
+        self.testHelper.logout_user(access_token)
         # login second user
-        self.testHelper.login_user(login_data2)
+        res = self.testHelper.login_user(login_data2)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # second user make a review
-        resp = self.testHelper.make_review(1000, review_data[0])
+        resp = self.testHelper.make_review(1000, review_data[0], access_token)
         # check count of review with sent heading in db
         posted_heading = review_data[0]['heading']
         db_count = self.db_object_count(Review, 'heading', posted_heading)
@@ -261,19 +276,21 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode("utf-8")))["msg"]
         pattern = r"^SUCCESS:.+$"
         self.assertRegexpMatches(msg, pattern)
-        self.testHelper.logout_user()
+        self.testHelper.logout_user(access_token)
 
     # @pytest.mark.run(order = 15)
     def test_user_can_get_reviews(self):
         self.testHelper.register_user(user_data)
         self.testHelper.register_user(user_data2)
-        self.testHelper.login_user(login_data)
-        self.testHelper.register_business(business_data)
-        self.testHelper.make_review(1000, review_data[0])
-        self.testHelper.logout_user()
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
+        self.testHelper.make_review(1000, review_data[0], access_token)
+        self.testHelper.logout_user(access_token)
         # login another user
-        self.testHelper.login_user(login_data2)
-        self.testHelper.make_review(1000, review_data[1])
+        res = self.testHelper.login_user(login_data2)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.make_review(1000, review_data[1], access_token)
         resp = self.testHelper.get_all_reviews(1000)
         reviews_info = (json.loads(resp.data.decode("utf-8")))['info']
         resp_review_headings = [review_info['heading']
