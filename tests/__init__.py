@@ -31,7 +31,6 @@ class TestHelper ():
 
     def register_user(self, user_data):
         url = self.base_url + '/api/v2/auth/register'
-        # res = requests.post(url, data = json.dumps(user_data), headers = self.headers)
         res = self.app.post(url, data=json.dumps(
             user_data), headers=self.headers)
         return res
@@ -48,10 +47,10 @@ class TestHelper ():
         return self.app.post(url)
     #
 
-    def register_business(self, bizdata):
-        self.login_user(login_data)
+    def register_business(self, bizdata, token=None):
         url = self.base_url + '/api/v2/businesses'
-        return self.app.post(url, data=json.dumps(bizdata), headers=self.headers)
+        return self.app.post(url, data=json.dumps(bizdata),
+            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
     def get_businesses(self):

@@ -90,8 +90,10 @@ class TestAPICase (BaseAPITestSetUp):
     # @pytest.mark.run(order = 6)
     def test_user_can_register_business(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.login_user(login_data)
-        res = self.testHelper.register_business(business_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        # register business now
+        res = self.testHelper.register_business(business_data, access_token)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         # test actual user from database
         data = business_data['name']
