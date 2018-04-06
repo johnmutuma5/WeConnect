@@ -22,13 +22,12 @@ def login_required(func):
     def wrapper(*args, **kwargs):
         access_token = None
         auth = request.headers.get('Authorization')
-        if auth:
-            auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
-            match = re.search(auth_pattern, auth)
-            if match:
-                access_token = match.group('token_string')
+        auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
+        match = re.search(auth_pattern, auth)
+        if match:
+            access_token = match.group('token_string')
             try:
-                token_payload = jwt.decode(access_token, session['secret'])
+                token_payload = jwt.decode(access_token, session.get('secret'))
                 bearer_id = token_payload.get('user_id')
                 session['user_id'] = bearer_id
             except (InvalidSignatureError, DecodeError):
