@@ -108,6 +108,8 @@ class TestAPICase (BaseAPITestSetUp):
     def test_only_logged_in_users_can_register_business(self):
         resp = self.testHelper.register_business(business_data)
         self.assertEqual(resp.status_code, 401)
+        resp = self.testHelper.register_business(business_data, 'aninvalid.access.token')
+        self.assertEqual(resp.status_code, 401)
 
 
     # @pytest.mark.run(order = 7)
