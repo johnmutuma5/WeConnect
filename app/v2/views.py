@@ -42,8 +42,9 @@ def login_required(func):
 
 
 @login_required
-def register_a_business(business_data, owner):
+def register_a_business(business_data):
     # create a business to register
+    owner = session.get('user_id')
     business = Business.create_business(business_data, owner)
     try:
         msg = store.add(business)
@@ -62,7 +63,8 @@ def find_status_code(err):
 
 
 @login_required
-def update_business_info(business_id, update_data, issuer_id):
+def update_business_info(business_id, update_data):
+    issuer_id = session.get('user_id')
     try:
         msg = store.update_business(business_id, update_data, issuer_id)
     except (DataNotFoundError, PermissionDeniedError, DuplicationError) as put_err:
@@ -72,7 +74,8 @@ def update_business_info(business_id, update_data, issuer_id):
 
 
 @login_required
-def delete_business(business_id, issuer_id):
+def delete_business(business_id):
+    issuer_id = session.get('user_id')
     try:
         msg = store.delete_business(business_id, issuer_id)
     except (DataNotFoundError, PermissionDeniedError) as del_err:
@@ -82,7 +85,8 @@ def delete_business(business_id, issuer_id):
 
 
 @login_required
-def add_a_review(business_id, author_id, review_data):
+def add_a_review(business_id, review_data):
+    author_id = session.get('user_id')
     new_review = Review.create_review(business_id, author_id, review_data)
     # store the review
     msg = store.add(new_review)
@@ -161,7 +165,7 @@ def businesses():
         business_data = json.loads(request.data.decode('utf-8'))
         owner = session.get('user_id')
         # this method is decorated with login required
-        response = register_a_business(business_data, owner)
+        response = register_a_business(business_data)
         return response
 
     businesses_info = store.get_businesses_info()
@@ -171,8 +175,6 @@ def businesses():
 @v2.route('/businesses/<int:business_id>',
           methods=['GET', 'PUT', 'DELETE'])
 def business(business_id):
-    # business_id = Business.gen_id_string (business_id)
-    issuer_id = session.get('user_id')
     if request.method == 'GET':
         response = get_info_response(business_id, info_type='business_data')
         return response
@@ -180,11 +182,11 @@ def business(business_id):
     elif request.method == 'PUT':
         update_data = json.loads(request.data.decode('utf-8'))
         # this method is decorated with login_required
-        response = update_business_info(business_id, update_data, issuer_id)
+        response = update_business_info(business_id, update_data)
         return response
 
     # handle DELETE
-    response = delete_business(business_id, issuer_id)
+    response = delete_business(business_id)
     return response
 
 
@@ -199,7 +201,7 @@ def reviews(business_id):
     review_data = json.loads(request.data.decode('utf-8'))
     # get logged in user
     author_id = session.get('user_id')
-    response = add_a_review(business_id, author_id, review_data)
+    response = add_a_review(business_id, review_data)
     return response
 
 
