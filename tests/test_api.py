@@ -161,11 +161,13 @@ class TestAPICase (BaseAPITestSetUp):
         for business_data in businesses_data:
             self.testHelper.register_business(business_data, access_token)
         # define a search key
-        search_key = 'la'
+        search_key = 'lE'
         resp = self.testHelper.search_business(search_key)
         results = (json.loads(resp.data.decode('utf-8')))['results']
         for result in results:
-            self.assertTrue(search_key in result['name'])
+            search_key = search_key.lower()
+            business_name = (result['name']).lower()
+            self.assertTrue(search_key in business_name)
 
     # @pytest.mark.run(order = 10)
     def test_users_retrieve_only_avail_business_info_and_reviews(self):
