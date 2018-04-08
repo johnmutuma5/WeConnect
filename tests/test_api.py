@@ -154,6 +154,19 @@ class TestAPICase (BaseAPITestSetUp):
         # assert that the response business id equals the url variable
         self.assertEqual(res_business_id, 1000)
 
+    def test_users_can_search_for_business(self):
+        self.testHelper.register_user(user_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        for business_data in businesses_data:
+            self.testHelper.register_business(business_data, access_token)
+        # define a search key
+        search_key = 'la'
+        resp = self.testHelper.search_business(search_key)
+        results = (json.loads(resp.data.decode('utf-8')))['results']
+        for result in results:
+            self.assertTrue(search_key in result['name'])
+
     # @pytest.mark.run(order = 10)
     def test_users_retrieve_only_avail_business_info_and_reviews(self):
         raw_id = 1000000
