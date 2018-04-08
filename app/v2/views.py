@@ -190,6 +190,11 @@ def business(business_id):
     return response
 
 
+@v2.route('business_id/search')
+def search_business():
+    return jsonify({'msg': 'a list of business search results'})
+
+
 @v2.route('/businesses/<int:business_id>/reviews',
           methods=['GET', 'POST'])
 def reviews(business_id):
