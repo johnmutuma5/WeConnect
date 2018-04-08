@@ -20,7 +20,6 @@ class StoreHelper ():
         fields = ["name", "owner_id", "location", "mobile", "id"]
         for field in fields:
             business_data[field] = getattr(business, field)
-
         return business_data
 
     @staticmethod
@@ -99,10 +98,10 @@ class DbInterface ():
         businesses_info = []
         session = self.Session()
         businesses = session.query(Business).all()
-        session.close()
         for business in businesses:
             business_data = self.clerk.extract_business_data(business)
             businesses_info.append(business_data)
+        session.close()
         return businesses_info
 
     @staticmethod
@@ -126,12 +125,30 @@ class DbInterface ():
         target_business = session.query(Business)\
             .filter(Business.id == business_id)\
             .first()
+        try:
+            if target_business:
+                # session.expunge (target_business)
+                business_info = self.clerk.extract_business_data(target_business)
+                return business_info
+            self.handle_data_not_found()
+        finally:
+            session.close()
+
+
+    def search_businesses(self, search_key):
+        session = self.Session()
+        _operator = '%' + search_key + '%'
+        results = session.query(Business)\
+            .filter(Business.name.ilike(_operator))\
+            .all()
+        results_info = []
+        for business in results:
+            # session.expunge(business)
+            business_info = self.clerk.extract_business_data(business)
+            results_info.append(business_info)
         session.close()
-        if target_business:
-            # session.expunge (target_business)
-            business_info = self.clerk.extract_business_data(target_business)
-            return business_info
-        self.handle_data_not_found()
+        return results_info
+
 
     def update_business(self, business_id, update_data, issuer_id):
         session = self.Session()
@@ -194,7 +211,7 @@ class DbInterface ():
             reviews_info = []
             if len(target_reviews) > 0:
                 for review in target_reviews:
-                    session.expunge(review)
+                    # session.expunge(review)
                     review_info = self.clerk.extract_review_info(review)
                     reviews_info.append(review_info)
             session.close()

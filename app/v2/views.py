@@ -190,9 +190,11 @@ def business(business_id):
     return response
 
 
-@v2.route('business_id/search')
+@v2.route('/businesses/search', methods=['GET'])
 def search_business():
-    return jsonify({'msg': 'a list of business search results'})
+    search_key = request.args.get('q')
+    results = store.search_businesses(search_key)
+    return jsonify({'results': results})
 
 
 @v2.route('/businesses/<int:business_id>/reviews',
