@@ -4,6 +4,7 @@ from . import Base
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKeyConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
+from ...helpers import inspect_data
 
 
 class Business (Base):
@@ -30,13 +31,18 @@ class Business (Base):
     owner = relationship('User', back_populates='businesses')
     reviews = relationship('Review', back_populates='business')
 
+    # class variables
+    required_fields = ["mobile", "name", "location"]
+
     @classmethod
     def create_business(cls, data, owner_id):
         '''
             An alternative way of instantiating a business object
             directly with the class
         '''
-        new_business = cls(data, owner_id)
+        # inspect_data raises a MissingDataError for blank fields
+        cleaned_data = inspect_data(data, cls.required_fields)
+        new_business = cls(cleaned_data, owner_id)
         return new_business
 
     def __init__(self, data=None, owner_id=None):
