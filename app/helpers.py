@@ -20,6 +20,7 @@ def generate_token ():
 def inspect_data(data, required_fields=None):
     '''
         Removes extra spaces in data and checks for blank fields
+        Default required fields None incase data being inspected is PUT data.
     '''
     if not required_fields:
         required_fields = data.keys()
