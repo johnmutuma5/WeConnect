@@ -27,7 +27,7 @@ def login_required(func):
         if match:
             access_token = match.group('token_string')
             try:
-                token_payload = jwt.decode(access_token, session.get('secret'))
+                token_payload = jwt.decode(access_token, config['SECRET_KEY'])
                 bearer_id = token_payload.get('user_id')
                 session['user_id'] = bearer_id
             except (InvalidSignatureError, DecodeError):
@@ -145,9 +145,9 @@ def login():
         return jsonify({"msg": "Invalid username or password"}), 401
 
     session['user_id'] = target_user.id
-    session['secret'] = config['SECRET_KEY']
+    secret = config['SECRET_KEY']
     msg = "Logged in {}".format(username)
-    access_token = jwt.encode({'user_id': target_user.id}, session['secret'])
+    access_token = jwt.encode({'user_id': target_user.id}, secret)
     access_token = access_token.decode('utf-8')
     return jsonify({'msg': msg, 'access_token': access_token}), 200
 
