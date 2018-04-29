@@ -152,6 +152,19 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Business name already exists')
 
+
+    def test_handles_blank_business_name(self):
+        self.testHelper.register_user (user_data)
+        resp = self.testHelper.login_user (login_data)
+        resp_dict = json.loads(resp.data.decode('utf-8'))
+        access_token = resp_dict['access_token']
+        data_lacking_name = {**business_data, "name": " "}
+        res = self.testHelper.register_business (data_lacking_name, access_token)
+        resp_dict = json.loads(res.data.decode('utf-8'))
+        msg = resp_dict.get("msg")
+        self.assertEqual(msg, "Please provide name")
+
+
     # @pytest.mark.run(order = 8)
     def test_users_retrieve_all_businesses(self):
         self.testHelper.register_user(user_data)
