@@ -1,7 +1,7 @@
 from . import v2, store
 from app import config
 from .models import User, Business, Review, Token
-from ..helpers import generate_token
+from ..helpers import generate_token, inspect_data
 from flask import jsonify, request, session, url_for
 from ..exceptions import (DuplicationError, DataNotFoundError,
                          PermissionDeniedError, InvalidUserInputError)
@@ -191,9 +191,15 @@ def business(business_id):
 
     elif request.method == 'PUT':
         update_data = json.loads(request.data.decode('utf-8'))
-        # this method is decorated with login_required
-        response = update_business_info(business_id, update_data)
-        return response
+        try:
+            cleaned_data = inspect_data(update_data)
+            # this method is decorated with login_required
+            response = update_business_info(business_id, cleaned_data)
+            return response
+        except InvalidUserInputError as e:
+            # MissingDataError extends InvalidUserInputError
+            return jsonify({'msg': e.msg})
+
 
     # handle DELETE
     response = delete_business(business_id)
