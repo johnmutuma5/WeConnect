@@ -67,8 +67,6 @@ def find_status_code (err):
         status_code = 403
     elif type(err) == DuplicationError:
         status_code = 409
-    elif type(err) == InvalidUserInputError:
-        status_code = 422
     return status_code
 
 
@@ -198,7 +196,7 @@ def business(business_id):
             return response
         except InvalidUserInputError as e:
             # MissingDataError extends InvalidUserInputError
-            return jsonify({'msg': e.msg})
+            return jsonify({'msg': e.msg}), 422
 
 
     # handle DELETE
