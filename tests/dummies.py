@@ -6,17 +6,17 @@ user_data = {
     "mobile": "254720000000",
     "email": "johndoe@gmail.com",
     "username": "john_doe",
-    "password": "pass",
+    "password": "pass"
 }
 
 user_data2 = {
-    "first_name": "John",
+    "first_name": "Alice",
     "last_name": "Doe",
-    "gender": "Male",
+    "gender": "Female",
     "mobile": "254720000000",
-    "email": "johndoe@gmail.com",
-    "username": "john_doe2",
-    "password": "pass",
+    "email": "alicedoe@gmail.com",
+    "username": "alice_doe",
+    "password": "pass"
 }
 
 login_data = {
@@ -25,7 +25,7 @@ login_data = {
 }
 
 login_data2 = {
-    "username": "john_doe2",
+    "username": "alice_doe",
     "password": "pass"
 }
 
