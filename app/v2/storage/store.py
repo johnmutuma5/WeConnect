@@ -2,6 +2,7 @@ from ...exceptions import DuplicationError, DataNotFoundError, PermissionDeniedE
 from app.v2.models import User, Business, Review, Token
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
+import re
 
 
 class StoreHelper ():
@@ -57,16 +58,24 @@ class DbInterface ():
         # call method with argument and return it's output
         return _add(obj)
 
+    def retrieve_field_raising_integrity_error(self, e):
+        # naming of constraints and indexes: users_field_key
+        pattern = r"\".+?_(?P<key>.+)_.+?\""
+        match = re.search(pattern, e.args[0])
+        key = match.group('key')
+        return key.capitalize()
+
     def add_user(self, user_obj):
         session = self.Session()
         username = user_obj.username
         try:
             session.add(user_obj)
             session.commit()
-        except (IntegrityError):
+        except (IntegrityError) as e:
+            key = self.retrieve_field_raising_integrity_error(e)
             session.rollback()
             raise DuplicationError('Storage::add_user',
-                                   'Username already exists')
+                                   '%s already exists' %key)
         finally:
             session.close()
 
