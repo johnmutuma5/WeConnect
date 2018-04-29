@@ -45,7 +45,12 @@ def login_required(func):
 def register_a_business(business_data):
     # create a business to register
     owner = session.get('user_id')
-    business = Business.create_business(business_data, owner)
+    try:
+        business = Business.create_business(business_data, owner)
+    except InvalidUserInputError as e:
+        # MissingDataError extends InvalidUserInputError
+        return jsonify({"msg": e.msg})
+
     try:
         msg = store.add(business)
     except DuplicationError as e:
@@ -54,11 +59,16 @@ def register_a_business(business_data):
     return jsonify({"msg": msg}), 201
 
 
-def find_status_code(err):
-    if isinstance(err, DataNotFoundError):
+def find_status_code (err):
+    status_code = None
+    if type (err) == DataNotFoundError:
         status_code = 404
-    else:
-        status_code = 401
+    elif type(err) == PermissionDeniedError:
+        status_code = 403
+    elif type(err) == DuplicationError:
+        status_code = 409
+    elif type(err) == InvalidUserInputError:
+        status_code = 422
     return status_code
 
 
