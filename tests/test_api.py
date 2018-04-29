@@ -35,7 +35,7 @@ class TestAPICase (BaseAPITestSetUp):
         self.assertEqual(user_in_response_msg, user_data['username'])
 
     def test_user_cannot_register_with_invalid_username(self):
-        invalid_names = ['000', 'j', '90jdj', 'axc', '    ']
+        invalid_names = ['000', '90jdj', 'axc']
         for invalid_name in invalid_names:
             # make a copy of valid user_data by unpacking and replace username with invalid_name
             invalid_user_data = {**user_data, "username": invalid_name}
@@ -44,13 +44,42 @@ class TestAPICase (BaseAPITestSetUp):
             msg = (json.loads(res.data.decode("utf-8")))['msg']
             self.assertEqual(msg, 'Invalid username!')
 
+
+    def test_user_cannot_register_with_invalid_email(self):
+        invalid_email_data = {**user_data, 'email':'john.doe@'}
+        resp = self.testHelper.register_user(invalid_email_data)
+        resp_dict = json.loads(resp.data.decode('utf-8'))
+        msg = resp_dict['msg']
+        self.assertEqual(msg, 'Invalid email')
+
+
     # @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed(self):
         res = self.testHelper.register_user(user_data)
-        # register user with similar data as used above
-        res = self.testHelper.register_user(user_data)
+        # register user with similar data as used above but different email
+        identical_email = {**user_data, "email": 'another@gmail.com'}
+        res = self.testHelper.register_user(identical_email)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
+
+    def test_checks_cases_to_determine_duplication(self):
+        res = self.testHelper.register_user(user_data)
+        test_data_caps = {**user_data, "email":"another@gmail.com", "username": 'JOHN_DOE'}
+        res = self.testHelper.register_user(test_data_caps)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual(msg, 'Username already exists')
+
+
+
+
+    def test_duplicate_emails_disallowed(self):
+        res = self.testHelper.register_user(user_data)
+        # make a copy of user data and change the username, leave email as is
+        changed_username = {**user_data2, "email": "Johndoe@gmail.com"}
+        res = self.testHelper.register_user(changed_username)
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual(msg, 'Email already exists')
+
 
     # @pytest.mark.run(order = 3)
     def test_user_can_login(self):
