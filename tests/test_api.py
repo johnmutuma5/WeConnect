@@ -257,6 +257,7 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Duplicate business name not allowed")
 
+
     def test_handles_updating_or_deleting_unavailble_business_id(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
@@ -311,7 +312,7 @@ class TestAPICase (BaseAPITestSetUp):
             # unauthorised del
             self.testHelper.delete_business(1000, access_token)])
         for resp in responses:
-            self.assertEqual(resp.status_code, 401)
+            self.assertEqual(resp.status_code, 403)
 
     # @pytest.mark.run(order = 14)
     def test_users_can_make_a_review(self):
