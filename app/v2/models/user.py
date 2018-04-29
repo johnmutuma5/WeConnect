@@ -1,9 +1,11 @@
 from ...exceptions import InvalidUserInputError
 import re
 from . import Base
-from sqlalchemy import Column, Integer, String, Enum, Sequence
+from sqlalchemy import Column, Integer, String, Enum, Sequence, Index
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import func
+from ...helpers import inspect_data
 
 
 class User (Base):
@@ -14,22 +16,29 @@ class User (Base):
     id = Column('id', Integer, server_default=user_id_seq.next_value(),
                 primary_key=True)
     _mobile = Column('mobile', String(12), nullable=False)
-    _username = Column('username', String(63), nullable=False, unique=True)
+    _username = Column('username', String(63), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
     first_name = Column(String(63), nullable=False)
     last_name = Column(String(63), nullable=False)
     gender = Column(Enum('Male', 'Female', name='gender_type'),
                     nullable=False)
-    _email = Column('email', String(127), nullable=False)
+    _email = Column('email', String(127), unique=True, nullable=False)
     # relationships
     businesses = relationship('Business', back_populates='owner')
     reviews = relationship('Review', back_populates='author')
     pass_reset_token = relationship(
         'Token', back_populates='bearer', uselist=False)
 
+
+    # class variables
+    required_fields = ['username', 'mobile', 'first_name',
+        'last_name', 'gender', 'email', 'password']
+
     @classmethod
     def create_user(cls, data):
-        new_user = cls(data)
+        # inspect_data raises a MissingDataError for blank fields
+        cleaned_data = inspect_data(data, cls.required_fields)
+        new_user = cls(cleaned_data)
         return new_user
 
     def __init__(self, data=None):
@@ -78,5 +87,14 @@ class User (Base):
 
     @email.setter
     def email(self, email):
-        # to do some format checks
-        self._email = email
+        email_pattern = r'^([\w\d_\.]+)@([\w\d]+)\.([\w\d]+\.?[\w\d]+)$'
+        match = re.search(email_pattern, email)
+        if match:
+            self._email = email
+            return
+        raise InvalidUserInputError(msg='Invalid email')
+
+
+
+Index('users_email_index', func.lower(User.email), unique=True)
+Index('users_username_index', func.lower(User.username), unique=True)
