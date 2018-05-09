@@ -103,9 +103,12 @@ class TestHelper ():
             return self.app.get(url)
         return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
 
+
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp(self):
         self.testHelper = TestHelper()
+        self.userDbFacade = userDbFacade
+        self.businessDbFacade = businessDbFacade
         init_db()
 
     def tearDown(self):
