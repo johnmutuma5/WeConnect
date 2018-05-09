@@ -1,5 +1,6 @@
 import random
 from .exceptions import MissingDataError
+import hashlib
 
 def generate_token ():
     chars = ""
@@ -33,3 +34,10 @@ def inspect_data(data, required_fields=None):
         data[field] = field_value
 
     return data
+
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password, passhash):
+    return hashlib.sha256(password.encode()).hexdigest() == passhash
