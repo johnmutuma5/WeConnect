@@ -24,7 +24,7 @@ def register():
     try:
         user = User.create_user(data)
     except InvalidUserInputError as e:
-        return jsonify({"msg": e.msg})
+        return jsonify({"msg": e.msg}), 401
 
     try:
         msg = store.add(user)
