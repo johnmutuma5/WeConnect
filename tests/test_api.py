@@ -196,18 +196,22 @@ class TestAPICase (BaseAPITestSetUp):
         # assert that the response business id equals the url variable
         self.assertEqual(res_business_id, 1000)
 
-    def test_users_can_search_for_business(self):
+    def test_users_can_filter_businesses(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         for business_data in businesses_data:
             self.testHelper.register_business(business_data, access_token)
         # define a search key
-        search_key = 'lE'
-        resp = self.testHelper.search_business(search_key)
+        filter_dict = {
+            "name": "Google",
+            "location": "Nairobi",
+            "category": "Technology"
+        }
+        resp = self.testHelper.search_business(filter_dict)
         results = (json.loads(resp.data.decode('utf-8')))['results']
         for result in results:
-            search_key = search_key.lower()
+            search_key = filter_dict['name'].lower()
             business_name = (result['name']).lower()
             self.assertTrue(search_key in business_name)
 
