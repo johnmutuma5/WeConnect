@@ -34,6 +34,18 @@ class TestBusinessCase(BaseAPITestSetUp):
         self.assertEqual(resp.status_code, 401)
 
 
+    def test_only_register_business_without_token(self):
+        url = self.base_url + '/api/v2/businesses'
+        resp = self.app.post(url, data=json.dumps(business_data), headers={**self.headers})
+        self.assertEqual(resp.status_code, 401)
+
+
+    def test_only_register_business_without_json(self):
+        url = self.base_url + '/api/v2/businesses'
+        resp = self.app.post(url, headers={**self.headers})
+        self.assertEqual(resp.status_code, 401)
+
+
     def test_duplicate_businessname_disallowed(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
@@ -43,6 +55,16 @@ class TestBusinessCase(BaseAPITestSetUp):
         res = self.testHelper.register_business(business_data, access_token)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Business name already exists')
+
+
+    def test_handles_invalid_tokens_with_active_sessions(self):
+        self.testHelper.register_user(user_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        # register business with an invalid token
+        res = self.testHelper.register_business(business_data, 'an.invalid.access_token')
+        msg = (json.loads(res.data.decode("utf-8")))['msg']
+        self.assertEqual(msg, 'Invalid Token')
 
 
     def test_handles_blank_business_name(self):
