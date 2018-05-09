@@ -7,7 +7,7 @@ Create Date: 2018-04-03 04:07:38.898350
 """
 from alembic import op
 import sqlalchemy as sa
-from app.v2.models import Base
+from app.storage.base import Base
 
 
 

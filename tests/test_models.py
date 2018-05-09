@@ -1,14 +1,13 @@
 import unittest
-from app.v2.models import Business, User, Review
+from app.business.models import Business, Review
+from app.user.models import User
 from app.exceptions import InvalidUserInputError
+from .dummies import user_data, review_data, business_data
 
 
 class TestReviewCase (unittest.TestCase):
     def setUp(self):
-        self.data = {
-            'body': 'They create progressive technology products',
-            'heading': 'Wonderful'
-        }
+        self.data = review_data[0]
         self.test_author_id = 'TST00001'
         self.test_bss_id = 'BUS00001'
         self.new_review = Review.create_review(

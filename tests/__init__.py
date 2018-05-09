@@ -2,7 +2,9 @@ import unittest
 import json
 from .dummies import login_data
 from app import app
-from app.v2.models import init_db, drop_tables
+from app.storage.base import init_db, drop_tables
+from app.business.backends import businessDbFacade
+from app.user.backends import userDbFacade
 
 
 # requests = requests.Session() #persist cookies across requests

@@ -1,5 +1,5 @@
-from app.v2 import dbEngine
-from app.v2.models import Base
+from app.storage.base import dbEngine
+from app.storage.base import Base
 import sys
 
 

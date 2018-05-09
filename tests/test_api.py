@@ -1,8 +1,8 @@
 import unittest, pytest, json, re, time
 from sqlalchemy import func
-from app.v2.models import Business, User, Review
+from app.business.models import Business, Review
+from app.user.models import User
 from app.exceptions import InvalidUserInputError
-from app.v2 import store
 from . import BaseAPITestSetUp
 from .dummies import (user_data, user_data2, business_data,
                       invalid_credentials, login_data, login_data2,
