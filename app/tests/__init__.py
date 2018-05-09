@@ -1,10 +1,12 @@
 import unittest
 import json
+from sqlalchemy import func
 from .dummies import login_data
 from app import app
 from app.storage.base import init_db, drop_tables
 from app.business.backends import businessDbFacade
 from app.user.backends import userDbFacade
+from app.user.models import User
 
 
 # requests = requests.Session() #persist cookies across requests
@@ -107,9 +109,26 @@ class TestHelper ():
 class BaseAPITestSetUp (unittest.TestCase):
     def setUp(self):
         self.testHelper = TestHelper()
+        self.base_url = self.testHelper.base_url
+        self.app = self.testHelper.app
+        self.headers = self.testHelper.headers
         self.userDbFacade = userDbFacade
         self.businessDbFacade = businessDbFacade
         init_db()
+
+
+    def db_object_count(self, Obj_model, col_name, value):
+        store = self.businessDbFacade
+
+        if isinstance(Obj_model, User):
+            store = self.userDbFacade
+
+        session = store.Session()
+        count = session.query(func.COUNT(getattr(Obj_model, col_name)))\
+            .filter(getattr(Obj_model, col_name) == value)\
+            .scalar()
+        session.close()
+        return count
 
     def tearDown(self):
         drop_tables()

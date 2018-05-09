@@ -40,6 +40,11 @@ class TestBusinessCase (unittest.TestCase):
             business.mobile = '254725k000000'
 
 
+    def test_disallows_invalid_businessname(self):
+        with self.assertRaises(InvalidUserInputError):
+            self.new_business.name = '9'
+
+
 class TestUserCase (unittest.TestCase):
     def setUp(self):
         self.data = user_data
