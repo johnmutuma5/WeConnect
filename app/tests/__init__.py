@@ -1,6 +1,5 @@
 import unittest
 import json
-from sqlalchemy import func
 from .dummies import login_data
 from app import app
 from app.storage.base import init_db, drop_tables
@@ -117,18 +116,18 @@ class BaseAPITestSetUp (unittest.TestCase):
         init_db()
 
 
-    def db_object_count(self, Obj_model, col_name, value):
+    def db_object_count(self, model, col_name, value):
         store = self.businessDbFacade
 
-        if isinstance(Obj_model, User):
+        if isinstance(model, User):
             store = self.userDbFacade
 
         session = store.Session()
-        count = session.query(func.COUNT(getattr(Obj_model, col_name)))\
-            .filter(getattr(Obj_model, col_name) == value)\
-            .scalar()
+        results = session.query(model)\
+            .filter(getattr(model, col_name) == value).all()
         session.close()
-        return count
+        return len(results)
+
 
     def tearDown(self):
         drop_tables()
