@@ -62,14 +62,13 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
 
+
     def test_checks_cases_to_determine_duplication(self):
         res = self.testHelper.register_user(user_data)
         test_data_caps = {**user_data, "email":"another@gmail.com", "username": 'JOHN_DOE'}
         res = self.testHelper.register_user(test_data_caps)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
-
-
 
 
     def test_duplicate_emails_disallowed(self):

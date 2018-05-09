@@ -22,12 +22,7 @@ class TestReviewCase (unittest.TestCase):
 
 class TestBusinessCase (unittest.TestCase):
     def setUp(self):
-        self.data = {
-            'name': 'Andela',
-            'mobile': '254720000000',
-            'location': 'TRM',
-            'owner': 'John',
-        }
+        self.data = business_data
         self.test_id = 'TST00001'
         self.new_business = Business.create_business(self.data, self.test_id)
 
@@ -47,15 +42,7 @@ class TestBusinessCase (unittest.TestCase):
 
 class TestUserCase (unittest.TestCase):
     def setUp(self):
-        self.data = {
-            'first_name': 'Lazuli',
-            'last_name': 'Murimi',
-            'gender': 'Female',
-            'email': 'lazuli@gmail.com',
-            'mobile': '254728000000',
-            'username': 'laz_doe',
-            'password': 'pass'
-        }
+        self.data = user_data
         self.new_user = User.create_user(self.data)
 
     def test_create_user(self):
