@@ -3,7 +3,7 @@ from flask import jsonify, request, session, Blueprint
 from app.decorators import login_required, require_json
 from app.business.models import Business
 from .backends import businessDbFacade as store
-from ..exceptions import InvalidUserInputError
+from ..exceptions import InvalidUserInputError, PaginationError
 from .utils import (get_info_response, register_a_business,
     update_business_info, delete_business, add_a_review)
 
