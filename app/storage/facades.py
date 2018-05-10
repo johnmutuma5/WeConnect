@@ -159,20 +159,37 @@ class BusinessDbFacade(DbFacade):
             session.close()
 
 
-    def filter_businesses (self, filter_dict):
+    def search_businesses(self, search_key):
+        session = self.Session()
+        _operator = '%' + search_key + '%'
+        results = session.query(Business)\
+            .filter(Business.name.ilike(_operator))\
+            .all()
+
+        results_info = self._process_results(results)
+        session.close()
+        return results_info
+
+
+    def filter_businesses (self, filter_params):
         session = self.Session()
         subquery = session.query(Business)
 
-        for key in filter_dict.keys():
-            _operator = '%' + filter_dict[key] + '%'
+
+        for key in filter_params.keys():
+            if key not in VALID_BUSINESS_FIELDS:
+                continue
+            search_key = filter_params[key]
+            _operator = '%' + search_key + '%'
             subquery = subquery.filter(getattr(Business, key).ilike(_operator))
 
+        # pagination
+        limit = filter_params.get("limit")
+        page = filter_params.get("page") or 1
+        subquery = self._apply_pagination(limit, page, subquery)
+
         results = subquery.all()
-        results_info = []
-        for business in results:
-            # session.expunge(business)
-            business_info = self.clerk.extract_business_data(business)
-            results_info.append(business_info)
+        results_info = self._process_results(results)
         session.close()
         return results_info
 
