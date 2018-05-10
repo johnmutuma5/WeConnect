@@ -25,8 +25,7 @@ def businesses():
     return jsonify({"businesses": businesses_info}), 200
 
 
-@business.route('/<int:business_id>',
-          methods=['GET', 'PUT', 'DELETE'])
+@business.route('/<int:business_id>', methods=['GET', 'PUT', 'DELETE'])
 @require_json
 def one_business(business_id):
     if request.method == 'GET':
@@ -49,10 +48,20 @@ def one_business(business_id):
     return response
 
 
+@business.route('/search', methods=['GET'])
+def search_business():
+    search_key = request.args.get('q')
+    results = store.search_businesses(search_key)
+    return jsonify({'results': results})
+
+
 @business.route('/filter', methods=['GET'])
 def filter_businesses():
-    filter_keys = request.args
-    results = store.filter_businesses(filter_keys)
+    filter_params = request.args
+    try:
+        results = store.filter_businesses(filter_params)
+    except PaginationError as error:
+        return jsonify({"msg": error.msg})
     return jsonify({'results': results})
 
 
