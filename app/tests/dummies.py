@@ -33,31 +33,25 @@ invalid_credentials = {"username": "alice_doe", "password": "pass2"}
 
 business_data = {
     "name": "Andela Kenya",
-    "owner": "Alice Doe",
-    "location": "TRM, Thika Road",
+    "co-owners": ["Alice Doe"],
+    "location": "TRM, Thika Road, Nairobi",
     "mobile": "254700020020",
     "category": "Technology"
 }
 
 businesses_data = [
-    {
-        "name": "Andela Kenya",
-        "owner": "Alice Doe",
-        "location": "TRM, Thika Road",
-        "mobile": "254700020020",
-        "category": "Technology"
-    },
+    business_data,
     {
         "name": "Google",
-        "owner": "John Doe",
+        "co-owners": ["Alice Doe"],
         "location": "Nairobi",
         "mobile": "254700982005",
         "category": "Technology"
     },
     {
         "name": "Crafters Inc.",
-        "owner": "Mike Main",
-        "location": "Ridgeways, Kiambu Road",
+        "co-owners": ["Alice Doe"],
+        "location": "Ridgeways, Kiambu Road, Nairobi",
         "mobile": "254750020625",
         "category": "Arts & Creativiy"
     }
