@@ -21,11 +21,14 @@ class StoreHelper ():
         ...
 
     @staticmethod
-    def extract_business_data(business):
+    def extract_business_data(business, session=None):
         business_data = {}
-        fields = ["name", *REQUIRED_BUSINESS_FIELDS, "id"]
+        fields = ["name", *VALID_BUSINESS_FIELDS, "id"]
         for field in fields:
-            business_data[field] = getattr(business, field)
+            value = getattr(business, field)
+            if isinstance(value, User):
+                value = value.id
+            business_data[field] = value
         return business_data
 
     @staticmethod
@@ -88,6 +91,29 @@ class DbFacade():
         raise PermissionDeniedError(expression, msg)
 
 
+    def _process_results(self, results):
+        results_info = []
+        for business in results:
+            business_info = self.clerk.extract_business_data(business)
+            results_info.append(business_info)
+        return results_info
+
+
+    def _apply_pagination (self, limit=None, page=1, subquery=None):
+        if not limit:
+            return subquery
+
+        try:
+            limit = int(limit)
+            offset = limit*(int(page)-1)
+            subquery = subquery.limit(limit)
+            subquery = subquery.offset(offset)
+        except ValueError:
+            raise PaginationError(msg="Invalid pagination limit or page")
+
+        return subquery
+
+
 
 
 class BusinessDbFacade(DbFacade):
@@ -112,7 +138,7 @@ class BusinessDbFacade(DbFacade):
         session = self.Session()
         businesses = session.query(Business).all()
         for business in businesses:
-            business_data = self.clerk.extract_business_data(business)
+            business_data = self.clerk.extract_business_data(business, session)
             businesses_info.append(business_data)
         session.close()
         return businesses_info
