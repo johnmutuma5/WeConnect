@@ -5,7 +5,7 @@ from app.business.models import Business, Review
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 import re
-from app.business.schemas import REQUIRED_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS
+from app.business.schemas import VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS
 from app.user.schemas import REQUIRED_USER_FIELDS
 
 

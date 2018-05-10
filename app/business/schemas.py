@@ -6,6 +6,11 @@ REQUIRED_BUSINESS_FIELDS = [
     "category"
 ]
 
+VALID_BUSINESS_FIELDS = [
+    *REQUIRED_BUSINESS_FIELDS,
+    "owner"
+]
+
 
 REQUIRED_REVIEW_FIELDS = [
     "heading",
