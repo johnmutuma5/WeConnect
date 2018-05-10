@@ -66,9 +66,14 @@ class TestHelper ():
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
         return self.app.get(url)
     #
-    def search_business(self, filter_dict):
+    def filter_business(self, filter_dict):
         url = self.base_url + '/api/v2/businesses/filter'
         return self.app.get(url, query_string=filter_dict)
+
+    #
+    def search_business(self, search_key):
+        url = self.base_url + '/api/v2/businesses/search'
+        return self.app.get(url, query_string={"q": search_key})
 
     def update_business(self, raw_id, update_data, token=None):
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
