@@ -1,4 +1,5 @@
-from app.exceptions import DuplicationError, DataNotFoundError, PermissionDeniedError
+from app.exceptions import (DuplicationError, DataNotFoundError,
+    PermissionDeniedError, PaginationError)
 from app import config
 from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review

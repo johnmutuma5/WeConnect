@@ -32,3 +32,8 @@ class MissingDataError(InvalidUserInputError):
     '''
         raised: when data passed by user lacks some required fields
     '''
+
+class PaginationError(CustomException):
+    '''
+        raised: when user uses invalid page and limit values for pagination
+    '''
