@@ -1,11 +1,9 @@
-import unittest, pytest, json, re, time
-from app.business.models import Business, Review
-from app.user.models import User
-from app.exceptions import InvalidUserInputError
+import unittest
+import json
+from app.business.models import Review
 from app.tests import BaseAPITestSetUp
 from app.tests.dummies import (user_data, user_data2, business_data,
-                      invalid_credentials, login_data, login_data2,
-                      businesses_data, update_data, review_data)
+                               login_data, login_data2, review_data)
 
 
 class TestBusinessCase(BaseAPITestSetUp):
@@ -17,7 +15,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         # test message to match regex
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches(res_msg, pattern)
-
 
     def test_users_can_make_a_review(self):
         self.testHelper.register_user(user_data)
@@ -41,7 +38,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         pattern = r"^SUCCESS:.+$"
         self.assertRegexpMatches(msg, pattern)
         self.testHelper.logout_user(access_token)
-
 
     def test_user_can_get_reviews(self):
         self.testHelper.register_user(user_data)

@@ -1,11 +1,8 @@
-import unittest, pytest, json, re, time
-from app.business.models import Business, Review
-from app.user.models import User
-from app.exceptions import InvalidUserInputError
+import unittest
+import json
+import re
 from app.tests import BaseAPITestSetUp
-from app.tests.dummies import (user_data, user_data2, business_data,
-                      invalid_credentials, login_data, login_data2,
-                      businesses_data, update_data, review_data)
+from app.tests.dummies import user_data, invalid_credentials, login_data
 
 
 class TestAPICase (BaseAPITestSetUp):

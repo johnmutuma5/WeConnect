@@ -1,13 +1,12 @@
-import json, jwt, re
+import json
+import jwt
 from flask import jsonify, request, session, url_for, Blueprint
-
 from app import config
+from app.decorators import login_required, require_json
 from .backends import userDbFacade as store
 from .models import User, PasswordResetToken
-from ..helpers import generate_token, inspect_data, verify_password
-from app.decorators import login_required, require_json
-from ..exceptions import (DuplicationError, DataNotFoundError,
-                         PermissionDeniedError, InvalidUserInputError)
+from ..helpers import generate_token, verify_password
+from ..exceptions import DuplicationError, InvalidUserInputError
 
 '''
 BEGINNING OF ENDOPOINTS
@@ -22,12 +21,12 @@ def register():
     data = json.loads(request.data.decode('utf-8'))
 
     try:
-        user = User.create_user(data)
+        new_user = User.create_user(data)
     except InvalidUserInputError as e:
         return jsonify({"msg": e.msg}), 401
 
     try:
-        msg = store.add(user)
+        msg = store.add(new_user)
     except DuplicationError as e:
         return jsonify({'msg': e.msg}), 401
 
@@ -75,8 +74,12 @@ def reset_password():
             token_string = generate_token()
             token_obj = PasswordResetToken(token_string, username)
             store.add_token(token_obj, username)
-            reset_link = url_for('.update_password', _external=True, t=token_string)
-            # to email reset_link with token url parameter to user's email address
+            reset_link = url_for(
+                '.update_password',
+                _external=True,
+                t=token_string)
+            # to email reset_link with token url parameter to user's email
+            # address
             return jsonify({"reset_link": reset_link}), 200  # for testing
         return jsonify({"msg": "Invalid Username"}), 404
     return jsonify({"msg": "Please supply your username"}), 401

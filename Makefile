@@ -5,7 +5,7 @@ install:
 	pip install -r requirements.txt
 
 freeze:
-	pip freeze | grep -v "pkg-resources" > requirements.txt
+	pip freeze | grep -v "pylint" > requirements.txt
 
 tables:
 	python tables.py create

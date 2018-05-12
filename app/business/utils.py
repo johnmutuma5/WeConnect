@@ -5,7 +5,7 @@ from app.decorators import login_required
 from app.helpers import inspect_data
 from .backends import businessDbFacade as store
 from ..exceptions import (DuplicationError, DataNotFoundError,
-                         PermissionDeniedError, InvalidUserInputError)
+                          PermissionDeniedError, InvalidUserInputError)
 
 
 def get_info_response(business_id, info_type):
@@ -42,13 +42,13 @@ def register_a_business(business_json):
     return jsonify({"msg": msg}), 201
 
 
-def find_status_code (err):
+def find_status_code(err):
     status_code = None
-    if type (err) == DataNotFoundError:
+    if isinstance(err, DataNotFoundError):
         status_code = 404
-    elif type(err) == PermissionDeniedError:
+    elif isinstance(err, PermissionDeniedError):
         status_code = 403
-    elif type(err) == DuplicationError:
+    elif isinstance(err, DuplicationError):
         status_code = 409
     return status_code
 

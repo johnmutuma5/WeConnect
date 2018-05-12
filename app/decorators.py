@@ -1,4 +1,5 @@
-import jwt, re
+import jwt
+import re
 from flask import jsonify, request, session
 from jwt.exceptions import InvalidSignatureError, DecodeError
 from app import config
@@ -17,7 +18,6 @@ def wraps(original_func):
         wrapper.__doc__ = original_func.__doc__
         return wrapper
     return decorator
-
 
 
 def handle_invalid_credentials(msg=None):
@@ -51,7 +51,8 @@ def login_required(func):
 def require_json(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if request.method in ['POST', 'PUT'] and not request.data.decode('utf-8'):
+        if request.method in ['POST',
+                              'PUT'] and not request.data.decode('utf-8'):
             return jsonify({"msg": "Could not handle the request"}), 401
 
         return func(*args, **kwargs)

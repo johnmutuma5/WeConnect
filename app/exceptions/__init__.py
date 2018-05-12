@@ -28,10 +28,12 @@ class InvalidUserInputError (CustomException):
         raised: when trying to write invalid data
     '''
 
+
 class MissingDataError(InvalidUserInputError):
     '''
         raised: when data passed by user lacks some required fields
     '''
+
 
 class PaginationError(CustomException):
     '''

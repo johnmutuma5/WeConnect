@@ -2,7 +2,7 @@ from app.storage.base import Base
 from app.exceptions import InvalidUserInputError
 import re
 from sqlalchemy import (Column, Integer, String, Sequence,
-    ForeignKeyConstraint, Index, ForeignKey, Text)
+                        ForeignKeyConstraint, Index, ForeignKey, Text)
 from sqlalchemy.sql.expression import text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
@@ -15,13 +15,16 @@ class Business (Base):
     __table_args__ = (
         # we can use a FK at column level, constraint good for composite FKs
         ForeignKeyConstraint(['owner_id'], ['users.id'],
-             name='FK_business_user_id',
-             ondelete='CASCADE', onupdate='CASCADE'),
+                             name='FK_business_user_id',
+                             ondelete='CASCADE', onupdate='CASCADE'),
         Index('ix_business_name', text('LOWER(name)'), unique=True),
         {}
     )
 
-    business_id_seq = Sequence('business_id_seq', start=1000, metadata=Base.metadata)
+    business_id_seq = Sequence(
+        'business_id_seq',
+        start=1000,
+        metadata=Base.metadata)
     id = Column('id', Integer, server_default=business_id_seq.next_value(),
                 primary_key=True)
     _mobile = Column('mobile', String(12), nullable=False)
@@ -72,7 +75,7 @@ class Business (Base):
             self._mobile = num
         else:
             raise InvalidUserInputError("Business::mobile.setter",
-                "Invalid mobile number")
+                                        "Invalid mobile number")
 
     @name.setter
     def name(self, business_name):
@@ -84,19 +87,28 @@ class Business (Base):
             raise InvalidUserInputError(msg='Invalid business name')
 
 
-
 class Review (Base):
     __tablename__ = 'review'
 
     rev_id_seq = Sequence('rev_id_seq', start=1, metadata=Base.metadata)
     id = Column('id', Integer, server_default=rev_id_seq.next_value(),
-        primary_key=True)
+                primary_key=True)
     heading = Column(String(63), nullable=False)
     body = Column(Text, nullable=False)
-    author_id = Column(Integer,
-        ForeignKey('users.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    business_id = Column(Integer,
-        ForeignKey('business.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
+    author_id = Column(
+        Integer,
+        ForeignKey(
+            'users.id',
+            ondelete='CASCADE',
+            onupdate='CASCADE'),
+        nullable=False)
+    business_id = Column(
+        Integer,
+        ForeignKey(
+            'business.id',
+            ondelete='CASCADE',
+            onupdate='CASCADE'),
+        nullable=False)
 
     author = relationship('User', back_populates='reviews')
     business = relationship('Business', back_populates='reviews')

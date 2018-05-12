@@ -1,11 +1,9 @@
-import unittest, pytest, json, re, time
-from app.business.models import Business, Review
+import unittest
+import json
+import re
 from app.user.models import User
-from app.exceptions import InvalidUserInputError
 from app.tests import BaseAPITestSetUp
-from app.tests.dummies import (user_data, user_data2, business_data,
-                      invalid_credentials, login_data, login_data2,
-                      businesses_data, update_data, review_data)
+from app.tests.dummies import user_data, user_data2
 
 
 class TestAPICase (BaseAPITestSetUp):
@@ -28,25 +26,23 @@ class TestAPICase (BaseAPITestSetUp):
         user_in_response_msg = match.group('username')
         self.assertEqual(user_in_response_msg, user_data['username'])
 
-
     def test_user_cannot_register_with_invalid_username(self):
         invalid_names = ['000', '90jdj', 'axc']
         for invalid_name in invalid_names:
-            # make a copy of valid user_data by unpacking and replace username with invalid_name
+            # make a copy of valid user_data by unpacking and replace username
+            # with invalid_name
             invalid_user_data = {**user_data, "username": invalid_name}
             # send request with invalid_user_data
             res = self.testHelper.register_user(invalid_user_data)
             msg = (json.loads(res.data.decode("utf-8")))['msg']
             self.assertEqual(msg, 'Invalid username!')
 
-
     def test_user_cannot_register_with_invalid_email(self):
-        invalid_email_data = {**user_data, 'email':'john.doe@'}
+        invalid_email_data = {**user_data, 'email': 'john.doe@'}
         resp = self.testHelper.register_user(invalid_email_data)
         resp_dict = json.loads(resp.data.decode('utf-8'))
         msg = resp_dict['msg']
         self.assertEqual(msg, 'Invalid email')
-
 
     # @pytest.mark.run(order = 2)
     def test_duplicate_username_disallowed(self):
@@ -57,14 +53,15 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
 
-
     def test_checks_cases_to_determine_duplication(self):
         res = self.testHelper.register_user(user_data)
-        test_data_caps = {**user_data, "email":"another@gmail.com", "username": 'JOHN_DOE'}
+        test_data_caps = {
+            **user_data,
+            "email": "another@gmail.com",
+            "username": 'JOHN_DOE'}
         res = self.testHelper.register_user(test_data_caps)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
-
 
     def test_duplicate_emails_disallowed(self):
         res = self.testHelper.register_user(user_data)

@@ -1,11 +1,8 @@
-import unittest, pytest, json, re, time
-from app.business.models import Business, Review
-from app.user.models import User
-from app.exceptions import InvalidUserInputError
+import unittest
+import json
+import time
 from app.tests import BaseAPITestSetUp
-from app.tests.dummies import (user_data, user_data2, business_data,
-                      invalid_credentials, login_data, login_data2,
-                      businesses_data, update_data, review_data)
+from app.tests.dummies import user_data
 
 
 class TestAPICase (BaseAPITestSetUp):
@@ -18,14 +15,16 @@ class TestAPICase (BaseAPITestSetUp):
         return reset_link
 
     def supply_new_password(self, reset_link, reset_data):
-        resp = self.testHelper.reset_password_verify(reset_link, 'POST', reset_data)
+        resp = self.testHelper.reset_password_verify(
+            reset_link, 'POST', reset_data)
         return resp
 
     def test_users_can_reset_passwords(self):
         # use username to send password reset request
         username = user_data['username']
         reset_link = self.get_password_reset_link(username)
-        # client first clicks link within their email inbox to get update password form
+        # client first clicks link within their email inbox to get update
+        # password form
         resp = self.testHelper.reset_password_verify(reset_link)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, 'Please supply your new password')
@@ -52,14 +51,14 @@ class TestAPICase (BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Token expired")
 
-
     def test_users_cannot_reset_with_invalid_token(self):
         self.testHelper.register_user(user_data)
         reset_data = {'new_password': "changed"}
         fake_token = "aquitelongstringrepresentingaFAKEtokentoresetpassword"
         fake_link = 'http://127.0.0.1:8080/api/v2/auth/reset-password/verify?t='\
-            +fake_token
-        resp = self.testHelper.reset_password_verify(fake_link, 'POST', reset_data)
+            + fake_token
+        resp = self.testHelper.reset_password_verify(
+            fake_link, 'POST', reset_data)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Invalid token")
         # test users can

@@ -1,10 +1,13 @@
+'''
+app instance
+'''
+
 from flask import Flask
 
 app = Flask(__name__)
 app.config.from_object('config.env')
 config = app.config
 
-# fetch Blueprints
 from app.business.views import business
 from app.user.views import user
 

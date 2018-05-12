@@ -5,7 +5,7 @@ from app.business.models import Business
 from .backends import businessDbFacade as store
 from ..exceptions import InvalidUserInputError, PaginationError
 from .utils import (get_info_response, register_a_business,
-    update_business_info, delete_business, add_a_review)
+                    update_business_info, delete_business, add_a_review)
 
 
 business = Blueprint('business', __name__)
@@ -41,7 +41,6 @@ def one_business(business_id):
         except InvalidUserInputError as e:
             # MissingDataError extends InvalidUserInputError
             return jsonify({'msg': e.msg}), 422
-
 
     # handle DELETE
     response = delete_business(business_id)

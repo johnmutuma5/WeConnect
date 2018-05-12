@@ -47,14 +47,21 @@ class TestHelper ():
 
     def logout_user(self, token=None):
         url = self.base_url + '/api/v2/auth/logout'
-        return self.app.post(url,
-            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
+        return self.app.post(
+            url,
+            headers={
+                **self.headers,
+                'authorization': 'Bearer {}'.format(token)})
     #
 
     def register_business(self, bizdata, token=None):
         url = self.base_url + '/api/v2/businesses'
-        return self.app.post(url, data=json.dumps(bizdata),
-            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
+        return self.app.post(
+            url,
+            data=json.dumps(bizdata),
+            headers={
+                **self.headers,
+                'authorization': 'Bearer {}'.format(token)})
     #
 
     def get_businesses(self):
@@ -66,6 +73,7 @@ class TestHelper ():
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
         return self.app.get(url)
     #
+
     def filter_business(self, filter_dict):
         url = self.base_url + '/api/v2/businesses/filter'
         return self.app.get(url, query_string=filter_dict)
@@ -77,21 +85,29 @@ class TestHelper ():
 
     def update_business(self, raw_id, update_data, token=None):
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
-        return self.app.put(url, data=json.dumps(update_data),
-            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
+        return self.app.put(
+            url,
+            data=json.dumps(update_data),
+            headers={
+                **self.headers,
+                'authorization': 'Bearer {}'.format(token)})
     #
 
     def delete_business(self, raw_id, token=None):
         url = self.base_url + '/api/v2/businesses/{id:}'.format(id=raw_id)
-        return self.app.delete(url,
-            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
+        return self.app.delete(
+            url,
+            headers={
+                **self.headers,
+                'authorization': 'Bearer {}'.format(token)})
     #
 
     def make_review(self, raw_id, review_data, token=None):
         url = self.base_url + \
             '/api/v2/businesses/{id:}/reviews'.format(id=raw_id)
-        return self.app.post(url, data=json.dumps(review_data),
-            headers={**self.headers, 'authorization': 'Bearer {}'.format(token)})
+        return self.app.post(
+            url, data=json.dumps(review_data), headers={
+                **self.headers, 'authorization': 'Bearer {}'.format(token)})
     #
 
     def get_all_reviews(self, raw_id):
@@ -101,13 +117,19 @@ class TestHelper ():
 
     def reset_password(self, reset_data, token=None):
         url = self.base_url + '/api/v2/auth/reset-password'
-        return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
+        return self.app.post(
+            url,
+            data=json.dumps(reset_data),
+            headers=self.headers)
 
     def reset_password_verify(self, reset_link, method=None, reset_data=None):
         url = reset_link
         if not method:
             return self.app.get(url)
-        return self.app.post(url, data=json.dumps(reset_data), headers=self.headers)
+        return self.app.post(
+            url,
+            data=json.dumps(reset_data),
+            headers=self.headers)
 
 
 class BaseAPITestSetUp (unittest.TestCase):
@@ -120,7 +142,6 @@ class BaseAPITestSetUp (unittest.TestCase):
         self.businessDbFacade = businessDbFacade
         init_db()
 
-
     def db_object_count(self, model, col_name, value):
         store = self.businessDbFacade
 
@@ -132,7 +153,6 @@ class BaseAPITestSetUp (unittest.TestCase):
             .filter(getattr(model, col_name) == value).all()
         session.close()
         return len(results)
-
 
     def tearDown(self):
         drop_tables()

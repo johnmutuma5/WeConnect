@@ -1,12 +1,13 @@
 import random
-from .exceptions import MissingDataError
 import hashlib
+from .exceptions import MissingDataError
 
-def generate_token ():
+
+def generate_token():
     chars = ""
     for i in range(26):
-        chars += chr (65+i)
-        chars += chr (97+i)
+        chars += chr(65 + i)
+        chars += chr(97 + i)
         if i > 9:
             continue
         chars += str(i)
@@ -29,7 +30,7 @@ def inspect_data(data, required_fields=None):
     for field in required_fields:
         field_value = str(data.get(field, "")).strip()
         if not len(field_value):
-            raise MissingDataError(msg='Please provide %s' %field)
+            raise MissingDataError(msg='Please provide %s' % field)
         field_value = " ".join(field_value.split())
         data[field] = field_value
 
@@ -38,6 +39,7 @@ def inspect_data(data, required_fields=None):
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
 
 def verify_password(password, passhash):
     return hashlib.sha256(password.encode()).hexdigest() == passhash

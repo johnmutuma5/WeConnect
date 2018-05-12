@@ -1,15 +1,15 @@
-import unittest, json
+import unittest
+import json
 from app.tests import BaseAPITestSetUp
-from app.tests.dummies import (user_data, business_data,
-                      login_data,
-                      businesses_data, update_data)
+from app.tests.dummies import(user_data, business_data,
+                              login_data, businesses_data)
 
 
 class TestBusinessCase(BaseAPITestSetUp):
 
     def test_users_retrieve_all_businesses(self):
         self.testHelper.register_user(user_data)
-        res=self.testHelper.login_user(login_data)
+        res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         # register a number of businesses
         for business_data in businesses_data:
@@ -23,7 +23,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         for data in businesses_data:
             self.assertIn(data['name'], res_business_names)
 
-
     def test_users_retrieve_one_business(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
@@ -36,7 +35,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         res_business_id = res_business_info['id']
         # assert that the response business id equals the url variable
         self.assertEqual(res_business_id, 1000)
-
 
     def test_users_can_filter_businesses(self):
         self.testHelper.register_user(user_data)
@@ -57,7 +55,7 @@ class TestBusinessCase(BaseAPITestSetUp):
             business_name = (result['name']).lower()
             self.assertTrue(search_key in business_name)
 
-    def test_filter_applies_pagination (self):
+    def test_filter_applies_pagination(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
@@ -73,7 +71,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         resp = self.testHelper.filter_business(filter_dict)
         results = (json.loads(resp.data.decode('utf-8')))['results']
         self.assertTrue(len(results) == limit)
-
 
     def test_it_handles_filter_with_invalid_limit_or_page(self):
         self.testHelper.register_user(user_data)
@@ -91,7 +88,6 @@ class TestBusinessCase(BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, 'Invalid pagination limit or page')
 
-
     def test_users_can_search_for_business(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
@@ -106,7 +102,6 @@ class TestBusinessCase(BaseAPITestSetUp):
             search_key = search_key.lower()
             business_name = (result['name']).lower()
             self.assertTrue(search_key in business_name)
-
 
     def test_users_retrieve_only_avail_business_info(self):
         raw_id = 1000000

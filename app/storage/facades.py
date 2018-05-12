@@ -1,5 +1,5 @@
 from app.exceptions import (DuplicationError, DataNotFoundError,
-    PermissionDeniedError, PaginationError)
+                            PermissionDeniedError, PaginationError)
 from app import config
 from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review
@@ -90,7 +90,6 @@ class DbFacade():
         expression = "Storage::unauthorised operation"
         raise PermissionDeniedError(expression, msg)
 
-
     def _process_results(self, results):
         results_info = []
         for business in results:
@@ -98,21 +97,18 @@ class DbFacade():
             results_info.append(business_info)
         return results_info
 
-
-    def _apply_pagination (self, limit=None, page=1, subquery=None):
+    def _apply_pagination(self, limit=None, page=1, subquery=None):
         if not limit:
             return subquery
 
         try:
             limit = int(limit)
-            offset = limit*(int(page)-1)
+            offset = limit * (int(page) - 1)
             subquery = subquery.limit(limit).offset(offset)
         except ValueError:
             raise PaginationError(msg="Invalid pagination limit or page")
 
         return subquery
-
-
 
 
 class BusinessDbFacade(DbFacade):
@@ -131,7 +127,6 @@ class BusinessDbFacade(DbFacade):
             session.close()
         return 'SUCCESS: business {} created!'.format(businessname)
 
-
     def get_businesses_info(self):
         businesses_info = []
         session = self.Session()
@@ -142,7 +137,6 @@ class BusinessDbFacade(DbFacade):
         session.close()
         return businesses_info
 
-
     def get_business_info(self, business_id):
         session = self.Session()
         target_business = session.query(Business)\
@@ -151,12 +145,12 @@ class BusinessDbFacade(DbFacade):
         try:
             if target_business:
                 # session.expunge (target_business)
-                business_info = self.clerk.extract_business_data(target_business)
+                business_info = self.clerk.extract_business_data(
+                    target_business)
                 return business_info
             self.handle_data_not_found()
         finally:
             session.close()
-
 
     def search_businesses(self, search_key):
         session = self.Session()
@@ -169,11 +163,9 @@ class BusinessDbFacade(DbFacade):
         session.close()
         return results_info
 
-
-    def filter_businesses (self, filter_params):
+    def filter_businesses(self, filter_params):
         session = self.Session()
         subquery = session.query(Business)
-
 
         for key in filter_params.keys():
             if key not in VALID_BUSINESS_FIELDS:
@@ -192,7 +184,6 @@ class BusinessDbFacade(DbFacade):
         session.close()
         return results_info
 
-
     def update_business(self, business_id, update_data, issuer_id):
         session = self.Session()
         target_business = session.query(Business)\
@@ -206,8 +197,9 @@ class BusinessDbFacade(DbFacade):
                     session.commit()
                 except IntegrityError:
                     session.rollback()
-                    raise DuplicationError("Storage::update_business",
-                                           'Duplicate business name not allowed')
+                    raise DuplicationError(
+                        "Storage::update_business",
+                        'Duplicate business name not allowed')
                 finally:
                     session.close()
                 return "Changes recorded successfully"
@@ -215,7 +207,6 @@ class BusinessDbFacade(DbFacade):
             self.handle_permission_denied(session)
         # if a business with the business_id is not found
         self.handle_data_not_found(session)
-
 
     def delete_business(self, business_id, issuer_id):
         session = self.Session()
@@ -234,13 +225,11 @@ class BusinessDbFacade(DbFacade):
         # if business with id = business_id is not found
         self.handle_data_not_found(session)
 
-
     def add_review(self, review_obj):
         session = self.Session()
         session.add(review_obj)
         session.commit()
         return 'SUCCESS: review posted!'
-
 
     def get_reviews_info(self, business_id):
         session = self.Session()
@@ -263,7 +252,6 @@ class BusinessDbFacade(DbFacade):
         self.handle_data_not_found(session)
 
 
-
 class UserDbFacade(DbFacade):
 
     def add_user(self, user_obj):
@@ -276,7 +264,7 @@ class UserDbFacade(DbFacade):
             key = self.retrieve_field_raising_integrity_error(e)
             session.rollback()
             raise DuplicationError('Storage::add_user',
-                                   '%s already exists' %key)
+                                   '%s already exists' % key)
         finally:
             session.close()
 
@@ -295,7 +283,6 @@ class UserDbFacade(DbFacade):
         session.add(token_obj)
         session.commit()
 
-
     def get_token_tuple(self, token_string):
         session = self.Session()
         token_obj = session.query(PasswordResetToken)\
@@ -307,12 +294,10 @@ class UserDbFacade(DbFacade):
         session.close()
         return token_obj, bearer
 
-
     def destroy_token(self, token_obj):
         session = self.Session()
         session.delete(token_obj)
         session.commit()
-
 
     def update_user_password(self, token_bearer, new_password):
         session = self.Session()
