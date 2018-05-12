@@ -5,7 +5,7 @@ class Config():
     DEBUG = True
     TESTING = True
     SECRET_KEY = os.getenv('APP_SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST')
     NAMING_CONVENTION = {
         "ix": "ix_%(column_0_label)s",
         "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -29,3 +29,10 @@ class DevelopmentConfig (Config):
 
 class TestingConfig(Config):
     PASSWORD_RESET_TOKEN_LIFETIME = {'seconds': 15}
+
+
+env = {
+    'dev': DevelopmentConfig,
+    'prod': ProductionConfig,
+    'test': TestingConfig
+}[os.getenv('ENVIRONMENT')]
