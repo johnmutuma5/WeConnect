@@ -106,8 +106,7 @@ class DbFacade():
         try:
             limit = int(limit)
             offset = limit*(int(page)-1)
-            subquery = subquery.limit(limit)
-            subquery = subquery.offset(offset)
+            subquery = subquery.limit(limit).offset(offset)
         except ValueError:
             raise PaginationError(msg="Invalid pagination limit or page")
 
