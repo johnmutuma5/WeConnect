@@ -29,6 +29,7 @@ class DevelopmentConfig (Config):
 
 class TestingConfig(Config):
     PASSWORD_RESET_TOKEN_LIFETIME = {'seconds': 15}
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 env = {

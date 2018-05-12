@@ -3,6 +3,7 @@ language: python
 env:
   DATABASE_URL_TEST="postgresql+psycopg2://postgres:@localhost:5432/testdb"
   APP_SECRET='applicationsecretkey'
+  ENVIRONMENT='dev'
 
 python:
   - 3.6
