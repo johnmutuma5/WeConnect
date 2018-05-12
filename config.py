@@ -4,7 +4,7 @@ import os
 class Config():
     DEBUG = True
     TESTING = True
-    SECRET_KEY = 'asecretkeyfortheapi'
+    SECRET_KEY = os.getenv('APP_SECRET')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     NAMING_CONVENTION = {
         "ix": "ix_%(column_0_label)s",
