@@ -5,7 +5,7 @@ class Config():
     DEBUG = True
     TESTING = True
     SECRET_KEY = 'asecretkeyfortheapi'
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:databasepass@localhost:5432/testdb"
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     NAMING_CONVENTION = {
         "ix": "ix_%(column_0_label)s",
         "uq": "uq_%(table_name)s_%(column_0_name)s",

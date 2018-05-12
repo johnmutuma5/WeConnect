@@ -6,5 +6,6 @@ export PYTHONPATH=$(pwd)
 
 make venv
 source ./venv/bin/activate
+source ./LocalConfig
 make install
 make freeze
