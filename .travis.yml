@@ -1,4 +1,5 @@
 language: python
+
 env:
   DATABASE_URL="postgresql+psycopg2://postgres:@localhost:5432/testdb"
 
