@@ -81,7 +81,7 @@ class DbFacade():
     def handle_data_not_found(session=None):
         if session:
             session.close()
-        msg = "UNSUCCESSFUL: Could not find the requested information"
+        msg = "UNSUCCESSFUL: Could not find the requested business"
         expression = "Storage::unavailable info"
         raise DataNotFoundError(expression, msg)
 
