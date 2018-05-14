@@ -56,6 +56,23 @@ class TestBusinessCase(BaseAPITestSetUp):
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Please provide name")
 
+
+    def test_users_cannot_update_with_unknown_properties(self):
+        self.testHelper.register_user(user_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
+        # register another businesses: business_data[1] has name Google
+        self.testHelper.register_business(businesses_data[1], access_token)
+        # try to update first business with name Google
+        unknown_prop = 'namse'
+        unknown_data = {unknown_prop: "set this"}
+        resp = self.testHelper.update_business(
+            1000, unknown_data, access_token)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, "Unknown property %s"%unknown_prop)
+
+
     def test_handles_updating_an_unavailble_business(self):
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
