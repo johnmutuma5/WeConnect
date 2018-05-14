@@ -240,9 +240,16 @@ class BusinessDbFacade(DbFacade):
 
     def add_review(self, review_obj):
         session = self.Session()
-        session.add(review_obj)
-        session.commit()
+        try:
+            session.add(review_obj)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            return self.handle_data_not_found()
+        finally:
+            session.close()
         return 'SUCCESS: review posted!'
+
 
     def get_reviews_info(self, business_id):
         session = self.Session()

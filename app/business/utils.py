@@ -82,5 +82,9 @@ def add_a_review(business_id, review_data):
     author_id = session.get('user_id')
     new_review = Review.create_review(business_id, author_id, review_data)
     # store the review
-    msg = store.add(new_review)
+    try:
+        msg = store.add(new_review)
+    except DataNotFoundError as error:
+        return jsonify({'msg': error.msg})
+
     return jsonify({'msg': msg}), 200
