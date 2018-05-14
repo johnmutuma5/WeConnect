@@ -57,6 +57,10 @@ class User(Base):
             self.username = data['username']
             self.password = data['password']
 
+    def profile(self, profile_type=None):
+        profile = PrivateUserProfile(self)
+        return profile.get_dict()
+
     # use hybrid_property to make the property accessible with sqlalchemy
     # filter
     @hybrid_property
@@ -113,6 +117,47 @@ class User(Base):
     def password(self, password):
         passhash = hash_password(password)
         self._password = passhash
+
+
+
+class UserProfile():
+    def __init__(self, user):
+        self.user = user
+
+    def _process_business_list(self, business_list):
+        func = lambda business: {
+            'id': business.id,
+            'name': business.name
+        }
+        businesses_map = map(func, business_list)
+        value = list(businesses_map)
+        return value
+
+    def _process_reviews_list(self, reviews_list):
+        func = lambda review: {
+            'id': review.id,
+            'heading': review.heading
+        }
+        reviews_map = map(func, reviews_list)
+        value = list(reviews_map)
+        return value
+
+
+class PrivateUserProfile(UserProfile):
+    def get_dict(self):
+        user_profile = {}
+        for attribute in VALID_USER_FIELDS:
+            value = getattr(self.user, attribute)
+            if attribute in ('businesses',):
+                value = self._process_business_list(value)
+
+            if attribute in ('reviews'):
+                value = self._process_reviews_list(value)
+
+            user_profile[attribute] = value
+
+        return user_profile
+
 
 
 def compute_token_expiry():

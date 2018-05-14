@@ -23,6 +23,10 @@ class StoreHelper ():
         ...
 
     @staticmethod
+    def get_profile(_object, profile_type=None):
+        return _object.profile(profile_type)
+
+    @staticmethod
     def extract_business_data(business, session=None):
         business_data = {}
         fields = ["name", *VALID_BUSINESS_FIELDS, "id"]
@@ -150,8 +154,7 @@ class BusinessDbFacade(DbFacade):
             if not target_business:
                 self.handle_data_not_found()
             # session.expunge (target_business)
-            business_info = self.clerk.extract_business_data(
-                target_business)
+            business_info = self.clerk.extract_business_data(target_business)
             return business_info
         finally:
             session.close()
@@ -299,6 +302,17 @@ class UserDbFacade(DbFacade):
             .first()
         session.close()
         return target_user
+
+
+    def get_user_profile(self, user_id, profile_type=None):
+        session = self.Session()
+        target_user = session.query(User)\
+            .filter(User.id == user_id)\
+            .first()
+        profile = self.clerk.get_profile(target_user, profile_type)
+        session.close()
+        return profile
+
 
     def add_token(self, token_obj, bearer_name):
         session = self.Session()
