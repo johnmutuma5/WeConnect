@@ -7,3 +7,13 @@ REQUIRED_USER_FIELDS = [
     'email',
     'password'
 ]
+
+USER_DEFINED_USER_FIELDS = [
+    *REQUIRED_USER_FIELDS
+]
+
+VALID_USER_FIELDS = [
+    *USER_DEFINED_USER_FIELDS,
+    'businesses',
+    'reviews'
+]

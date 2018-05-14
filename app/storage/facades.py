@@ -4,8 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from app import config
 from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review
-from app.business.schemas import VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS
 from app.user.schemas import REQUIRED_USER_FIELDS
+from app.business.schemas import(VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS,
+                                 USER_DEFINED_BUSINESS_FIELDS)
 from app.exceptions import (DuplicationError, DataNotFoundError,
                             PermissionDeniedError, PaginationError,
                             UnknownPropertyError)
@@ -35,7 +36,7 @@ class StoreHelper ():
     @staticmethod
     def update_business(target_business, update_data):
         for key in update_data.keys():
-            if not hasattr(target_business, key):
+            if key not in USER_DEFINED_BUSINESS_FIELDS:
                 raise UnknownPropertyError(msg="Unknown property %s" %key)
             setattr(target_business, key, update_data[key])
 
@@ -168,6 +169,7 @@ class BusinessDbFacade(DbFacade):
         session.close()
         return results_info
 
+
     def filter_businesses(self, filter_params):
         session = self.Session()
         subquery = session.query(Business)
@@ -187,6 +189,7 @@ class BusinessDbFacade(DbFacade):
         results_info = self._process_results(results)
         session.close()
         return results_info
+
 
     def update_business(self, business_id, update_data, issuer_id):
         session = self.Session()
