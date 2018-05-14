@@ -2,7 +2,7 @@ import re
 from datetime import datetime, timedelta
 from app import config
 from app.storage.base import Base
-from app.user.schemas import REQUIRED_USER_FIELDS
+from app.user.schemas import USER_DEFINED_USER_FIELDS, VALID_USER_FIELDS
 from app.exceptions import InvalidUserInputError
 from app.helpers import inspect_data, hash_password
 
@@ -38,12 +38,12 @@ class User(Base):
         'PasswordResetToken', back_populates='bearer', uselist=False)
 
     # class variables
-    required_fields = [*REQUIRED_USER_FIELDS]
+    writable_fields = [*USER_DEFINED_USER_FIELDS]
 
     @classmethod
     def create_user(cls, data):
         # inspect_data raises a MissingDataError for blank fields
-        cleaned_data = inspect_data(data, cls.required_fields)
+        cleaned_data = inspect_data(data, cls.writable_fields)
         new_user = cls(cleaned_data)
         return new_user
 
