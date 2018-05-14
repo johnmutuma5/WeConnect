@@ -52,7 +52,7 @@ def one_business(business_id):
 def search_business():
     search_key = request.args.get('q')
     results = store.search_businesses(search_key)
-    return jsonify({'results': results})
+    return jsonify({'results': results}), 200
 
 
 @business.route('/filter', methods=['GET'])
@@ -61,8 +61,8 @@ def filter_businesses():
     try:
         results = store.filter_businesses(filter_params)
     except PaginationError as error:
-        return jsonify({"msg": error.msg})
-    return jsonify({'results': results})
+        return jsonify({"msg": error.msg}), 422
+    return jsonify({'results': results}), 200
 
 
 @business.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
