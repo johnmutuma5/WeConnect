@@ -11,12 +11,9 @@ def wraps(original_func):
     Helps keep decorated functions with their original names in the namespace
     '''
     def decorator(original_wrapper):
-        def wrapper(*args, **kwargs):
-            return original_wrapper(*args, **kwargs)
-
-        wrapper.__name__ = original_func.__name__
-        wrapper.__doc__ = original_func.__doc__
-        return wrapper
+        original_wrapper.__name__ = original_func.__name__
+        original_wrapper.__doc__ = original_func.__doc__
+        return original_wrapper
     return decorator
 
 
