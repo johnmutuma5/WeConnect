@@ -146,17 +146,19 @@ class BusinessDbFacade(DbFacade):
             .filter(Business.id == business_id)\
             .first()
         try:
-            if target_business:
-                # session.expunge (target_business)
-                business_info = self.clerk.extract_business_data(
-                    target_business)
-                return business_info
-            self.handle_data_not_found()
+            if not target_business:
+                self.handle_data_not_found()
+            # session.expunge (target_business)
+            business_info = self.clerk.extract_business_data(
+                target_business)
+            return business_info
         finally:
             session.close()
 
     def search_businesses(self, search_key):
         session = self.Session()
+        search_key = search_key or ''
+
         _operator = '%' + search_key + '%'
         results = session.query(Business)\
             .filter(Business.name.ilike(_operator))\
@@ -191,41 +193,47 @@ class BusinessDbFacade(DbFacade):
         target_business = session.query(Business)\
             .filter(Business.id == business_id)\
             .first()
-        if target_business:
-            issuer_is_owner = target_business.owner_id == issuer_id
-            if issuer_is_owner:
-                try:
-                    self.clerk.update_business(target_business, update_data)
-                    session.commit()
-                except IntegrityError:
-                    session.rollback()
-                    raise DuplicationError(
-                        "Storage::update_business",
-                        'Duplicate business name not allowed')
-                finally:
-                    session.close()
-                return "Changes recorded successfully"
-            # if instruction issuer is not owner
-            self.handle_permission_denied(session)
-        # if a business with the business_id is not found
-        self.handle_data_not_found(session)
+        # check if target_business exists
+        if not target_business:
+            return self.handle_data_not_found(session)
+        # check if request issuer is owner
+        issuer_is_owner = target_business.owner_id == issuer_id
+        if not issuer_is_owner:
+            return self.handle_permission_denied(session)
+        # except updating with an existent name
+        try:
+            self.clerk.update_business(target_business, update_data)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            raise DuplicationError("Storage::update_business",
+                                   'Duplicate business name not allowed')
+        finally:
+            session.close()
+        # everything is okay
+        return "Changes recorded successfully"
+
 
     def delete_business(self, business_id, issuer_id):
         session = self.Session()
         target_business = session.query(Business)\
             .filter(Business.id == business_id)\
             .first()
-        if target_business:
-            issuer_is_owner = target_business.owner_id == issuer_id
-            if issuer_is_owner:
-                # delete the business
-                session.delete(target_business)
-                session.commit()
-                return "SUCCESS: business deleted"
-            # if issuer is not owner
-            self.handle_permission_denied(session)
+
         # if business with id = business_id is not found
-        self.handle_data_not_found(session)
+        if not target_business:
+            self.handle_data_not_found(session)
+
+        # check if request issuer is owner
+        issuer_is_owner = target_business.owner_id == issuer_id
+        if not issuer_is_owner:
+            self.handle_permission_denied(session)
+
+        # everything is okay, delete the business
+        session.delete(target_business)
+        session.commit()
+        return "SUCCESS: business deleted"
+
 
     def add_review(self, review_obj):
         session = self.Session()
@@ -238,20 +246,22 @@ class BusinessDbFacade(DbFacade):
         target_business = session.query(Business)\
             .filter(Business.id == business_id)\
             .first()
-        if target_business:
-            target_reviews = session.query(Review)\
-                .filter(Review.business_id == business_id)\
-                .all()
-            reviews_info = []
-            if len(target_reviews) > 0:
-                for review in target_reviews:
-                    # session.expunge(review)
-                    review_info = self.clerk.extract_review_info(review)
-                    reviews_info.append(review_info)
-            session.close()
-            return reviews_info
+
         # if business with id business_id is not found
-        self.handle_data_not_found(session)
+        if not target_business:
+            self.handle_data_not_found(session)
+
+        target_reviews = session.query(Review)\
+            .filter(Review.business_id == business_id)\
+            .all()
+
+        reviews_info = []
+        for review in target_reviews:
+            # session.expunge(review)
+            review_info = self.clerk.extract_review_info(review)
+            reviews_info.append(review_info)
+        session.close()
+        return reviews_info
 
 
 class UserDbFacade(DbFacade):
