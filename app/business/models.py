@@ -90,7 +90,7 @@ class Business (Base):
 class Review (Base):
     __tablename__ = 'review'
 
-    rev_id_seq = Sequence('rev_id_seq', start=1, metadata=Base.metadata)
+    rev_id_seq = Sequence('rev_id_seq', start=1000, metadata=Base.metadata)
     id = Column('id', Integer, server_default=rev_id_seq.next_value(),
                 primary_key=True)
     heading = Column(String(63), nullable=False)
