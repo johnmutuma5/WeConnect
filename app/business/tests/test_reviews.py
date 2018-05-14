@@ -60,5 +60,15 @@ class TestBusinessCase(BaseAPITestSetUp):
             self.assertIn(data['heading'], resp_review_headings)
 
 
+    def test_handles_review_for_non_existent_business(self):
+        self.testHelper.register_user(user_data)
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        response = self.testHelper.make_review(1000, review_data[1], access_token)
+        msg = (json.loads(response.data.decode("utf-8")))["msg"]
+        self.assertTrue(msg == 'UNSUCCESSFUL: Could not find the requested business')
+
+
+
 if __name__ == "__main__":
     unittest.main(module=__name__)
