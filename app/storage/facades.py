@@ -1,13 +1,14 @@
-from app.exceptions import (DuplicationError, DataNotFoundError,
-                            PermissionDeniedError, PaginationError)
+import re
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import sessionmaker
 from app import config
 from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
-import re
 from app.business.schemas import VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS
 from app.user.schemas import REQUIRED_USER_FIELDS
+from app.exceptions import (DuplicationError, DataNotFoundError,
+                            PermissionDeniedError, PaginationError,
+                            UnknownPropertyError)
 
 
 class StoreHelper ():
@@ -34,6 +35,8 @@ class StoreHelper ():
     @staticmethod
     def update_business(target_business, update_data):
         for key in update_data.keys():
+            if not hasattr(target_business, key):
+                raise UnknownPropertyError(msg="Unknown property %s" %key)
             setattr(target_business, key, update_data[key])
 
     @staticmethod
@@ -166,7 +169,6 @@ class BusinessDbFacade(DbFacade):
     def filter_businesses(self, filter_params):
         session = self.Session()
         subquery = session.query(Business)
-
         for key in filter_params.keys():
             if key not in VALID_BUSINESS_FIELDS:
                 continue

@@ -59,7 +59,6 @@ def update_business_info(business_id, update_json):
     try:
         update_data = json.loads(update_json)
         cleaned_data = inspect_data(update_data)
-
         msg = store.update_business(business_id, cleaned_data, issuer_id)
     except (DataNotFoundError, PermissionDeniedError, DuplicationError) as put_err:
         status_code = find_status_code(put_err)

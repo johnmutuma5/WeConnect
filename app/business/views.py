@@ -3,7 +3,8 @@ from flask import jsonify, request, session, Blueprint
 from app.decorators import login_required, require_json
 from app.business.models import Business
 from .backends import businessDbFacade as store
-from ..exceptions import InvalidUserInputError, PaginationError
+from ..exceptions import(InvalidUserInputError, PaginationError,
+                         UnknownPropertyError)
 from .utils import (get_info_response, register_a_business,
                     update_business_info, delete_business, add_a_review)
 
@@ -38,9 +39,9 @@ def one_business(business_id):
             # this method is decorated with login_required and require_json
             response = update_business_info(business_id, update_data)
             return response
-        except InvalidUserInputError as e:
+        except (InvalidUserInputError, UnknownPropertyError) as error:
             # MissingDataError extends InvalidUserInputError
-            return jsonify({'msg': e.msg}), 422
+            return jsonify({'msg': error.msg}), 422
 
     # handle DELETE
     response = delete_business(business_id)

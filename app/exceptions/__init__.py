@@ -28,6 +28,11 @@ class InvalidUserInputError (CustomException):
         raised: when trying to write invalid data
     '''
 
+class UnknownPropertyError(CustomException):
+    '''
+        raised: when user uses invalid value for a class attribute
+    '''
+
 
 class MissingDataError(InvalidUserInputError):
     '''
