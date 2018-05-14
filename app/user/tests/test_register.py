@@ -6,7 +6,7 @@ from app.tests import BaseAPITestSetUp
 from app.tests.dummies import user_data, user_data2
 
 
-class TestAPICase (BaseAPITestSetUp):
+class TestRegisterCase (BaseAPITestSetUp):
 
     def test_a_user_can_register(self):
         url = self.base_url + '/api/v2/auth/register'

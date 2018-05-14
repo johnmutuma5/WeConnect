@@ -5,7 +5,7 @@ from app.tests import BaseAPITestSetUp
 from app.tests.dummies import user_data, invalid_credentials, login_data
 
 
-class TestAPICase (BaseAPITestSetUp):
+class TestUserCase (BaseAPITestSetUp):
 
     def test_user_can_login(self):
         res = self.testHelper.register_user(user_data)

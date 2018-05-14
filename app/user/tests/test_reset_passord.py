@@ -5,7 +5,7 @@ from app.tests import BaseAPITestSetUp
 from app.tests.dummies import user_data
 
 
-class TestAPICase (BaseAPITestSetUp):
+class TestResetPasswordCase (BaseAPITestSetUp):
 
     def get_password_reset_link(self, username):
         self.testHelper.register_user(user_data)
