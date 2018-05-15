@@ -6,9 +6,9 @@ def index():
     ctx = {
         'title': 'WeConnect - Homepage'
     }
-    return render_template('index.html', **ctx)
+    return render_template('index.html', **ctx), 200
 
 
-@app.route('/api/documenation', methods=['GET'])
+@app.route('/api/documentation', methods=['GET'])
 def documentation():
-    return render_template('documentation.html')
+    return render_template('documentation.html'), 200
