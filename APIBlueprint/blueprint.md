@@ -8,7 +8,7 @@ ability to write reviews about the businesses they have interacted with.
 
 # Group User
 
-## User Registration [/api/v1/auth/register]
+## User Registration [/api/v2/auth/register]
 All requests sent by client to register new user accounts are handled by
 this resource. Receives data in `json` format and it should check that
 all the required fields are supplied.
@@ -20,8 +20,8 @@ all the required fields are supplied.
   + Attributes (User Data)
 
 
-+ Response Created 201 (application/json)
-    The client recevies a success message on registration
++ Response 201 (application/json)
+    The client recievies a success message on registration
 
   + Attributes
       - msg: SUCCESS: user john_doe created! (string) - The success response message
@@ -29,8 +29,8 @@ all the required fields are supplied.
 + Response 409 (application/json)
     The client receives an error message on sending a registration request with data that contains an unavailable username
 
-    + Attributes
-        - msg: Username already exists (string) - The error message that a client gets for trying to register with an existing username
+  + Attributes
+      - msg: Username already exists (string) - The error message that a client gets for trying to register with an existing username
 
 
 + Response 422 (application/json)
@@ -38,12 +38,14 @@ all the required fields are supplied.
     Invalid username: `Invalid username!`
     Invalid email: `Invalid email!`
     Invalid mobile: `Invalid mobile!`
+    Invalid password: `Password too short`
+
 
   + Attributes
       - msg: Invalid username! (string) - The error message that the client gets for sending invalid data e.g. username, email, mobile
 
 
-## Users login [/api/v1/auth/login]
+## Users login [/api/v2/auth/login]
 This resource handles all client login requests. The API receives data in
 `json` format and logs in the user after verifying the credentials.
 
@@ -55,7 +57,7 @@ This resource handles all client login requests. The API receives data in
       - username: john_doe (string, required) - A registered username
       - password: userspassword (string, required) - The user's password
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
   For successful login
 
   + Attributes
@@ -116,7 +118,7 @@ Handles users' requests to change a password. A link with a verification token s
 
 # Group Business
 
-## Businesses Resource [/api/v1/businesses]
+## Businesses Resource [/api/v2/businesses]
 Resource for registering businesses and getting information for all businesses stored
 
 ### Register a business [POST]
@@ -157,7 +159,7 @@ This action gets information for all businesses stored
   + Attributes (array[Business Info])
 
 
-## One Business Resource [/api/v1/businesses/{id}]
+## One Business Resource [/api/v2/businesses/{id}]
 Resource related to a specific businesses referenced by its `id`
 
 + Parameters
