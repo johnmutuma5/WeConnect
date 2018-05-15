@@ -51,6 +51,7 @@ def one_business(business_id):
 @business.route('/search', methods=['GET'])
 def search_business():
     search_params = request.args
+    # expect pagnation error
     results = store.search_businesses(search_params)
     return jsonify({'results': results}), 200
 
