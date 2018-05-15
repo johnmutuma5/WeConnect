@@ -32,16 +32,20 @@ def login_required(func):
             return handle_invalid_credentials("Authorization data required")
         auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
         match = re.search(auth_pattern, auth)
-        if match and session.get('user_id'):
-            access_token = match.group('token_string')
-            try:
-                token_payload = jwt.decode(access_token, config['SECRET_KEY'])
-                bearer_id = token_payload.get('user_id')
-                session['user_id'] = bearer_id
-            except (InvalidSignatureError, DecodeError):
-                return handle_invalid_credentials("Invalid Token")
-            return func(*args, **kwargs)
-        return handle_invalid_credentials("Invalid Token")
+
+        if not match or not session.get('user_id'):
+            message = None
+            if not match: message = 'Invalid Token'
+            return handle_invalid_credentials(message)
+
+        access_token = match.group('token_string')
+        try:
+            token_payload = jwt.decode(access_token, config['SECRET_KEY'])
+            bearer_id = token_payload.get('user_id')
+            session['user_id'] = bearer_id
+        except (InvalidSignatureError, DecodeError):
+            return handle_invalid_credentials("Invalid Token")
+        return func(*args, **kwargs)
     return wrapper
 
 
