@@ -291,14 +291,14 @@ This action handles posting a review for a business
 + Response 201 (application/json)
   Includes a message for a successful review of a business
 
-    + Attributes
-        - msg: SUCCESS: review heading:[Wonderful] created! (string) - The success message for a successful review
+  + Attributes
+      - msg: SUCCESS: review heading:[Wonderful] created! (string) - The success message for a successful review
 
 + Response 401 (application/json)
   Includes a message for an unsuccessful review. This is when a user sends a request without login in
 
-    + Attributes
-        - Include Login Required
+  + Attributes
+      - Include Login Required
 
 
 ### Get Reviews of a business [GET]
@@ -312,10 +312,44 @@ This action handles getting all the reviews of a business
 + Response 404 (application/json)
   Includes an error message for trying to retrieve reviews with an unrecognized business `id`
 
-    + Attributes
-          - Include Business Not Found Error
+  + Attributes
+      - Include Business Not Found Error
 
 
+## Search Businesses [/api/v2/businesses/search{?q}]
+This Resource enables users to search for businesses by name
+
+### Search for a business [GET]
+
++ Parameters
+  + q: Andela%20Kenya (string, optional) - Full or part of a business name
+
++ Response 200
+
+  + Attributes (array[Business Info])
+
+
+## Filter Businesses [/api/v2/businesses/filter{?location}{&category}{&name}{&mobile}{&limit}{&page}]
+This Resource enables users to filter businesses by their attributes. A user can filter businesses by `category`, `location`, `name`, `mobile` as desirable.
+
+### Filter businesses [GET]
+
++ Parameters
+  + location: Nairobi%20Kenya (string, optional) - Full or part of a business location
+  + category: tech (string, optional) - Full or part of a business category
+  + name: Andela%20Kenya (string, optional) - Full or part of a business name
+  + mobile: 2547000200 (number, optional) - Full or part of a business mobile
+  + limit: 10 (number, optional) - Number of results to display per page
+  + page: 1 (number, optional) - Pagination results page number
+
++ Response 200
+
+  + Attributes (array[Business Info])
+
++ Response 422
+
+  + Attributes
+      - msg: Invalid pagination limit or page (string) - message for invalid characters in pagination limit and/or page
 
 
 ## Data Structures
@@ -342,9 +376,9 @@ This action handles getting all the reviews of a business
 ### Business Registration Info
 - name: Andela Kenya (string, required) - The name of the business
 - owner: Alice Doe (string, optional) - The owner of the business
-- location: TRM, Thika Road (string, required) - The location of the business
+- location: TRM, Thika Road, Nairobi (string, required) - The location of the business
 - mobile: 2547000200 (string, required) - The contact of the business
-- category: textile (string, required) - The sector of the business
+- category: Technology (string, required) - The sector of the business
 
 ### Business Info(Business Registration Info)
 - id: 1000 (number) - The formatted `id` of the business.
