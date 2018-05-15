@@ -6,7 +6,7 @@ user_data = {
     "mobile": "254720000000",
     "email": "johndoe@gmail.com",
     "username": "john_doe",
-    "password": "pass"
+    "password": "atleastSixCharacters"
 }
 
 user_data2 = {
@@ -16,17 +16,17 @@ user_data2 = {
     "mobile": "254720000000",
     "email": "alicedoe@gmail.com",
     "username": "alice_doe",
-    "password": "pass"
+    "password": "atleastSixCharacters"
 }
 
 login_data = {
     "username": "john_doe",
-    "password": "pass"
+    "password": "atleastSixCharacters"
 }
 
 login_data2 = {
     "username": "alice_doe",
-    "password": "pass"
+    "password": "atleastSixCharacters"
 }
 
 invalid_credentials = {"username": "alice_doe", "password": "pass2"}
