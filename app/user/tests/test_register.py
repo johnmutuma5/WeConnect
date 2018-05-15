@@ -37,6 +37,15 @@ class TestRegisterCase (BaseAPITestSetUp):
             msg = (json.loads(res.data.decode("utf-8")))['msg']
             self.assertEqual(msg, 'Invalid username!')
 
+
+    def test_checks_if_password_too_short(self):
+        invalid_email_data = {**user_data, 'password': 'short'}
+        resp = self.testHelper.register_user(invalid_email_data)
+        resp_dict = json.loads(resp.data.decode('utf-8'))
+        msg = resp_dict['msg']
+        self.assertEqual(msg, 'Password too short')
+
+
     def test_user_cannot_register_with_invalid_email(self):
         invalid_email_data = {**user_data, 'email': 'john.doe@'}
         resp = self.testHelper.register_user(invalid_email_data)
