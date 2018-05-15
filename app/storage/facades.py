@@ -98,6 +98,7 @@ class DbFacade():
         expression = "Storage::unauthorised operation"
         raise PermissionDeniedError(expression, msg)
 
+
     def _process_results(self, results):
         results_info = []
         for business in results:
@@ -105,15 +106,16 @@ class DbFacade():
             results_info.append(business_info)
         return results_info
 
+
     def _apply_pagination(self, limit=None, page=1, subquery=None):
-        if not limit:
+        if not limit and not page:
             return subquery
 
         try:
             limit = int(limit)
             offset = limit * (int(page) - 1)
             subquery = subquery.limit(limit).offset(offset)
-        except ValueError:
+        except (ValueError, TypeError):
             raise PaginationError(msg="Invalid pagination limit or page")
 
         return subquery
@@ -145,6 +147,7 @@ class BusinessDbFacade(DbFacade):
         session.close()
         return businesses_info
 
+
     def get_business_info(self, business_id):
         session = self.Session()
         target_business = session.query(Business)\
@@ -159,14 +162,20 @@ class BusinessDbFacade(DbFacade):
         finally:
             session.close()
 
-    def search_businesses(self, search_key):
+
+    def search_businesses(self, search_params):
         session = self.Session()
-        search_key = search_key or ''
+        search_key = search_params.get('q', '')
 
         _operator = '%' + search_key + '%'
-        results = session.query(Business)\
-            .filter(Business.name.ilike(_operator))\
-            .all()
+        subquery = session.query(Business)\
+            .filter(Business.name.ilike(_operator))
+
+        # pagination
+        limit = search_params.get('limit', 10)
+        page = search_params.get('page', 1)
+        subquery = self._apply_pagination(limit, page, subquery)
+        results = subquery.all()
 
         results_info = self._process_results(results)
         session.close()
@@ -184,11 +193,11 @@ class BusinessDbFacade(DbFacade):
             subquery = subquery.filter(getattr(Business, key).ilike(_operator))
 
         # pagination
-        limit = filter_params.get("limit")
-        page = filter_params.get("page") or 1
+        limit = filter_params.get("limit", 10)
+        page = filter_params.get("page", 1)
         subquery = self._apply_pagination(limit, page, subquery)
-
         results = subquery.all()
+
         results_info = self._process_results(results)
         session.close()
         return results_info

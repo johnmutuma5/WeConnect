@@ -50,8 +50,8 @@ def one_business(business_id):
 
 @business.route('/search', methods=['GET'])
 def search_business():
-    search_key = request.args.get('q')
-    results = store.search_businesses(search_key)
+    search_params = request.args
+    results = store.search_businesses(search_params)
     return jsonify({'results': results}), 200
 
 
