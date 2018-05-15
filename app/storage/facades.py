@@ -108,9 +108,6 @@ class DbFacade():
 
 
     def _apply_pagination(self, limit=None, page=1, subquery=None):
-        if not limit and not page:
-            return subquery
-
         try:
             limit = int(limit)
             offset = limit * (int(page) - 1)
