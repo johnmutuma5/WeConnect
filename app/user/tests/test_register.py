@@ -75,7 +75,7 @@ class TestRegisterCase (BaseAPITestSetUp):
     def test_duplicate_emails_disallowed(self):
         res = self.testHelper.register_user(user_data)
         # make a copy of user data and change the username, leave email as is
-        changed_username = {**user_data2, "email": "Johndoe@gmail.com"}
+        changed_username = {**user_data2, "email": "John.mutuma@andela.com"}
         res = self.testHelper.register_user(changed_username)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Email already exists')
