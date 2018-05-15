@@ -22,3 +22,6 @@ test:
 
 test_verbose:
 	nosetests --exe -v --nocapture --with-coverage --cover-package=app
+
+doc:
+	node ./APIBlueprint/genHTML.js

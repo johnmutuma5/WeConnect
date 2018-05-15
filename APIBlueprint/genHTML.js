@@ -7,7 +7,7 @@ const options = {
 };
 
 
-const documentation_output = './designs/UI/documentation.html';
+const documentation_output = './app/templates/documentation.html';
 const documentation_input = './APIBlueprint/blueprint.md';
 
 aglio.renderFile(documentation_input, documentation_output, options, function (err, warnings) {
