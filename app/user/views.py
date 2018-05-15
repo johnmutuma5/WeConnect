@@ -90,6 +90,11 @@ def reset_password():
                 t=token_string)
             # to email reset_link with token url parameter to user's email
             # address
+            mailer = Mailer()
+            recipient = target_user.email
+            mailer.send_reset_link(reset_link, recipient)
+            token_obj = PasswordResetToken(token_string, username)
+            store.add_token(token_obj, username)
             return jsonify({"reset_link": reset_link}), 200  # for testing
         return jsonify({"msg": "Invalid Username"}), 404
     return jsonify({"msg": "Please supply your username"}), 401

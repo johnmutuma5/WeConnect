@@ -14,7 +14,11 @@ class Config():
         "pk": "pk_%(table_name)s"
     }
     NAMING_CONVENTION_REGEX = r"\"\w{2,}(_(?P<table>.+))?_(?P<column>.+)(_(?P<foreign_table>.+))?\""
-
+    EMAIL_USERNAME = 'johnmutuma5'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+    print(EMAIL_PASSWORD)
+    EMAIL_PORT = 587
 
 class ProductionConfig (Config):
     DEBUG = False
@@ -28,7 +32,7 @@ class DevelopmentConfig (Config):
 
 
 class TestingConfig(Config):
-    PASSWORD_RESET_TOKEN_LIFETIME = {'seconds': 15}
+    PASSWORD_RESET_TOKEN_LIFETIME = {'seconds': 20}
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 

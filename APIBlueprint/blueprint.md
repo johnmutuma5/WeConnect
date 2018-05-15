@@ -149,6 +149,10 @@ This action registers businesses.
 + Request (application/json)
   Includes data for the business to be registered
 
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
   + Attributes (Business Registration Info)
 
 
@@ -209,6 +213,10 @@ The targeted business business is referenced by referenced by a URI parameter re
 
 + Request (application/json)
 
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
   + Attributes
       - name: New Name (string, optional) - The new name of the business
       - owner: Alice Doe (string, optional) - The new owner of the business
@@ -253,6 +261,13 @@ The targeted business business is referenced by referenced by a URI parameter re
 ### Delete business [DELETE]
 This action sends a request to delete a business from the API.
 
++ Request
+
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
+
 + Response 201 (application/json)
   Includes a successful delete business operation message
 
@@ -285,8 +300,12 @@ This action handles posting a review for a business
 + Request (application/json)
   Includes the heading and body of a review
 
-    + Attributes
-        - Include Review From User
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
+  + Attributes
+      - Include Review From User
 
 + Response 201 (application/json)
   Includes a message for a successful review of a business
@@ -299,6 +318,12 @@ This action handles posting a review for a business
 
   + Attributes
       - Include Login Required
+
++ Response 404 (application/json)
+  Includes a message for an unsuccessful review. This is when a user sends a request to review a non-existent business
+
+  + Attributes
+      - Include Business Not Found Error
 
 
 ### Get Reviews of a business [GET]
@@ -400,7 +425,7 @@ This Resource enables users to filter businesses by their attributes. A user can
 - msg: Duplicate business name not allowed (string) - The error message for providing an taken business name
 
 ### Business Not Found Error
-- msg: UNSUCCESSFUL: Could not find the requested information (string) - The error message for non-existent business `id`
+- msg: UNSUCCESSFUL: Could not find the requested business (string) - The error message for non-existent business `id`
 
 ### Forbidden Business Operation Error
 - msg: UNSUCCESSFUL: The business is registered to another user (string) - The error message for trying to edit/delete a business registered to another user

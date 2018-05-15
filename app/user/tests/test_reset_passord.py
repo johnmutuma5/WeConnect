@@ -32,7 +32,7 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         reset_data = {'new_password': "changed"}
         resp = self.supply_new_password(reset_link, reset_data)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
-        self.assertEqual(msg, "Password updated successfully")
+        self.assertEqual(msg, "Password updated successfully", msg='ensure correct env')
         # login with new password
         resp = self.testHelper.login_user({"username": username,
                                            "password": "changed"})

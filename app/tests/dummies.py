@@ -4,7 +4,7 @@ user_data = {
     "last_name": "Doe",
     "gender": "Male",
     "mobile": "254720000000",
-    "email": "johndoe@gmail.com",
+    "email": "john.mutuma@andela.com",
     "username": "john_doe",
     "password": "atleastSixCharacters"
 }
