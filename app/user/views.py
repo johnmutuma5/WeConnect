@@ -76,14 +76,13 @@ def logout():
 @user.route('/reset-password', methods=['POST'])
 @require_json
 def reset_password():
+    from app.mailing.mailer import Mailer
     username = (json.loads(request.data.decode('utf-8'))).get('username')
     # user initiates request with their username
     if username:
         target_user = store.get_user(username)
         if target_user:
             token_string = generate_token()
-            token_obj = PasswordResetToken(token_string, username)
-            store.add_token(token_obj, username)
             reset_link = url_for(
                 '.update_password',
                 _external=True,

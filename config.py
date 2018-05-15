@@ -17,7 +17,6 @@ class Config():
     EMAIL_USERNAME = 'johnmutuma5'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
-    print(EMAIL_PASSWORD)
     EMAIL_PORT = 587
 
 class ProductionConfig (Config):
