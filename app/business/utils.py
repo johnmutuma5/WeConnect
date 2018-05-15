@@ -85,6 +85,6 @@ def add_a_review(business_id, review_data):
     try:
         msg = store.add(new_review)
     except DataNotFoundError as error:
-        return jsonify({'msg': error.msg})
+        return jsonify({'msg': error.msg}), 404
 
-    return jsonify({'msg': msg}), 200
+    return jsonify({'msg': msg}), 201
