@@ -29,7 +29,7 @@ def login_required(func):
         access_token = None
         auth = request.headers.get('Authorization')
         if not auth:
-            return handle_invalid_credentials("Authorization data required")
+            return handle_invalid_credentials("Bearer Token authorization header missing")
         auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
         match = re.search(auth_pattern, auth)
 
