@@ -71,20 +71,18 @@ class Business (Base):
     def mobile(self, num):
         pattern = r"^[0-9]{12}$"
         match = re.match(pattern, num)
-        if match:
-            self._mobile = num
-        else:
+        if not match:
             raise InvalidUserInputError("Business::mobile.setter",
                                         "Invalid mobile number")
+        self._mobile = num
 
     @name.setter
     def name(self, business_name):
         pattern = r'^([a-zA-Z]+( )?[\w\d_\.-]+( )?)+'
         match = re.match(pattern, business_name)
-        if match:
-            self._name = business_name
-        else:
+        if not match:
             raise InvalidUserInputError(msg='Invalid business name')
+        self._name = business_name
 
 
 class Review (Base):

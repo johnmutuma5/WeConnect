@@ -87,31 +87,27 @@ class User(Base):
         # numbers
         pattern = r"^[0-9]{12}$"
         match = re.match(pattern, num)
-        if match:
-            self._mobile = num
-        else:
-            raise InvalidUserInputError(
-                "User::mobile.setter", "Invalid mobile number")
+        if not match:
+            raise InvalidUserInputError("User::mobile.setter",
+                                        "Invalid mobile number")
+        self._mobile = num
 
     @username.setter
     def username(self, name):
         pattern = r'^[a-zA-Z_]+[\d\w]{3,}'
         match = re.search(pattern, name)
-        if match:
-            self._username = name
-            return
-        self._username = None
-        # assert 0, 'Invalid username'
-        raise InvalidUserInputError("User::namesetter", "Invalid username!")
+        if not match:
+            raise InvalidUserInputError("User::namesetter", "Invalid username!")
+        self._username = name
+
 
     @email.setter
     def email(self, email):
         email_pattern = r'^([\w\d_\.]+)@([\w\d]+)\.([\w\d]+\.?[\w\d]+)$'
         match = re.search(email_pattern, email)
-        if match:
-            self._email = email
-            return
-        raise InvalidUserInputError(msg='Invalid email')
+        if not match:
+            raise InvalidUserInputError(msg='Invalid email')
+        self._email = email
 
 
     @password.setter
