@@ -71,19 +71,41 @@ This resource handles all client login requests. The API receives data in
               the client gets on supplying invalid credentials
 
 
-## Logout [/api/v1/auth/logout]
+## Logout [/api/v2/auth/logout]
 Handles logout requests
 
 ### Logout user [POST]
+
++ Request
+
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
 
 + Response 200 (application/json)
 
   + Attributes
       - msg: Logged out successfully! (string) - Successful logout message
 
+## User Profile [/api/v2/auth/personal-profile]
+Users can get their private profile data. This resource requires login.
+
+### Get user profile [GET]
+
++ Request
+
+  + Headers
+
+      Authorization: Bearer valid.jwttoken.string
+
++ Response
+
+  + Attributes
+      - Include Private Profile
 
 
-## Resetting passwords [/api/v1/auth/reset-password]
+## Resetting passwords [/api/v2/auth/reset-password]
 Handles users' requests to change a password. A link with a verification token should be sent to their registered email address to enable changing password
 
 ### Reset a user password [POST]
@@ -306,24 +328,39 @@ This action handles getting all the reviews of a business
 + username: john_doe
 + password: pass
 
+### Private Profile
+- Include User Data
+- businesses(array[Key Business Identity])
+- reviews(array[Key Review Identity])
+
+
+### Key Business Identity
+- name: Andela Kenya (string, required) - The name of the business
+- id: 1000 (number) - The formatted `id` of the business.
+
 
 ### Business Registration Info
 - name: Andela Kenya (string, required) - The name of the business
-- owner: Alice Doe (string, required) - The owner of the business
+- owner: Alice Doe (string, optional) - The owner of the business
 - location: TRM, Thika Road (string, required) - The location of the business
 - mobile: 2547000200 (string, required) - The contact of the business
+- category: textile (string, required) - The sector of the business
 
-### Business Info (Business Registration Info)
-- id: BUS0001 (string) - The formatted `id` of the business.
+### Business Info(Business Registration Info)
+- id: 1000 (number) - The formatted `id` of the business.
+
+### Key Review Identity
+- heading: Wonderful (string) - The `heading` of the review
+- id: 100 (number) - The `id` of the review
 
 ### Review From User
 - heading: Wonderful (string) - The `heading` of the review
 - body: Awesome products (string) - The `message` of the review
 
-### Full Review Info (Review From User)
-- author_id: USR00001 (string) - The `id` of the reviewer
-- business_id: BUS0001 (string) - The `id` of the business to review
-- id: REV00001 (string) - The `id` of the review
+### Full Review Info(Review From User)
+- author_id: 1000 (number) - The `id` of the reviewer
+- business_id: 1000 (number) - The `id` of the business to review
+- id: 100 (number) - The `id` of the review
 
 ### Business Name Duplication Error
 - msg: Duplicate business name not allowed (string) - The error message for providing an taken business name
