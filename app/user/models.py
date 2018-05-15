@@ -113,10 +113,17 @@ class User(Base):
             return
         raise InvalidUserInputError(msg='Invalid email')
 
+
     @password.setter
     def password(self, password):
+        pass_pattern = r'^.{6,}$'
+        match = re.match(pass_pattern, password)
+        if not match:
+            raise InvalidUserInputError(msg='Password too short')
+
         passhash = hash_password(password)
         self._password = passhash
+
 
 
 
