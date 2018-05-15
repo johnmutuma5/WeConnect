@@ -23,14 +23,14 @@ def register():
     try:
         new_user = User.create_user(data)
     except InvalidUserInputError as e:
-        return jsonify({"msg": e.msg}), 401
+        return jsonify({"msg": e.msg}), 422
 
     try:
         msg = store.add(new_user)
     except DuplicationError as e:
-        return jsonify({'msg': e.msg}), 401
+        return jsonify({'msg': e.msg}), 409
 
-    return jsonify({"msg": msg}), 200
+    return jsonify({"msg": msg}), 201
 
 
 @user.route('/login', methods=['POST'])
@@ -55,13 +55,14 @@ def login():
     access_token = access_token.decode('utf-8')
     return jsonify({'msg': msg, 'access_token': access_token}), 200
 
+
 @user.route('/personal-profile', methods=['GET'])
 @login_required
 def private_profile():
     profile_type = 'private'
     user_id = session.get('user_id')
     profile = store.get_user_profile(user_id, profile_type)
-    return jsonify({"profile": profile})
+    return jsonify({"profile": profile}), 200
 
 
 
