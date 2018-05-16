@@ -4,6 +4,8 @@ env:
   DATABASE_URL_TEST="postgresql+psycopg2://postgres:@localhost:5432/testdb"
   APP_SECRET='applicationsecretkey'
   ENVIRONMENT='dev'
+  EMAIL_USERNAME='weconnect.mailer'
+  EMAIL_PASSWORD='emailpassword'
 
 python:
   - 3.6

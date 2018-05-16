@@ -14,7 +14,7 @@ class Config():
         "pk": "pk_%(table_name)s"
     }
     NAMING_CONVENTION_REGEX = r"\"\w{2,}(_(?P<table>.+))?_(?P<column>.+)(_(?P<foreign_table>.+))?\""
-    EMAIL_USERNAME = 'johnmutuma5'
+    EMAIL_USERNAME = 'weconnect.mailer'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
     EMAIL_PORT = 587
