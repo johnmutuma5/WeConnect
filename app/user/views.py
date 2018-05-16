@@ -3,6 +3,7 @@ import jwt
 from flask import jsonify, request, session, url_for, Blueprint
 from app import config
 from app.decorators import login_required, require_json
+from app.mailing.mailer import Mailer
 from .backends import userDbFacade as store
 from .models import User, PasswordResetToken
 from ..helpers import generate_token, verify_password
@@ -17,8 +18,8 @@ user = Blueprint("user", __name__)
 
 @user.route('/register', methods=['POST'])
 @require_json
-def register():
-    data = json.loads(request.data.decode('utf-8'))
+def register(request_data=None):
+    data = request_data
 
     try:
         new_user = User.create_user(data)
@@ -35,8 +36,8 @@ def register():
 
 @user.route('/login', methods=['POST'])
 @require_json
-def login():
-    login_data = json.loads(request.data.decode('utf-8'))
+def login(request_data=None):
+    login_data = request_data
     username = login_data['username']
 
     target_user = store.get_user(username)
@@ -68,55 +69,52 @@ def private_profile():
 
 @user.route('/logout', methods=['POST'])
 @login_required
-def logout():
+def logout(request_data=None):
     session.pop('user_id')
     return jsonify({"msg": "Logged out successfully!"}), 200
 
 
 @user.route('/reset-password', methods=['POST'])
 @require_json
-def reset_password():
-    from app.mailing.mailer import Mailer
-    username = (json.loads(request.data.decode('utf-8'))).get('username')
+def reset_password(request_data=None):
     # user initiates request with their username
-    if username:
-        target_user = store.get_user(username)
-        if target_user:
-            token_string = generate_token()
-            reset_link = url_for(
-                '.update_password',
-                _external=True,
-                t=token_string)
-            # to email reset_link with token url parameter to user's email
-            # address
-            mailer = Mailer()
-            recipient = target_user.email
-            mailer.send_reset_link(reset_link, recipient)
-            token_obj = PasswordResetToken(token_string, username)
-            store.add_token(token_obj, username)
-            return jsonify({"reset_link": reset_link}), 200  # for testing
+    username = request_data.get('username')
+    if not username:
+        return jsonify({"msg": "Please supply your username"}), 401
+
+    target_user = store.get_user(username)
+    if not target_user:
         return jsonify({"msg": "Invalid Username"}), 404
-    return jsonify({"msg": "Please supply your username"}), 401
+
+    token_string = generate_token()
+    reset_link = url_for('.update_password', _external=True,
+                         t=token_string)
+    # email reset_link with token url parameter to user's email address
+    mailer = Mailer()
+    recipient = target_user.email
+    mailer.send_reset_link(reset_link, recipient)
+    token_obj = PasswordResetToken(token_string, username)
+    store.add_token(token_obj, username)
+    return jsonify({"reset_link": reset_link}), 200  # for testing
 
 
 @user.route('/reset-password/verify', methods=['POST', 'GET'])
 @require_json
-def update_password():
+def update_password(request_data=None):
     if request.method == 'GET':
         return jsonify({'msg': 'Please supply your new password'})
 
     url_query_token = request.args.get('t')
-    new_password = (json.loads(request.data.decode('utf-8')))\
-        .get('new_password')
+    new_password = request_data.get('new_password')
     if url_query_token:
         token_obj, token_bearer = store.get_token_tuple(url_query_token)
         if token_obj:
-            if not token_obj.expired:
-                store.update_user_password(token_bearer, new_password)
-                # ensure tokens are one time use
+            if token_obj.expired:
+                # destroy token if expired
                 store.destroy_token(token_obj)
-                return jsonify({"msg": "Password updated successfully"})
-            # destroy token if expired
+                return jsonify({'msg': 'Token expired'})
+            store.update_user_password(token_bearer, new_password)
+            # ensure tokens are one time use
             store.destroy_token(token_obj)
-            return jsonify({'msg': 'Token expired'})
+            return jsonify({"msg": "Password updated successfully"})
     return jsonify({"msg": "Invalid token"}), 401

@@ -8,6 +8,7 @@ from app.tests.dummies import(user_data, business_data,
 class TestBusinessCase(BaseAPITestSetUp):
 
     def test_users_retrieve_all_businesses(self):
+        # check length
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']

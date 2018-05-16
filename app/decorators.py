@@ -1,9 +1,11 @@
 import jwt
 import re
+import json
+from json.decoder import JSONDecodeError
 from flask import jsonify, request, session
 from jwt.exceptions import InvalidSignatureError, DecodeError
 from app import config
-from functools import wraps
+# from functools import wraps
 
 
 def wraps(original_func):
@@ -50,11 +52,20 @@ def login_required(func):
 
 
 def require_json(func):
+    '''
+        Decorates endpoints that requires data, load the data from json and
+        pass it to the decorated function
+    '''
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if request.method in ['POST',
-                              'PUT'] and not request.data.decode('utf-8'):
-            return jsonify({"msg": "Could not handle the request"}), 401
+        if not request.method in ['POST', 'PUT']:
+            return func(*args, **kwargs)
 
-        return func(*args, **kwargs)
+        try:
+            data = json.loads(request.data.decode('utf-8'))
+            # pass data to the decorated endpoint that requires json
+            return func(request_data=data, *args, **kwargs)
+        except JSONDecodeError:
+            return jsonify({"msg": "Missing or Invalid JSON data"}), 401
+
     return wrapper

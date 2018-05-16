@@ -2,7 +2,6 @@ import json
 from flask import jsonify, session
 from app.business.models import Business, Review
 from app.decorators import login_required
-from app.helpers import inspect_data
 from .backends import businessDbFacade as store
 from ..exceptions import (DuplicationError, DataNotFoundError,
                           PermissionDeniedError, InvalidUserInputError)
@@ -26,15 +25,14 @@ def get_info_response(business_id, info_type):
 
 
 @login_required
-def register_a_business(business_json):
+def register_a_business(business_data, owner):
     # create a business to register
-    owner = session.get('user_id')
     try:
-        business_data = json.loads(business_json)
         business = Business.create_business(business_data, owner)
-    except InvalidUserInputError as e:
-        # MissingDataError extends InvalidUserInputError
-        return jsonify({"msg": e.msg})
+    except InvalidUserInputError as error:
+        # MissingDataError extends InvalidUserInputError, shall be caught too
+        return jsonify({"msg": error.msg})
+
     try:
         msg = store.add(business)
     except DuplicationError as e:
@@ -54,12 +52,9 @@ def find_status_code(err):
 
 
 @login_required
-def update_business_info(business_id, update_json):
-    issuer_id = session.get('user_id')
+def update_business_info(business_id, update_data, issuer_id):
     try:
-        update_data = json.loads(update_json)
-        cleaned_data = inspect_data(update_data)
-        msg = store.update_business(business_id, cleaned_data, issuer_id)
+        msg = store.update_business(business_id, update_data, issuer_id)
     except (DataNotFoundError, PermissionDeniedError, DuplicationError) as put_err:
         status_code = find_status_code(put_err)
         return jsonify({"msg": put_err.msg}), status_code
@@ -67,8 +62,7 @@ def update_business_info(business_id, update_json):
 
 
 @login_required
-def delete_business(business_id):
-    issuer_id = session.get('user_id')
+def delete_business(business_id, issuer_id):
     try:
         msg = store.delete_business(business_id, issuer_id)
     except (DataNotFoundError, PermissionDeniedError) as del_err:

@@ -40,6 +40,7 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         pattern = r"Logged in (?P<username>.+)"
         self.assertRegexpMatches(msg, pattern)
 
+
     def test_user_cannot_reset_password_with_expired_token(self):
         username = user_data['username']
         reset_link = self.get_password_reset_link(username)

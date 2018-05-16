@@ -1,13 +1,13 @@
-from app.storage.base import Base
-from app.exceptions import InvalidUserInputError
 import re
-from sqlalchemy import (Column, Integer, String, Sequence,
-                        ForeignKeyConstraint, Index, ForeignKey, Text)
 from sqlalchemy.sql.expression import text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from app.helpers import inspect_data
+from sqlalchemy import (Column, Integer, String, Sequence,
+                        ForeignKeyConstraint, Index, ForeignKey, Text)
 from .schemas import REQUIRED_BUSINESS_FIELDS
+from app.storage.base import Base
+from app.exceptions import InvalidUserInputError
 
 
 class Business (Base):
@@ -93,20 +93,12 @@ class Review (Base):
                 primary_key=True)
     heading = Column(String(63), nullable=False)
     body = Column(Text, nullable=False)
-    author_id = Column(
-        Integer,
-        ForeignKey(
-            'users.id',
-            ondelete='CASCADE',
-            onupdate='CASCADE'),
-        nullable=False)
-    business_id = Column(
-        Integer,
-        ForeignKey(
-            'business.id',
-            ondelete='CASCADE',
-            onupdate='CASCADE'),
-        nullable=False)
+    author_id = Column(Integer, ForeignKey( 'users.id', ondelete='CASCADE',
+                                            onupdate='CASCADE'),
+                       nullable=False)
+    business_id = Column(Integer, ForeignKey('business.id', ondelete='CASCADE',
+                                             onupdate='CASCADE'),
+                       nullable=False)
 
     author = relationship('User', back_populates='reviews')
     business = relationship('Business', back_populates='reviews')

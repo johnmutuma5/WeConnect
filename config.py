@@ -38,5 +38,5 @@ class TestingConfig(Config):
 env = {
     'dev': DevelopmentConfig,
     'prod': ProductionConfig,
-    'test': TestingConfig
+    'test': TestingConfig # for postman: allows longer time for pass reset token expiry
 }[os.getenv('ENVIRONMENT')]
