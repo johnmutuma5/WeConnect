@@ -106,15 +106,23 @@ def update_password(request_data=None):
 
     url_query_token = request.args.get('t')
     new_password = request_data.get('new_password')
-    if url_query_token:
-        token_obj, token_bearer = store.get_token_tuple(url_query_token)
-        if token_obj:
-            if token_obj.expired:
-                # destroy token if expired
-                store.destroy_token(token_obj)
-                return jsonify({'msg': 'Token expired'})
-            store.update_user_password(token_bearer, new_password)
-            # ensure tokens are one time use
-            store.destroy_token(token_obj)
-            return jsonify({"msg": "Password updated successfully"})
-    return jsonify({"msg": "Invalid token"}), 401
+    if not url_query_token:
+        return jsonify({"msg": "Password reset token is missing"})
+
+    # fetch the token object and the bearer
+    token_obj, token_bearer = store.get_token_tuple(url_query_token)
+    if not token_obj:
+        return jsonify({"msg": "Invalid token"}), 401
+
+    if token_obj.expired:
+        # destroy expired token
+        store.destroy_token(token_obj)
+        return jsonify({'msg': 'Token expired'})
+    # at this point on this should be an eligible reset
+    try:
+        store.update_user_password(token_bearer, new_password)
+        # ensure tokens are one time use
+        store.destroy_token(token_obj)
+    except InvalidUserInputError as error: # check min password length
+        return jsonify({"msg": error.msg})
+    return jsonify({"msg": "Password updated successfully"})
