@@ -51,10 +51,14 @@ def login_required(func):
     return wrapper
 
 
+
 def require_json(methods=['POST', 'PUT']):
     '''
-        Decorates endpoints that requires data, load the data from json and
-        pass it to the decorated function
+        Decorates endpoints that require data, load the data from json and
+        pass it to the decorated function. an argument, the decorator will
+        enforce require json for POST and PUT as defaults. The decorated endpoint
+        functions should accept an argument request_data which should be defaulted
+        to None
     '''
     def decorator(func):
         @wraps(func)

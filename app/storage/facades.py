@@ -57,6 +57,14 @@ class StoreHelper ():
 
 
 class DbFacade():
+    '''
+        For consistency, IntegrityError will be used to capture Unique Index
+        violations related to duplicatons. ForeignKey violations will be preempted
+        using an explicity query on the foreign table. e.g Adding a review
+        may raise an IntegrityError if the target business is unavailable(ForeignKeyConstraint) or
+        when adding a duplicate review within 24hrs(UniqueIndexConstraint). IntegrityError will be used
+        to capture the later and an explicit query will be used to anticipate the former
+    '''
 
     def __init__(self, dbEngine):
         self.engine = dbEngine
@@ -326,6 +334,7 @@ class UserDbFacade(DbFacade):
             session.add(user_obj)
             session.commit()
         except (IntegrityError) as e:
+            # different columns in table user have a unique index that may be violated
             key = self.retrieve_field_raising_integrity_error(e)
             session.rollback()
             # revert the database sequence auto increment
