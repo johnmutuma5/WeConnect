@@ -16,6 +16,7 @@ class TestBusinessCase(BaseAPITestSetUp):
         pattern = r"^UNSUCCESSFUL:.+$"
         self.assertRegexpMatches(res_msg, pattern)
 
+
     def test_users_can_make_a_review(self):
         self.testHelper.register_user(user_data)
         # login the first user
@@ -34,11 +35,29 @@ class TestBusinessCase(BaseAPITestSetUp):
         posted_heading = review_data[0]['heading']
         db_count = self.db_object_count(Review, 'heading', posted_heading)
         self.assertEqual(db_count, 1)
-        # test response message
-        msg = (json.loads(resp.data.decode("utf-8")))["msg"]
-        pattern = r"^SUCCESS:.+$"
-        self.assertRegexpMatches(msg, pattern)
+
+
+    def test_duplicate_reviews_within_24hs_disallowed(self):
+        '''
+        One user may not make a duplicate review on the same business within 24hrs
+        '''
+        self.testHelper.register_user(user_data)
+        # login the first user
+        res = self.testHelper.login_user(login_data)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        self.testHelper.register_business(business_data, access_token)
         self.testHelper.logout_user(access_token)
+
+        self.testHelper.register_user(user_data2)
+        # login second user
+        res = self.testHelper.login_user(login_data2)
+        access_token = (json.loads(res.data.decode("utf-8")))['access_token']
+        # second user make a review
+        self.testHelper.make_review(1000, review_data[0], access_token)
+        resp = self.testHelper.make_review(1000, review_data[0], access_token)
+        msg = (json.loads(resp.data.decode("utf-8")))['msg']
+        self.assertEqual(msg, 'Duplicate reviews on a business not allowed within 24hrs')
+
 
     def test_user_can_get_reviews(self):
         self.testHelper.register_user(user_data)
