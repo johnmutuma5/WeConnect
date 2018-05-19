@@ -1,9 +1,10 @@
 import re
+from datetime import date
 from sqlalchemy.sql.expression import text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from app.helpers import inspect_data
-from sqlalchemy import (Column, Integer, String, Sequence,
+from sqlalchemy import (Column, Integer, String, Date, Sequence,
                         ForeignKeyConstraint, Index, ForeignKey, Text)
 from .schemas import REQUIRED_BUSINESS_FIELDS
 from app.storage.base import Base
@@ -25,7 +26,7 @@ class Business (Base):
         'business_id_seq',
         start=1000,
         metadata=Base.metadata)
-        
+
     id = Column('id', Integer, server_default=business_id_seq.next_value(),
                 primary_key=True)
     _mobile = Column('mobile', String(12), nullable=False)
@@ -100,6 +101,7 @@ class Review (Base):
     business_id = Column(Integer, ForeignKey('business.id', ondelete='CASCADE',
                                              onupdate='CASCADE'),
                        nullable=False)
+    publish_date = Column(Date, nullable=True, default=date.today())
 
     author = relationship('User', back_populates='reviews')
     business = relationship('Business', back_populates='reviews')
