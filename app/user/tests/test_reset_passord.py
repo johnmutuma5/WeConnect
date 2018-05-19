@@ -64,6 +64,26 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         self.assertEqual(msg, "Invalid token")
         # test users can
 
+    def test_users_cannot_reset_without_a_token(self):
+        self.testHelper.register_user(user_data)
+        reset_data = {'new_password': "changed"}
+        reset_link = 'http://127.0.0.1:8080/api/v2/auth/reset-password/verify?t='
+        resp = self.testHelper.reset_password_verify(
+            reset_link, 'POST', reset_data)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, "Password reset token is missing")
+
+
+    def test_users_cannot_reset_with_short_passwords(self):
+        username = user_data['username']
+        reset_link = self.get_password_reset_link(username)
+        # client fills form a clicks submit to send a post request
+        reset_data = {'new_password': "pass"}
+        resp = self.supply_new_password(reset_link, reset_data)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, "Password too short")
+
+
     def test_users_cannot_reset_password_with_unknown_or_no_username(self):
         invalid_usernames = ['unknown_doe', None]
         for username in invalid_usernames:
