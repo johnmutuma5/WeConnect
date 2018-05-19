@@ -89,6 +89,15 @@ class Business (Base):
 
 class Review (Base):
     __tablename__ = 'review'
+    __table_args__ = (
+        Index('ix_review_publish_date',
+              'author_id',
+              'business_id',
+              'publish_date',
+              text('LOWER(heading)'),
+              text('LOWER(body)'),
+              unique=True), {}
+    )
 
     rev_id_seq = Sequence('rev_id_seq', start=1000, metadata=Base.metadata)
     id = Column('id', Integer, server_default=rev_id_seq.next_value(),
