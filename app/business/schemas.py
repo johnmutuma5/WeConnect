@@ -22,3 +22,8 @@ REQUIRED_REVIEW_FIELDS = [
     "author_id",
     "business_id"
 ]
+
+BUSINESS_SEQUENCES = {
+    'review': 'rev_id_seq',
+    'business': 'business_id_seq'
+}

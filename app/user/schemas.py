@@ -17,3 +17,8 @@ VALID_USER_FIELDS = [
     'businesses',
     'reviews'
 ]
+
+USER_SEQUENCES = {
+    'users': 'user_id_seq',
+    'token': 'token_id_seq'
+}
