@@ -17,7 +17,7 @@ user = Blueprint("user", __name__)
 
 
 @user.route('/register', methods=['POST'])
-@require_json
+@require_json(methods=['POST'])
 def register(request_data=None):
     data = request_data
 
@@ -35,7 +35,7 @@ def register(request_data=None):
 
 
 @user.route('/login', methods=['POST'])
-@require_json
+@require_json(methods=['POST'])
 def login(request_data=None):
     login_data = request_data
     username = login_data['username']
@@ -75,7 +75,7 @@ def logout(request_data=None):
 
 
 @user.route('/reset-password', methods=['POST'])
-@require_json
+@require_json(methods=['POST'])
 def reset_password(request_data=None):
     # user initiates request with their username
     username = request_data.get('username')
@@ -99,7 +99,7 @@ def reset_password(request_data=None):
 
 
 @user.route('/reset-password/verify', methods=['POST', 'GET'])
-@require_json
+@require_json(methods=['POST'])
 def update_password(request_data=None):
     if request.method == 'GET':
         return jsonify({'msg': 'Please supply your new password'})

@@ -14,7 +14,7 @@ business = Blueprint('business', __name__)
 
 
 @business.route('', methods=['GET', 'POST'])
-@require_json
+@require_json(methods=['POST'])
 def businesses(request_data=None):
     if request.method == 'POST':
         owner = session.get('user_id')
@@ -27,7 +27,7 @@ def businesses(request_data=None):
 
 
 @business.route('/<int:business_id>', methods=['GET', 'PUT', 'DELETE'])
-@require_json
+@require_json(methods=['PUT'])
 def one_business(business_id, request_data=None):
     # get request issuer id
     issuer_id = session.get('user_id')
@@ -72,15 +72,13 @@ def filter_businesses():
 
 
 @business.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
-@require_json
+@require_json(methods=['POST'])
 def reviews(business_id, request_data=None):
     # business_id = Business.gen_id_string (business_id)
     if request.method == 'GET':
         response = get_info_response(business_id, 'business_reviews')
         return response
-
-    review_data = json.loads(request.data.decode('utf-8'))
     # get logged in user
     author_id = session.get('user_id')
-    response = add_a_review(business_id, review_data)
+    response = add_a_review(business_id, request_data, author_id)
     return response

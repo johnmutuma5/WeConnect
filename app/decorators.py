@@ -51,21 +51,23 @@ def login_required(func):
     return wrapper
 
 
-def require_json(func):
+def require_json(methods=['POST', 'PUT']):
     '''
         Decorates endpoints that requires data, load the data from json and
         pass it to the decorated function
     '''
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if not request.method in ['POST', 'PUT']:
-            return func(*args, **kwargs)
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not request.method in methods:
+                return func(*args, **kwargs)
 
-        try:
-            data = json.loads(request.data.decode('utf-8'))
-            # pass data to the decorated endpoint that requires json
-            return func(request_data=data, *args, **kwargs)
-        except JSONDecodeError:
-            return jsonify({"msg": "Missing or Invalid JSON data"}), 400
+            try:
+                data = json.loads(request.data.decode('utf-8'))
+                # pass data to the decorated endpoint that requires json
+                return func(request_data=data, *args, **kwargs)
+            except JSONDecodeError:
+                return jsonify({"msg": "Missing or Invalid JSON data"}), 400
 
-    return wrapper
+        return wrapper
+    return decorator
