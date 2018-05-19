@@ -38,10 +38,11 @@ class TestBusinessCase(BaseAPITestSetUp):
                 **self.headers})
         self.assertEqual(resp.status_code, 401)
 
-    def test_only_register_business_without_json(self):
+    def test_handles_register_business_without_json(self):
         url = self.base_url + '/api/v2/businesses'
         resp = self.app.post(url, headers={**self.headers})
         self.assertEqual(resp.status_code, 401)
+
 
     def test_duplicate_businessname_disallowed(self):
         self.testHelper.register_user(user_data)

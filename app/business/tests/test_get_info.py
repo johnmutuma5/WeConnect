@@ -8,21 +8,17 @@ from app.tests.dummies import(user_data, business_data,
 class TestBusinessCase(BaseAPITestSetUp):
 
     def test_users_retrieve_all_businesses(self):
-        # check length
         self.testHelper.register_user(user_data)
         res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
-        # register a number of businesses
+        # register a number of businesses(3)
         for business_data in businesses_data:
             self.testHelper.register_business(business_data, access_token)
         # get all businesses info
         res = self.testHelper.get_businesses()
-        res_businesses = (json.loads(res.data.decode("utf-8")))["businesses"]
-        res_business_names = [business_info['name']
-                              for business_info in res_businesses]
+        resp_businesses = (json.loads(res.data.decode("utf-8")))["businesses"]
         # assert that every piece of information we have sent has been returned
-        for data in businesses_data:
-            self.assertIn(data['name'], res_business_names)
+        self.assertEqual(len(resp_businesses), len(businesses_data))
 
     def test_users_retrieve_one_business(self):
         self.testHelper.register_user(user_data)

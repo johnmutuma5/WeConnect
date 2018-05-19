@@ -18,12 +18,13 @@ class TestBusinessCase(BaseAPITestSetUp):
 
     def test_users_can_make_a_review(self):
         self.testHelper.register_user(user_data)
-        self.testHelper.register_user(user_data2)
         # login the first user
         res = self.testHelper.login_user(login_data)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         self.testHelper.register_business(business_data, access_token)
         self.testHelper.logout_user(access_token)
+        
+        self.testHelper.register_user(user_data2)
         # login second user
         res = self.testHelper.login_user(login_data2)
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
