@@ -9,6 +9,10 @@ convention = config.get('NAMING_CONVENTION')
 meta = MetaData(naming_convention=convention)
 Base = declarative_base(metadata=meta)
 
+def weconnect_table_names():
+    all_tables = [table.name for table in Base.metadata.tables.values()]
+    return all_tables
+
 
 def init_db():
     Base.metadata.create_all(bind=dbEngine)

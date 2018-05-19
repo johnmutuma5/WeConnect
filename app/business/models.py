@@ -25,6 +25,7 @@ class Business (Base):
         'business_id_seq',
         start=1000,
         metadata=Base.metadata)
+        
     id = Column('id', Integer, server_default=business_id_seq.next_value(),
                 primary_key=True)
     _mobile = Column('mobile', String(12), nullable=False)
