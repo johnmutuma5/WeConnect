@@ -348,6 +348,8 @@ This Resource enables users to search for businesses by name
 
 + Parameters
   + q: Andela%20Kenya (string, optional) - Full or part of a business name
+  + limit: 10 (number, optional) - Number of results to display per page
+  + page: 1 (number, optional) - Pagination results page number
 
 + Response 200
 
