@@ -117,12 +117,12 @@ def update_password(request_data=None):
     if token_obj.expired:
         # destroy expired token
         store.destroy_token(token_obj)
-        return jsonify({'msg': 'Token expired'})
+        return jsonify({'msg': 'Token expired'}), 401
     # at this point on this should be an eligible reset
     try:
         store.update_user_password(token_bearer, new_password)
         # ensure tokens are one time use
         store.destroy_token(token_obj)
     except InvalidUserInputError as error: # check min password length
-        return jsonify({"msg": error.msg})
-    return jsonify({"msg": "Password updated successfully"})
+        return jsonify({"msg": error.msg}), 422
+    return jsonify({"msg": "Password updated successfully"}), 201

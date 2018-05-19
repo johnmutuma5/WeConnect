@@ -36,7 +36,7 @@ def register_a_business(business_data, owner):
     try:
         msg = store.add(business)
     except DuplicationError as e:
-        return jsonify({"msg": e.msg}), 401
+        return jsonify({"msg": e.msg}), 409
     return jsonify({"msg": msg}), 201
 
 

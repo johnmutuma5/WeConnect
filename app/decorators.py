@@ -66,6 +66,6 @@ def require_json(func):
             # pass data to the decorated endpoint that requires json
             return func(request_data=data, *args, **kwargs)
         except JSONDecodeError:
-            return jsonify({"msg": "Missing or Invalid JSON data"}), 401
+            return jsonify({"msg": "Missing or Invalid JSON data"}), 400
 
     return wrapper
