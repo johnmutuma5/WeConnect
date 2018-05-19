@@ -1,12 +1,14 @@
 import re
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.expression import text
+from sqlalchemy.orm import sessionmaker, scoped_session
+from .base import weconnect_table_names
 from app import config
 from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review
-from app.user.schemas import REQUIRED_USER_FIELDS
+from app.user.schemas import REQUIRED_USER_FIELDS, USER_SEQUENCES
 from app.business.schemas import(VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS,
-                                 USER_DEFINED_BUSINESS_FIELDS)
+                                 USER_DEFINED_BUSINESS_FIELDS, BUSINESS_SEQUENCES)
 from app.exceptions import (DuplicationError, DataNotFoundError,
                             PermissionDeniedError, PaginationError,
                             UnknownPropertyError)
@@ -58,7 +60,7 @@ class DbFacade():
 
     def __init__(self, dbEngine):
         self.engine = dbEngine
-        self.Session = sessionmaker(bind=dbEngine)
+        self.Session = scoped_session(sessionmaker(bind=dbEngine))
         self.clerk = StoreHelper()
 
     def add(self, obj):
@@ -118,6 +120,20 @@ class DbFacade():
         return subquery
 
 
+    def _revert_sequence_increment(self, sequence=None, table_name=None):
+        '''Reverts auto increment of sequences after failed database insertions'''
+        all_tables = weconnect_table_names()
+
+        if table_name in all_tables:
+            sql = "SELECT SETVAL(:seq, (SELECT MAX(id) from %s))"%(table_name,)
+
+        bind_params = {'seq': sequence}
+        session = self.Session()
+        session.execute(sql, bind_params)
+        # scoped session is closed at the parent scope
+
+
+
 class BusinessDbFacade(DbFacade):
 
     def add_business(self, business_obj):
@@ -128,11 +144,16 @@ class BusinessDbFacade(DbFacade):
             session.commit()
         except IntegrityError:
             session.rollback()
+            # revert the database sequence auto increment
+            seq = BUSINESS_SEQUENCES.get('business')
+            self._revert_sequence_increment(sequence=seq,
+                                            table_name='business')
             raise DuplicationError('Storage::add_business',
                                    'Business name already exists')
         finally:
             session.close()
         return 'SUCCESS: business {} created!'.format(businessname)
+
 
     def get_businesses_info(self):
         businesses_info = []
@@ -254,6 +275,10 @@ class BusinessDbFacade(DbFacade):
             session.commit()
         except IntegrityError:
             session.rollback()
+            # revert the database sequence auto increment
+            seq = BUSINESS_SEQUENCES.get('review')
+            self._revert_sequence_increment(sequence=seq,
+                                            table_name='review')
             return self.handle_data_not_found()
         finally:
             session.close()
@@ -294,12 +319,17 @@ class UserDbFacade(DbFacade):
         except (IntegrityError) as e:
             key = self.retrieve_field_raising_integrity_error(e)
             session.rollback()
+            # revert the database sequence auto increment
+            seq = USER_SEQUENCES.get('users')
+            self._revert_sequence_increment(sequence=seq,
+                                            table_name='users')
             raise DuplicationError('Storage::add_user',
                                    '%s already exists' % key)
         finally:
             session.close()
 
         return 'SUCCESS: user {} created!'.format(username)
+
 
     def get_user(self, username):
         session = self.Session()
