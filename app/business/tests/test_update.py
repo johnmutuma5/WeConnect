@@ -18,9 +18,7 @@ class TestBusinessCase(BaseAPITestSetUp):
         # get the business's info in it's new state
         res = self.testHelper.get_business(raw_id)
         res_business_info = (json.loads(res.data.decode("utf-8")))["info"]
-
-        for key, value in update_data.items():
-            self.assertEqual(update_data[key], res_business_info[key])
+        self.assertEqual(update_data['location'], res_business_info['location'])
 
     def test_only_logged_in_users_can_update_business(self):
         raw_id = 1000

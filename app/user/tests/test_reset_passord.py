@@ -33,12 +33,6 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         resp = self.supply_new_password(reset_link, reset_data)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Password updated successfully", msg='ensure correct env')
-        # login with new password
-        resp = self.testHelper.login_user({"username": username,
-                                           "password": "changed"})
-        msg = (json.loads(resp.data.decode('utf-8')))['msg']
-        pattern = r"Logged in (?P<username>.+)"
-        self.assertRegexpMatches(msg, pattern)
 
 
     def test_user_cannot_reset_password_with_expired_token(self):
@@ -84,16 +78,20 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         self.assertEqual(msg, "Password too short")
 
 
-    def test_users_cannot_reset_password_with_unknown_or_no_username(self):
-        invalid_usernames = ['unknown_doe', None]
-        for username in invalid_usernames:
-            reset_data = {"username": username}
-            resp = self.testHelper.reset_password(reset_data)
-            msg = (json.loads(resp.data.decode('utf-8')))['msg']
-            if username:
-                self.assertEqual(msg, 'Invalid Username')
-            else:
-                self.assertEqual(msg, 'Please supply your username')
+    def test_users_cannot_reset_password_with_unknown_username(self):
+        username = 'unknown_doe'
+        reset_data = {"username": username}
+        resp = self.testHelper.reset_password(reset_data)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, 'Invalid Username')
+
+
+    def test_users_cannot_reset_password_without_username(self):
+        username = None
+        reset_data = {"username": username}
+        resp = self.testHelper.reset_password(reset_data)
+        msg = (json.loads(resp.data.decode('utf-8')))['msg']
+        self.assertEqual(msg, 'Please supply your username')
 
 
 if __name__ == "__main__":

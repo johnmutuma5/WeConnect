@@ -23,7 +23,7 @@ class TestBusinessCase(BaseAPITestSetUp):
         access_token = (json.loads(res.data.decode("utf-8")))['access_token']
         self.testHelper.register_business(business_data, access_token)
         self.testHelper.logout_user(access_token)
-        
+
         self.testHelper.register_user(user_data2)
         # login second user
         res = self.testHelper.login_user(login_data2)
@@ -54,11 +54,11 @@ class TestBusinessCase(BaseAPITestSetUp):
         self.testHelper.make_review(1000, review_data[1], access_token)
         resp = self.testHelper.get_all_reviews(1000)
         reviews_info = (json.loads(resp.data.decode("utf-8")))['info']
-        resp_review_headings = [review_info['heading']
-                                for review_info in reviews_info]
+        # extract review headings from response reviews
+        func = lambda review_info: review_info['heading']
+        resp_review_headings = map(func, reviews_info)
         # check that all review heading have been returned
-        for data in review_data:
-            self.assertIn(data['heading'], resp_review_headings)
+        self.assertIn(review_data[0]['heading'], resp_review_headings)
 
 
     def test_handles_review_for_non_existent_business(self):

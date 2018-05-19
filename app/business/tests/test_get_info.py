@@ -47,10 +47,9 @@ class TestBusinessCase(BaseAPITestSetUp):
         }
         resp = self.testHelper.filter_business(filter_dict)
         results = (json.loads(resp.data.decode('utf-8')))['results']
-        for result in results:
-            search_key = filter_dict['name'].lower()
-            business_name = (result['name']).lower()
-            self.assertTrue(search_key in business_name)
+        search_key = filter_dict['name'].lower()
+        business_name = (results[0]['name']).lower()
+        self.assertTrue(search_key in business_name)
 
     def test_filter_applies_pagination(self):
         self.testHelper.register_user(user_data)
@@ -95,10 +94,10 @@ class TestBusinessCase(BaseAPITestSetUp):
         search_key = 'lE'
         resp = self.testHelper.search_business(search_key)
         results = (json.loads(resp.data.decode('utf-8')))['results']
-        for result in results:
-            search_key = search_key.lower()
-            business_name = (result['name']).lower()
-            self.assertTrue(search_key in business_name)
+        search_key = search_key.lower()
+        business_name = (results[0]['name']).lower()
+        self.assertTrue(search_key in business_name)
+
 
     def test_users_retrieve_only_avail_business_info(self):
         raw_id = 1000000
