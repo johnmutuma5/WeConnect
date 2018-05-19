@@ -1,5 +1,5 @@
 import json
-from flask import jsonify, session
+from flask import jsonify
 from app.business.models import Business, Review
 from app.decorators import login_required
 from .backends import businessDbFacade as store
@@ -72,13 +72,13 @@ def delete_business(business_id, issuer_id):
 
 
 @login_required
-def add_a_review(business_id, review_data):
-    author_id = session.get('user_id')
+def add_a_review(business_id, review_data, author_id):
     new_review = Review.create_review(business_id, author_id, review_data)
     # store the review
     try:
         msg = store.add(new_review)
-    except DataNotFoundError as error:
-        return jsonify({'msg': error.msg}), 404
+    except (DataNotFoundError, PermissionDeniedError) as error:
+        status_code = find_status_code(error)
+        return jsonify({'msg': error.msg}), status_code
 
     return jsonify({'msg': msg}), 201

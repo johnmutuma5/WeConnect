@@ -171,9 +171,9 @@ class BusinessDbFacade(DbFacade):
         target_business = session.query(Business)\
             .filter(Business.id == business_id)\
             .first()
+        if not target_business:
+            self.handle_data_not_found(session)
         try:
-            if not target_business:
-                self.handle_data_not_found()
             # session.expunge (target_business)
             business_info = self.clerk.extract_business_data(target_business)
             return business_info
@@ -270,16 +270,24 @@ class BusinessDbFacade(DbFacade):
 
     def add_review(self, review_obj):
         session = self.Session()
+        target_business = session.query(Business)\
+            .filter(Business.id == review_obj.business_id)\
+            .first()
+        # handle unavailable business to review
+
         try:
+            if not target_business:
+                self.handle_data_not_found()
             session.add(review_obj)
             session.commit()
         except IntegrityError:
+            # handle adding duplicate reviews within 24hrs, violates UniqueIndex on reviews table
             session.rollback()
             # revert the database sequence auto increment
             seq = BUSINESS_SEQUENCES.get('review')
             self._revert_sequence_increment(sequence=seq,
                                             table_name='review')
-            return self.handle_data_not_found()
+            raise PermissionDeniedError(msg="Duplicate reviews on a business not allowed within 24hrs")
         finally:
             session.close()
         return 'SUCCESS: review posted!'
@@ -293,7 +301,8 @@ class BusinessDbFacade(DbFacade):
 
         # if business with id business_id is not found
         if not target_business:
-            self.handle_data_not_found(session)
+            session.close()
+            self.handle_data_not_found()
 
         target_reviews = session.query(Review)\
             .filter(Review.business_id == business_id)\
