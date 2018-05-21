@@ -8,52 +8,10 @@ from app.user.models import User, PasswordResetToken
 from app.business.models import Business, Review
 from app.user.schemas import REQUIRED_USER_FIELDS, USER_SEQUENCES
 from app.business.schemas import(VALID_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS,
-                                 USER_DEFINED_BUSINESS_FIELDS, BUSINESS_SEQUENCES)
+                                 BUSINESS_SEQUENCES)
 from app.exceptions import (DuplicationError, DataNotFoundError,
-                            PermissionDeniedError, PaginationError,
-                            UnknownPropertyError)
+                            PermissionDeniedError, PaginationError)
 
-
-class StoreHelper ():
-    '''Used to create a clerical helper for the DbInterface:
-        Methods: extract_business_data
-                update_business
-                extract_review_info
-    '''
-
-    def __init__(self):
-        ...
-
-    @staticmethod
-    def get_profile(_object, profile_type=None):
-        return _object.profile(profile_type)
-
-    @staticmethod
-    def extract_business_data(business, session=None):
-        business_data = {}
-        fields = ["name", *VALID_BUSINESS_FIELDS, "id"]
-        for field in fields:
-            value = getattr(business, field)
-            if isinstance(value, User):
-                value = value.id
-            business_data[field] = value
-        return business_data
-
-    @staticmethod
-    def update_business(target_business, update_data):
-        for key in update_data.keys():
-            if key not in USER_DEFINED_BUSINESS_FIELDS:
-                raise UnknownPropertyError(msg="Unknown property %s" %key)
-            setattr(target_business, key, update_data[key])
-
-    @staticmethod
-    def extract_review_info(review):
-        review_info = {}
-        fields = [*REQUIRED_REVIEW_FIELDS, "id"]
-        for field in fields:
-            review_info[field] = getattr(review, field)
-
-        return review_info
 
 
 class DbFacade():
@@ -69,7 +27,6 @@ class DbFacade():
     def __init__(self, dbEngine):
         self.engine = dbEngine
         self.Session = scoped_session(sessionmaker(bind=dbEngine))
-        self.clerk = StoreHelper()
 
     def add(self, obj):
         obj_class = obj.__class__.__name__
@@ -112,7 +69,7 @@ class DbFacade():
     def _process_results(self, results):
         results_info = []
         for business in results:
-            business_info = self.clerk.extract_business_data(business)
+            business_info = business.profile()
             results_info.append(business_info)
         return results_info
 
@@ -168,7 +125,7 @@ class BusinessDbFacade(DbFacade):
         session = self.Session()
         businesses = session.query(Business).all()
         for business in businesses:
-            business_data = self.clerk.extract_business_data(business, session)
+            business_data = business.profile()
             businesses_info.append(business_data)
         session.close()
         return businesses_info
@@ -182,8 +139,7 @@ class BusinessDbFacade(DbFacade):
         if not target_business:
             self.handle_data_not_found(session)
         try:
-            # session.expunge (target_business)
-            business_info = self.clerk.extract_business_data(target_business)
+            business_info = target_business.profile()
             return business_info
         finally:
             session.close()
@@ -243,7 +199,7 @@ class BusinessDbFacade(DbFacade):
             return self.handle_permission_denied(session)
         # except updating with an existent name
         try:
-            self.clerk.update_business(target_business, update_data)
+            target_business.update_profile(update_data)
             session.commit()
         except IntegrityError:
             session.rollback()
@@ -319,7 +275,7 @@ class BusinessDbFacade(DbFacade):
         reviews_info = []
         for review in target_reviews:
             # session.expunge(review)
-            review_info = self.clerk.extract_review_info(review)
+            review_info = review.to_dict()
             reviews_info.append(review_info)
         session.close()
         return reviews_info
@@ -349,21 +305,19 @@ class UserDbFacade(DbFacade):
         return 'SUCCESS: user {} created!'.format(username)
 
 
-    def get_user(self, username):
+    def get_user(self, value=None, by='username'):
         session = self.Session()
         target_user = session.query(User)\
-            .filter(User.username == username)\
+            .filter(getattr(User, by) == value)\
             .first()
         session.close()
         return target_user
 
-
-    def get_user_profile(self, user_id, profile_type=None):
+    def fetch_user_profile(self, user, profile_type=None):
         session = self.Session()
-        target_user = session.query(User)\
-            .filter(User.id == user_id)\
-            .first()
-        profile = self.clerk.get_profile(target_user, profile_type)
+        user = session.merge(user)
+        if not profile_type or profile_type == 'private':
+            profile = user.profile(profile_type='private')
         session.close()
         return profile
 

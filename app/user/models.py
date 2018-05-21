@@ -58,8 +58,9 @@ class User(Base):
             self.password = data['password']
 
     def profile(self, profile_type=None):
-        profile = PrivateUserProfile(self)
-        return profile.get_dict()
+        if profile_type == 'private':
+            _profile = PrivateUserProfile(self)
+        return _profile.generate()
 
     # use hybrid_property to make the property accessible with sqlalchemy
     # filter
@@ -123,7 +124,7 @@ class User(Base):
 
 
 
-class UserProfile():
+class UserProfile(dict):
     def __init__(self, user):
         self.user = user
 
@@ -147,19 +148,20 @@ class UserProfile():
 
 
 class PrivateUserProfile(UserProfile):
-    def get_dict(self):
-        user_profile = {}
+    '''
+    Profile generated will include confidential information such as login credentials
+    '''
+    def generate(self):
         for attribute in VALID_USER_FIELDS:
             value = getattr(self.user, attribute)
             if attribute in ('businesses',):
                 value = self._process_business_list(value)
 
-            if attribute in ('reviews'):
+            if attribute in ('reviews',):
                 value = self._process_reviews_list(value)
-
-            user_profile[attribute] = value
-
-        return user_profile
+            # update dict key to value, UserProfile inherits from dict
+            self[attribute] = value
+        return self
 
 
 

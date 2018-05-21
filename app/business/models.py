@@ -4,11 +4,12 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from app.helpers import inspect_data
-from sqlalchemy import (Column, Integer, String, Date, Sequence,
+from sqlalchemy import(Column, Integer, String, Date, Sequence,
                         ForeignKeyConstraint, Index, ForeignKey, Text)
-from .schemas import REQUIRED_BUSINESS_FIELDS
 from app.storage.base import Base
-from app.exceptions import InvalidUserInputError
+from app.exceptions import InvalidUserInputError, UnknownPropertyError
+from .schemas import(REQUIRED_BUSINESS_FIELDS, VALID_BUSINESS_FIELDS,
+                     USER_DEFINED_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS)
 
 
 class Business (Base):
@@ -43,10 +44,6 @@ class Business (Base):
 
     @classmethod
     def create_business(cls, data, owner_id):
-        '''
-            An alternative way of instantiating a business object
-            directly with the class
-        '''
         # inspect_data raises a MissingDataError for blank fields
         cleaned_data = inspect_data(data, cls.required_fields)
         new_business = cls(cleaned_data, owner_id)
@@ -59,6 +56,19 @@ class Business (Base):
             self.location = data['location']
             self.category = data['category']
         self.owner_id = owner_id
+
+
+    def profile(self):
+        _profile = BusinessProfile(self)
+        return _profile.generate()
+
+
+    def update_profile(self, update_data):
+        for key in update_data.keys():
+            if key not in USER_DEFINED_BUSINESS_FIELDS:
+                raise UnknownPropertyError(msg="Unknown property %s" %key)
+            setattr(self, key, update_data[key])
+
 
     @hybrid_property
     def mobile(self):
@@ -87,7 +97,25 @@ class Business (Base):
         self._name = business_name
 
 
-class Review (Base):
+
+class BusinessProfile(dict):
+    def __init__(self, business):
+        self.business = business
+
+    def generate(self):
+        fields = [*VALID_BUSINESS_FIELDS, "id"]
+        for field in fields:
+            value = getattr(self.business, field)
+            if field in ('owner',):
+                # extract owner id
+                value = value.id
+            # update dict key to value
+            self[field] = value
+        return self
+
+
+
+class Review(Base):
     __tablename__ = 'review'
     __table_args__ = (
         Index('ix_review_publish_date',
@@ -125,3 +153,19 @@ class Review (Base):
         self.body = data['body']
         self.author_id = author_id
         self.business_id = business_id
+
+    def to_dict(self):
+        review_dict = ReviewDict(self)
+        return review_dict.generate()
+
+
+class ReviewDict(dict):
+    def __init__(self, review):
+        self.review = review
+
+    def generate(self):
+        fields = [*REQUIRED_REVIEW_FIELDS, "id"]
+        for field in fields:
+            value = getattr(self.review, field)
+            self[field] = value
+        return self
