@@ -80,7 +80,7 @@ Handles logout requests
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
 
 + Response 200 (application/json)
@@ -97,9 +97,9 @@ Users can get their private profile data. This resource requires login.
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
-+ Response
++ Response 200 (application/json)
 
   + Attributes
       - Include Private Profile
@@ -151,7 +151,7 @@ This action registers businesses.
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
   + Attributes (Business Registration Info)
 
@@ -182,14 +182,15 @@ This action gets information for all businesses stored
 + Response 200 (application/json)
   A list of key value pairs for each business's information
 
-  + Attributes (array[Business Info])
+  + Attributes
+      - businesses(array[Business Info])
 
 
 ## One Business Resource [/api/v2/businesses/{id}]
 Resource related to a specific businesses referenced by its `id`
 
 + Parameters
-  - id: 1 (integer, required) - The id of the business as an integer
+  - id: 1000 (integer, required) - The id of the business as an integer
 
 ### Get a single business's info [GET]
 This action sends a request to retrieve information of a single business.
@@ -198,7 +199,8 @@ It include a URI parameter representing the `id` of the business
 + Response 200 (application/json)
 Includes information of a business referenced by `id` mapping to the business's `id`
 
-  + Attributes (Business Info)
+  + Attributes
+      - info (Business Info)
 
 
 + Response 404 (application/json)
@@ -215,7 +217,7 @@ The targeted business business is referenced by referenced by a URI parameter re
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
   + Attributes
       - name: New Name (string, optional) - The new name of the business
@@ -265,7 +267,7 @@ This action sends a request to delete a business from the API.
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
 
 + Response 201 (application/json)
@@ -288,11 +290,11 @@ This action sends a request to delete a business from the API.
 
 
 
-## Business Reviews [/businesses/{business_id}/reviews]
+## Business Reviews [/api/v2/businesses/{business_id}/reviews]
 This resource handles getting and posting reviews of a business
 
 + Parameters
-    - business_id: 1 (integer) - The id of the business to review
+    - business_id: 1000 (integer) - The id of the business to review
 
 ### Review a business [POST]
 This action handles posting a review for a business
@@ -302,7 +304,7 @@ This action handles posting a review for a business
 
   + Headers
 
-      Authorization: Bearer valid.jwttoken.string
+            Authorization: Bearer valid.jwttoken.string
 
   + Attributes
       - Include Review From User
@@ -332,7 +334,8 @@ This action handles getting all the reviews of a business
 + Response 200 (application/json)
   Includes a list of all reviews of a business
 
-    + Attributes (array[Full Review Info])
+    + Attributes
+      - info (array[Full Review Info])
 
 + Response 404 (application/json)
   Includes an error message for trying to retrieve reviews with an unrecognized business `id`
@@ -341,7 +344,7 @@ This action handles getting all the reviews of a business
       - Include Business Not Found Error
 
 
-## Search Businesses [/api/v2/businesses/search{?q}]
+## Search Businesses [/api/v2/businesses/search{?q}{?limit}{?page}]
 This Resource enables users to search for businesses by name
 
 ### Search for a business [GET]
@@ -356,7 +359,7 @@ This Resource enables users to search for businesses by name
   + Attributes (array[Business Info])
 
 
-## Filter Businesses [/api/v2/businesses/filter{?location}{&category}{&name}{&mobile}{&limit}{&page}]
+## Filter Businesses [/api/v2/businesses/filter{?location}{?category}{?name}{?mobile}{?limit}{?page}]
 This Resource enables users to filter businesses by their attributes. A user can filter businesses by `category`, `location`, `name`, `mobile` as desirable.
 
 ### Filter businesses [GET]
@@ -381,13 +384,13 @@ This Resource enables users to filter businesses by their attributes. A user can
 
 ## Data Structures
 ### User Data
-+ first_name: John (string, required) - The first name of the users
-+ last_name: Doe (string, required) - The last name of the users
-+ gender: Male, Female (enum, required) - The gender name of the users
-+ mobile: 254720000000
-+ email: johndoe@gmail.com
-+ username: john_doe
-+ password: pass
+- first_name: John (string, required) - The first name of the users
+- last_name: Doe (string, required) - The last name of the users
+- gender: Male, Female (enum, required) - The gender name of the users
+- mobile: 254720000000
+- email: johndoe@gmail.com
+- username: john_doe
+- password: atLeastSixCharactersLong
 
 ### Private Profile
 - Include User Data
