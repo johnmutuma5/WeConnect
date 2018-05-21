@@ -40,7 +40,7 @@ def login(request_data=None):
     login_data = request_data
     username = login_data['username']
 
-    target_user = store.get_user(username)
+    target_user = store.get_user(username, by='username')
     if target_user:
         password = login_data['password']
         passhash = target_user.password
@@ -62,7 +62,8 @@ def login(request_data=None):
 def private_profile():
     profile_type = 'private'
     user_id = session.get('user_id')
-    profile = store.get_user_profile(user_id, profile_type)
+    target_user = store.get_user(user_id, by='id')
+    profile = store.fetch_user_profile(target_user, profile_type='private')
     return jsonify({"profile": profile}), 200
 
 
@@ -82,7 +83,7 @@ def reset_password(request_data=None):
     if not username:
         return jsonify({"msg": "Please supply your username"}), 401
 
-    target_user = store.get_user(username)
+    target_user = store.get_user(username, by='username')
     if not target_user:
         return jsonify({"msg": "Invalid Username"}), 404
 
