@@ -55,10 +55,11 @@ def login_required(func):
 def require_json(methods=['POST', 'PUT']):
     '''
         Decorates endpoints that require data, load the data from json and
-        pass it to the decorated function. an argument, the decorator will
-        enforce require json for POST and PUT as defaults. The decorated endpoint
-        functions should accept an argument request_data which should be defaulted
-        to None
+        pass it to the decorated function. If a list of methods to require json
+        is not passed as an argument, the decorator will enforce require
+        json for POST and/or PUT as defaults. The decorated endpoint
+        functions should accept a keyword argument, request_data, which should be
+        defaulted to None
     '''
     def decorator(func):
         @wraps(func)
@@ -69,7 +70,7 @@ def require_json(methods=['POST', 'PUT']):
             try:
                 data = json.loads(request.data.decode('utf-8'))
                 # pass data to the decorated endpoint that requires json
-                return func(request_data=data, *args, **kwargs)
+                return func(*args, request_data=data, **kwargs)
             except JSONDecodeError:
                 return jsonify({"msg": "Missing or Invalid JSON data"}), 400
 
