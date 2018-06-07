@@ -31,7 +31,7 @@ class DbFacade():
     def add(self, obj):
         obj_class = obj.__class__.__name__
 
-        # get appropriate method to call: a switch-like dict operation
+        # get appropriate method to call
         if obj_class == 'User':
             _add = self.add_user
         elif obj_class == 'Business':
@@ -305,10 +305,10 @@ class UserDbFacade(DbFacade):
         return 'SUCCESS: user {} created!'.format(username)
 
 
-    def get_user(self, value=None, by='username'):
+    def get_user(self, value=None, column='username'):
         session = self.Session()
         target_user = session.query(User)\
-            .filter(getattr(User, by) == value)\
+            .filter(getattr(User, column) == value)\
             .first()
         session.close()
         return target_user

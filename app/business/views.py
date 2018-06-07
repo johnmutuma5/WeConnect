@@ -1,5 +1,5 @@
 import json
-from flask import jsonify, request, session, Blueprint
+from flask import jsonify, request, session
 from app.decorators import login_required, require_json
 from app.helpers import inspect_data
 from app.business.models import Business
@@ -10,10 +10,7 @@ from .utils import (get_info_response, register_a_business,
                     update_business_info, delete_business, add_a_review)
 
 
-business = Blueprint('business', __name__)
 
-
-@business.route('', methods=['GET', 'POST'])
 @require_json(methods=['POST'])
 def businesses(request_data=None):
     if request.method == 'POST':
@@ -26,7 +23,7 @@ def businesses(request_data=None):
     return jsonify({"businesses": businesses_info}), 200
 
 
-@business.route('/<int:business_id>', methods=['GET', 'PUT', 'DELETE'])
+
 @require_json(methods=['PUT'])
 def one_business(business_id, request_data=None):
     # get request issuer id
@@ -53,7 +50,7 @@ def one_business(business_id, request_data=None):
     return response
 
 
-@business.route('/search', methods=['GET'])
+
 def search_business():
     search_params = request.args
     # expect pagnation error
@@ -61,7 +58,7 @@ def search_business():
     return jsonify({'results': results}), 200
 
 
-@business.route('/filter', methods=['GET'])
+
 def filter_businesses():
     filter_params = request.args
     try:
@@ -71,7 +68,7 @@ def filter_businesses():
     return jsonify({'results': results}), 200
 
 
-@business.route('/<int:business_id>/reviews', methods=['GET', 'POST'])
+
 @require_json(methods=['POST'])
 def reviews(business_id, request_data=None):
     # business_id = Business.gen_id_string (business_id)

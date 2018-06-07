@@ -14,10 +14,12 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         reset_link = (json.loads(resp.data.decode('utf-8')))['reset_link']
         return reset_link
 
+
     def supply_new_password(self, reset_link, reset_data):
         resp = self.testHelper.reset_password_verify(
             reset_link, 'POST', reset_data)
         return resp
+
 
     def test_users_can_reset_passwords(self):
         # use username to send password reset request
@@ -45,6 +47,7 @@ class TestResetPasswordCase (BaseAPITestSetUp):
         resp = self.supply_new_password(reset_link, reset_data)
         msg = (json.loads(resp.data.decode('utf-8')))['msg']
         self.assertEqual(msg, "Token expired")
+
 
     def test_users_cannot_reset_with_invalid_token(self):
         self.testHelper.register_user(user_data)

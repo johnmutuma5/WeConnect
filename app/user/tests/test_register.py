@@ -26,6 +26,7 @@ class TestRegisterCase (BaseAPITestSetUp):
         user_in_response_msg = match.group('username')
         self.assertEqual(user_in_response_msg, user_data['username'])
 
+
     def test_user_cannot_register_with_invalid_username(self):
         invalid_names = ['000', '90jdj', 'axc']
         for invalid_name in invalid_names:
@@ -53,7 +54,7 @@ class TestRegisterCase (BaseAPITestSetUp):
         msg = resp_dict['msg']
         self.assertEqual(msg, 'Invalid email')
 
-    # @pytest.mark.run(order = 2)
+
     def test_duplicate_username_disallowed(self):
         res = self.testHelper.register_user(user_data)
         # register user with similar data as used above but different email
@@ -61,6 +62,7 @@ class TestRegisterCase (BaseAPITestSetUp):
         res = self.testHelper.register_user(identical_email)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
+
 
     def test_checks_cases_to_determine_duplication(self):
         res = self.testHelper.register_user(user_data)
@@ -71,6 +73,7 @@ class TestRegisterCase (BaseAPITestSetUp):
         res = self.testHelper.register_user(test_data_caps)
         msg = (json.loads(res.data.decode("utf-8")))['msg']
         self.assertEqual(msg, 'Username already exists')
+
 
     def test_duplicate_emails_disallowed(self):
         res = self.testHelper.register_user(user_data)

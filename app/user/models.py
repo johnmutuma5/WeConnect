@@ -6,11 +6,11 @@ from app.user.schemas import USER_DEFINED_USER_FIELDS, VALID_USER_FIELDS
 from app.exceptions import InvalidUserInputError
 from app.helpers import inspect_data, hash_password
 
-from sqlalchemy import Column, Integer, String, Enum, Sequence, Index, DateTime, ForeignKey
+from sqlalchemy import(Column, Integer, String, Enum, Sequence, Index,
+                       DateTime, ForeignKey)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
-
 
 class User(Base):
     __tablename__ = 'users'

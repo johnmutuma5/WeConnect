@@ -1,6 +1,6 @@
 import json
 import jwt
-from flask import jsonify, request, session, url_for, Blueprint
+from flask import jsonify, request, session, url_for
 from app import config
 from app.decorators import login_required, require_json
 from app.mailing.mailer import Mailer
@@ -13,10 +13,7 @@ from ..exceptions import DuplicationError, InvalidUserInputError
 BEGINNING OF ENDOPOINTS
 '''
 
-user = Blueprint("user", __name__)
 
-
-@user.route('/register', methods=['POST'])
 @require_json(methods=['POST'])
 def register(request_data=None):
     data = request_data
@@ -34,13 +31,12 @@ def register(request_data=None):
     return jsonify({"msg": msg}), 201
 
 
-@user.route('/login', methods=['POST'])
 @require_json(methods=['POST'])
 def login(request_data=None):
     login_data = request_data
     username = login_data['username']
 
-    target_user = store.get_user(username, by='username')
+    target_user = store.get_user(username, column='username')
     if target_user:
         password = login_data['password']
         passhash = target_user.password
@@ -57,38 +53,35 @@ def login(request_data=None):
     return jsonify({'msg': msg, 'access_token': access_token}), 200
 
 
-@user.route('/personal-profile', methods=['GET'])
 @login_required
-def private_profile():
+def user_private_profile():
     profile_type = 'private'
     user_id = session.get('user_id')
-    target_user = store.get_user(user_id, by='id')
+    target_user = store.get_user(user_id, column='id')
     profile = store.fetch_user_profile(target_user, profile_type='private')
     return jsonify({"profile": profile}), 200
 
 
 
-@user.route('/logout', methods=['POST'])
 @login_required
 def logout(request_data=None):
     session.pop('user_id')
     return jsonify({"msg": "Logged out successfully!"}), 200
 
 
-@user.route('/reset-password', methods=['POST'])
 @require_json(methods=['POST'])
-def reset_password(request_data=None):
+def initiate_password_reset(request_data=None):
     # user initiates request with their username
     username = request_data.get('username')
     if not username:
         return jsonify({"msg": "Please supply your username"}), 401
 
-    target_user = store.get_user(username, by='username')
+    target_user = store.get_user(username, column='username')
     if not target_user:
         return jsonify({"msg": "Invalid Username"}), 404
 
     token_string = generate_token()
-    reset_link = url_for('.update_password', _external=True,
+    reset_link = url_for('.complete_password_reset', _external=True,
                          t=token_string)
     # email reset_link with token url parameter to user's email address
     mailer = Mailer()
@@ -99,9 +92,8 @@ def reset_password(request_data=None):
     return jsonify({"reset_link": reset_link}), 200  # for testing
 
 
-@user.route('/reset-password/verify', methods=['POST', 'GET'])
 @require_json(methods=['POST'])
-def update_password(request_data=None):
+def complete_password_reset(request_data=None):
     if request.method == 'GET':
         return jsonify({'msg': 'Please supply your new password'})
 
