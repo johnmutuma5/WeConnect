@@ -62,8 +62,7 @@ class User(Base):
             _profile = PrivateUserProfile(self)
         return _profile.generate()
 
-    # use hybrid_property to make the property accessible with sqlalchemy
-    # filter
+    # use hybrid_property to make the property accessible with sqlalchemy filter
     @hybrid_property
     def mobile(self):
         return self._mobile
