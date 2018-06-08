@@ -8,6 +8,7 @@ app.add_url_rule(rule='/',
 app.add_url_rule(rule='/api/documentation',
                  view_func=index.documentation,
                  methods=['GET'])
+# more url rules from blueprints
 app.register_blueprint(blueprint=business_urls_blueprint,
                        url_prefix="/api/v2/businesses")
 app.register_blueprint(blueprint=auth_urls_blueprint,
