@@ -1,9 +1,12 @@
-env:
-  global:
-    - CC_TEST_REPORTER_ID=77b7bee3ddde517dd8962132d655935695e342de483ae9cb8d13449baf56cd30
-
 language: python
-sudo: required
+
+env:
+  DATABASE_URL_TEST="postgresql+psycopg2://postgres:@localhost:5432/testdb"
+  APP_SECRET='applicationsecretkey'
+  ENVIRONMENT='dev'
+  EMAIL_USERNAME='weconnect.mailer'
+  EMAIL_PASSWORD='emailpassword'
+
 python:
   - 3.6
 
@@ -15,12 +18,11 @@ install:
   - pip install codecov
 
 before_script:
-  - psql -c 'create database weconnect;' -U postgres
+  - psql -c 'create database testdb;' -U postgres
 
 script:
   - nosetests --exe -v --with-coverage --cover-package=app
-
-
+  
 after_success:
   - coveralls
   - codecov

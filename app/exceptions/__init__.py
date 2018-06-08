@@ -1,6 +1,6 @@
 
 class CustomException (Exception):
-    def __init__(self, expression, msg):
+    def __init__(self, expression=None, msg=None):
         self.expression = expression
         self.msg = msg
 
@@ -26,4 +26,21 @@ class PermissionDeniedError (CustomException):
 class InvalidUserInputError (CustomException):
     '''
         raised: when trying to write invalid data
+    '''
+
+class UnknownPropertyError(CustomException):
+    '''
+        raised: when user uses invalid value for a class attribute
+    '''
+
+
+class MissingDataError(InvalidUserInputError):
+    '''
+        raised: when data passed by user lacks some required fields
+    '''
+
+
+class PaginationError(CustomException):
+    '''
+        raised: when user uses invalid page and limit values for pagination
     '''
