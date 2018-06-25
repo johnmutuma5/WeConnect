@@ -1,15 +1,14 @@
-from app.storage.base import dbEngine
-from app.storage.base import Base
+from app.storage.base import init_db, drop_tables, Base
 import sys
 
 
 def create_or_drop_all(sysarg):
     if sysarg == 'create':
-        Base.metadata.create_all(dbEngine)
-        print('Created Tables')
+        dbName = init_db()
+        print('Created all Tables in %s' %(dbName))
     elif sysarg == 'drop':
-        Base.metadata.drop_all(dbEngine)
-        print('Dropped Tables')
+        dbName = drop_tables()
+        print('Dropped all Tables from %s' %(dbName))
     else:
         print("Usage: python tables.py <create | drop>")
 

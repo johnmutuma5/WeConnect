@@ -1,7 +1,6 @@
 from app import app, index
 from app.business.urls import business as business_urls_blueprint
 from app.user.urls import auth as auth_urls_blueprint
-
 app.add_url_rule(rule='/',
                  view_func=index.index,
                  methods=['GET'])

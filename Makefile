@@ -13,8 +13,14 @@ tables:
 drop_all:
 	python tables.py drop
 
+upgrade_tables:
+	alembic upgrade head
+
+reset_db:
+	alembic downgrade base
+
 run:
-	make tables
+	make upgrade_tables
 	python run.py
 
 test:

@@ -4,6 +4,7 @@ from sqlalchemy.schema import MetaData
 from app import config
 
 dbEngine = create_engine(config['SQLALCHEMY_DATABASE_URI'])
+dbName = str(dbEngine.url).split('/')[-1]
 
 convention = config.get('NAMING_CONVENTION')
 meta = MetaData(naming_convention=convention)
@@ -16,7 +17,10 @@ def weconnect_table_names():
 
 def init_db():
     Base.metadata.create_all(bind=dbEngine)
+    print(Base.metadata.tables['business'].insert())
+    return dbName
 
 
 def drop_tables():
     Base.metadata.drop_all(bind=dbEngine)
+    return dbName

@@ -30,7 +30,7 @@ class User(Base):
     last_name = Column(String(63), nullable=False)
     gender = Column(Enum('Male', 'Female', name='gender_type'),
                     nullable=False)
-    _email = Column('email', String(127), unique=True, nullable=False)
+    _email = Column('email', String(127), nullable=False)
     # relationships
     businesses = relationship('Business', back_populates='owner')
     reviews = relationship('Review', back_populates='author')
