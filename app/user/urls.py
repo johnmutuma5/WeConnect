@@ -1,6 +1,6 @@
 from app.user import auth_urls_blueprint as auth, views
 
-# user url prefix = '/api/v2/auth'
+# auth url prefix = '/api/v2/auth'
 auth.add_url_rule(rule='/register',
                   view_func=views.register,
                   methods=['POST'])
