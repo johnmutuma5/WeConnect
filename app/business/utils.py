@@ -24,20 +24,23 @@ def get_info_response(business_id, info_type):
     return jsonify({"info": info}), 200
 
 
-@login_required
-def register_a_business(business_data, owner):
+# @login_required
+def register_a_business(business_data, owner=1000):
     # create a business to register
     try:
         business = Business.create_business(business_data, owner)
     except InvalidUserInputError as error:
         # MissingDataError extends InvalidUserInputError, shall be caught too
-        return jsonify({"msg": error.msg})
+        return jsonify({"msg": error.msg}), 401
 
     try:
         msg = store.add(business)
     except DuplicationError as e:
         return jsonify({"msg": e.msg}), 409
-    return jsonify({"msg": msg}), 201
+    return jsonify({
+        "msg": msg['msg'],
+        "id": msg['id']
+        }), 201
 
 
 def find_status_code(err):

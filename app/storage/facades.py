@@ -102,11 +102,12 @@ class DbFacade():
 class BusinessDbFacade(DbFacade):
 
     def add_business(self, business_obj):
-        businessname = business_obj.name
         session = self.Session()
         try:
             session.add(business_obj)
             session.commit()
+            created_business_id = session.query(Business.id)\
+                .filter(Business.name == business_obj.name).first()
         except IntegrityError:
             session.rollback()
             # revert the database sequence auto increment
@@ -117,7 +118,10 @@ class BusinessDbFacade(DbFacade):
                                    'Business name already exists')
         finally:
             session.close()
-        return 'SUCCESS: business {} created!'.format(businessname)
+        return {
+            'msg': 'SUCCESS: business {} created!'.format(business_obj.name),
+            'id': created_business_id[0]
+            }
 
 
     def get_businesses_info(self):
