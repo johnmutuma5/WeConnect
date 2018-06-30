@@ -4,7 +4,10 @@ def OPTIONSServer (environ, start_response):
         origin ='*' #environ["HTTP_ORIGIN"]
 
         status = "200 OK"
-        response_headers = [("Access-Control-Allow-Headers", "Content-Type"), ("Access-Control-Allow-Origin", origin)]
+        response_headers = [
+            ("Access-Control-Allow-Headers", "Content-Type, This-Header"),
+            ("Access-Control-Allow-Origin", origin),
+            ("Access-Control-Allow-Headers", "POST, PUT, DELETE, GET")]
         start_response(status, response_headers)
         return [b" "] #use b or encode since application must return bytes
 
@@ -17,7 +20,10 @@ class CORSMiddleware(Flask):
     def __call__ (self, environ, start_response):
         def new_start_response(status, response_headers):
             # we can appendd to response_headers here e.g. Access-Control-Allow-Origin, Origin(if verified to be in allowed origins)
-            cors_response_headers = [("Access-Control-Allow-Headers", "Content-Type"), ("Access-Control-Allow-Origin", '*')]
+            cors_response_headers = [
+                ("Access-Control-Allow-Headers", "Content-Type"),
+                ("Access-Control-Allow-Origin", '*'),
+                ("Access-Control-Allow-Headers", "POST, PUT, DELETE, GET")]
             new_response_headers = [*response_headers, *cors_response_headers] #unpacked old response_headers into new_response_headers
             return start_response(status, new_response_headers)
 
