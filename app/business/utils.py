@@ -24,11 +24,11 @@ def get_info_response(business_id, info_type):
     return jsonify({"info": info}), 200
 
 
-# @login_required
-def register_a_business(business_data, owner=1000):
+@login_required
+def register_a_business(business_data, bearer_id=None):
     # create a business to register
     try:
-        business = Business.create_business(business_data, owner)
+        business = Business.create_business(business_data, bearer_id)
     except InvalidUserInputError as error:
         # MissingDataError extends InvalidUserInputError, shall be caught too
         return jsonify({"msg": error.msg}), 401
@@ -55,9 +55,9 @@ def find_status_code(err):
 
 
 @login_required
-def update_business_info(business_id, update_data, issuer_id):
+def update_business_info(business_id, update_data, bearer_id=None):
     try:
-        msg = store.update_business(business_id, update_data, issuer_id)
+        msg = store.update_business(business_id, update_data, bearer_id)
     except (DataNotFoundError, PermissionDeniedError, DuplicationError) as put_err:
         status_code = find_status_code(put_err)
         return jsonify({"msg": put_err.msg}), status_code
@@ -65,9 +65,9 @@ def update_business_info(business_id, update_data, issuer_id):
 
 
 @login_required
-def delete_business(business_id, issuer_id):
+def delete_business(business_id, bearer_id=None):
     try:
-        msg = store.delete_business(business_id, issuer_id)
+        msg = store.delete_business(business_id, bearer_id)
     except (DataNotFoundError, PermissionDeniedError) as del_err:
         status_code = find_status_code(del_err)
         return jsonify({"msg": del_err.msg}), status_code
@@ -75,8 +75,8 @@ def delete_business(business_id, issuer_id):
 
 
 @login_required
-def add_a_review(business_id, review_data, author_id):
-    new_review = Review.create_review(business_id, author_id, review_data)
+def add_a_review(business_id, review_data, bearer_id=None):
+    new_review = Review.create_review(business_id, bearer_id, review_data)
     # store the review
     try:
         msg = store.add(new_review)

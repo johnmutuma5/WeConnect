@@ -52,35 +52,6 @@ div.business_details span {
   height: 100%;
   width: 100%;
   background: rgba(0, 0, 0, .7);
-  background: -webkit-gradient(linear,
-                              left top, right top,
-                              from(rgba(150, 133, 143, 1)),
-                              color-stop(50%, rgba(150, 133, 143, .6)),
-                              to(rgba(150, 133, 143, 0))),
-              -webkit-gradient(linear,
-                              left top, left bottom,
-                              from(rgba(109, 121, 147, 1)),
-                              color-stop(20%, rgba(109, 121, 147, .3)),
-                              to(rgba(109, 121, 147, 0))),
-              transparent;
-  background: -webkit-linear-gradient(left,
-                              rgba(150, 133, 143, 1) 0%,
-                              rgba(150, 133, 143, .6) 50%,
-                              rgba(150, 133, 143, 0) 100%),
-              -webkit-linear-gradient(top,
-                              rgba(109, 121, 147, 1) 0%,
-                              rgba(109, 121, 147, .3) 20%,
-                              rgba(109, 121, 147, 0) 100%),
-              transparent;
-  background: -o-linear-gradient(left,
-                              rgba(150, 133, 143, 1) 0%,
-                              rgba(150, 133, 143, .6) 50%,
-                              rgba(150, 133, 143, 0) 100%),
-              -o-linear-gradient(top,
-                              rgba(109, 121, 147, 1) 0%,
-                              rgba(109, 121, 147, .3) 20%,
-                              rgba(109, 121, 147, 0) 100%),
-              transparent;
   background: linear-gradient(90deg,
                               rgba(150, 133, 143, 1) 0%,
                               rgba(150, 133, 143, .6) 50%,

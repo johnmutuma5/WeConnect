@@ -108,7 +108,7 @@ class BusinessDbFacade(DbFacade):
             session.commit()
             created_business_id = session.query(Business.id)\
                 .filter(Business.name == business_obj.name).first()
-        except IntegrityError:
+        except IntegrityError as e:
             session.rollback()
             # revert the database sequence auto increment
             seq = BUSINESS_SEQUENCES.get('business')

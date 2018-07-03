@@ -54,18 +54,17 @@ def login(request_data=None):
 
 
 @login_required
-def user_private_profile():
+def user_private_profile(bearer_id=None):
     profile_type = 'private'
-    user_id = session.get('user_id')
-    target_user = store.get_user(user_id, column='id')
+    target_user = store.get_user(bearer_id, column='id')
     profile = store.fetch_user_profile(target_user, profile_type='private')
     return jsonify({"profile": profile}), 200
 
 
 
 @login_required
-def logout(request_data=None):
-    session.pop('user_id')
+def logout(bearer_id=None):
+    # session.pop('user_id')
     return jsonify({"msg": "Logged out successfully!"}), 200
 
 

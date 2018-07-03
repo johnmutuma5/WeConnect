@@ -14,9 +14,8 @@ from .utils import (get_info_response, register_a_business,
 @require_json(methods=['POST'])
 def businesses(request_data=None):
     if request.method == 'POST':
-        owner = session.get('user_id')
         # this method is decorated with login required and require_json
-        response = register_a_business(request_data, owner)
+        response = register_a_business(request_data)
         return response
 
     businesses_info = store.get_businesses_info()
@@ -27,8 +26,6 @@ def businesses(request_data=None):
 @require_json(methods=['PUT'])
 def one_business(business_id, request_data=None):
     # get request issuer id
-    issuer_id = session.get('user_id')
-
     if request.method == 'GET':
         response = get_info_response(business_id,
                                      info_type='business_data')
@@ -39,14 +36,14 @@ def one_business(business_id, request_data=None):
         try:
             cleaned_data = inspect_data(request_data)
             # this function is decorated with login_required
-            response = update_business_info(business_id, cleaned_data, issuer_id)
+            response = update_business_info(business_id, cleaned_data)
             return response
         except (InvalidUserInputError, UnknownPropertyError) as error:
             # MissingDataError extends InvalidUserInputError
             return jsonify({'msg': error.msg}), 422
 
     # handle DELETE
-    response = delete_business(business_id, issuer_id)
+    response = delete_business(business_id)
     return response
 
 
@@ -76,6 +73,5 @@ def reviews(business_id, request_data=None):
         response = get_info_response(business_id, 'business_reviews')
         return response
     # get logged in user
-    author_id = session.get('user_id')
-    response = add_a_review(business_id, request_data, author_id)
+    response = add_a_review(business_id, request_data)
     return response

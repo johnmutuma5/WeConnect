@@ -26,6 +26,9 @@ def handle_invalid_credentials(msg=None):
 
 # Decorators
 def login_required(func):
+    '''
+        Functions decorated with this need to accept an argument bearer_id defaulted to None
+    '''
     @wraps(func)
     def wrapper(*args, **kwargs):
         access_token = None
@@ -34,8 +37,7 @@ def login_required(func):
             return handle_invalid_credentials("Bearer Token authorization header missing")
         auth_pattern = r'Bearer (?P<token_string>.+\..+\..+)'
         match = re.search(auth_pattern, auth)
-
-        if not match or not session.get('user_id'):
+        if not match:
             message = None
             if not match: message = 'Invalid Token'
             return handle_invalid_credentials(message)
@@ -44,10 +46,9 @@ def login_required(func):
         try:
             token_payload = jwt.decode(access_token, config['SECRET_KEY'])
             bearer_id = token_payload.get('user_id')
-            session['user_id'] = bearer_id
         except (InvalidSignatureError, DecodeError):
             return handle_invalid_credentials("Invalid Token")
-        return func(*args, **kwargs)
+        return func(*args, bearer_id=bearer_id, **kwargs)
     return wrapper
 
 
