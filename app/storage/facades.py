@@ -217,9 +217,10 @@ class BusinessDbFacade(DbFacade):
 
     def delete_business(self, business_id, issuer_id):
         session = self.Session()
-        target_business = session.query(Business)\
-            .filter(Business.id == business_id)\
-            .first()
+        query = session.query(Business)\
+            .filter(Business.id == business_id)
+
+        target_business = query.first()
 
         # if business with id = business_id is not found
         if not target_business:
@@ -231,7 +232,7 @@ class BusinessDbFacade(DbFacade):
             self.handle_permission_denied(session)
 
         # everything is okay, delete the business
-        session.delete(target_business)
+        query.delete()
         session.commit()
         return "SUCCESS: business deleted"
 
