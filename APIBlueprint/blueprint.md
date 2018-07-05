@@ -60,7 +60,8 @@ This resource handles all client login requests. The API receives data in
 + Response 200 (application/json)
   For successful login
 
-  + Attributes
+  + Attributes (object)
+      - access_token: a.validuser.token (string) - The authentication token
       - msg: Logged in john_doe (string) - The success message for login
 
 + Response 401 (application/json)
@@ -182,7 +183,7 @@ This action gets information for all businesses stored
 + Response 200 (application/json)
   A list of key value pairs for each business's information
 
-  + Attributes
+  + Attributes (object)
       - businesses(array[Business Info])
 
 
@@ -412,6 +413,9 @@ This Resource enables users to filter businesses by their attributes. A user can
 
 ### Business Info(Business Registration Info)
 - id: 1000 (number) - The formatted `id` of the business.
+- owner (object)
+    - id: 1000 (number) - The `id` of the owner
+    - name: Alice Doe (string) - The `name` of the owner
 
 ### Key Review Identity
 - heading: Wonderful (string) - The `heading` of the review
@@ -422,7 +426,9 @@ This Resource enables users to filter businesses by their attributes. A user can
 - body: Awesome products (string) - The `message` of the review
 
 ### Full Review Info(Review From User)
-- author_id: 1000 (number) - The `id` of the reviewer
+- author (object)
+    - name: John Doe (string) - The `full names` of the author
+    - id: 1000 (number) - The `id` of the author
 - business_id: 1000 (number) - The `id` of the business to review
 - id: 100 (number) - The `id` of the review
 
