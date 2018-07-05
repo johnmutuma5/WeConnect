@@ -9,7 +9,8 @@ from sqlalchemy import(Column, Integer, String, Date, Sequence,
 from app.storage.base import Base
 from app.exceptions import InvalidUserInputError, UnknownPropertyError
 from .schemas import(REQUIRED_BUSINESS_FIELDS, VALID_BUSINESS_FIELDS,
-                     USER_DEFINED_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS)
+                     USER_DEFINED_BUSINESS_FIELDS, REQUIRED_REVIEW_FIELDS,
+                     VALID_REVIEW_FIELDS)
 
 
 class Business (Base):
@@ -107,8 +108,9 @@ class BusinessProfile(dict):
         for field in fields:
             value = getattr(self.business, field)
             if field in ('owner',):
-                # extract owner id
-                value = value.id
+                # extract owner name
+                name = '{} {}'.format(value.first_name, value.last_name)
+                value = {'name': name, 'id': value.id}
             # update dict key to value
             self[field] = value
         return self
@@ -164,8 +166,15 @@ class ReviewDict(dict):
         self.review = review
 
     def generate(self):
-        fields = [*REQUIRED_REVIEW_FIELDS, "id"]
+        fields = [*VALID_REVIEW_FIELDS, "id"]
         for field in fields:
+            if field in ('author_id',):
+                continue
             value = getattr(self.review, field)
+            if field in ('author',):
+                # extract owner name
+                name = '{} {}'.format(value.first_name, value.last_name)
+                value = {'name': name, 'id': value.id}
+                
             self[field] = value
         return self
