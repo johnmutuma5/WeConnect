@@ -50,7 +50,7 @@ def login(request_data=None):
     msg = "Logged in {}".format(username)
     access_token = jwt.encode({'user_id': target_user.id}, secret)
     access_token = access_token.decode('utf-8')
-    return jsonify({'msg': msg, 'access_token': access_token}), 200
+    return jsonify({'msg': msg, 'access_token': access_token, 'id': target_user.id}), 200
 
 
 @login_required
