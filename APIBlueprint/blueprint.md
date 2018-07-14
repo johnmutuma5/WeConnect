@@ -64,6 +64,7 @@ This resource handles all client login requests. The API receives data in
       - access_token: a.validuser.token (string) - The authentication token
       - msg: Logged in john_doe (string) - The success message for login
       - id: 1000 (number) - The id of the user
+      - full_name: John Doe (string) - The full name of the logged in user
 
 + Response 401 (application/json)
   For unsuccessful login due to invalid credentials. e.g. a wrong `password`
