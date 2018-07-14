@@ -53,7 +53,7 @@ This resource handles all client login requests. The API receives data in
 
 + Request
 
-  + Attributes
+  + Attributes (object)
       - username: john_doe (string, required) - A registered username
       - password: userspassword (string, required) - The user's password
 
@@ -63,6 +63,7 @@ This resource handles all client login requests. The API receives data in
   + Attributes (object)
       - access_token: a.validuser.token (string) - The authentication token
       - msg: Logged in john_doe (string) - The success message for login
+      - id: 1000 (number) - The id of the user
 
 + Response 401 (application/json)
   For unsuccessful login due to invalid credentials. e.g. a wrong `password`
