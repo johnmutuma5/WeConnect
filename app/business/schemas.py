@@ -12,6 +12,7 @@ USER_DEFINED_BUSINESS_FIELDS = [
 
 VALID_BUSINESS_FIELDS = [
     *USER_DEFINED_BUSINESS_FIELDS,
+    "date_created",
     "owner"
 ]
 

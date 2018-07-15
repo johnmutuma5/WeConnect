@@ -1,10 +1,10 @@
 import re
 from datetime import date
-from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.expression import text, func
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from app.helpers import inspect_data
-from sqlalchemy import(Column, Integer, String, Date, Sequence,
+from sqlalchemy import(Column, Integer, String, Date, DateTime, Sequence,
                         ForeignKeyConstraint, Index, ForeignKey, Text)
 from app.storage.base import Base
 from app.exceptions import InvalidUserInputError, UnknownPropertyError
@@ -36,6 +36,7 @@ class Business (Base):
     owner_id = Column('owner_id', Integer, nullable=False)
     location = Column('location', String(127), nullable=False)
     category = Column("category", String(127), nullable=False)
+    date_created = Column('date_created', DateTime, server_default=func.NOW(), nullable=False)
     # relationships
     owner = relationship('User', back_populates='businesses')
     reviews = relationship('Review', back_populates='business')
@@ -175,6 +176,6 @@ class ReviewDict(dict):
                 # extract owner name
                 name = '{} {}'.format(value.first_name, value.last_name)
                 value = {'name': name, 'id': value.id}
-                
+
             self[field] = value
         return self

@@ -127,7 +127,9 @@ class BusinessDbFacade(DbFacade):
     def get_businesses_info(self):
         businesses_info = []
         session = self.Session()
-        businesses = session.query(Business).all()
+        businesses = session.query(Business)\
+                            .order_by(Business.date_created.desc())\
+                            .all()
         for business in businesses:
             business_data = business.profile()
             businesses_info.append(business_data)
@@ -256,7 +258,7 @@ class BusinessDbFacade(DbFacade):
             seq = BUSINESS_SEQUENCES.get('review')
             self._revert_sequence_increment(sequence=seq,
                                             table_name='review')
-            raise PermissionDeniedError(msg="Duplicate reviews on a business not allowed within 24hrs")
+            raise DuplicationError(msg="Duplicate reviews on a business not allowed within 24hrs")
         finally:
             session.close()
         return 'SUCCESS: review posted!'

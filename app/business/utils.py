@@ -80,7 +80,7 @@ def add_a_review(business_id, review_data, bearer_id=None):
     # store the review
     try:
         msg = store.add(new_review)
-    except (DataNotFoundError, PermissionDeniedError) as error:
+    except (DataNotFoundError, DuplicationError) as error:
         status_code = find_status_code(error)
         return jsonify({'msg': error.msg}), status_code
 
