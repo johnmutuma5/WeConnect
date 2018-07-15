@@ -36,7 +36,7 @@ class Business (Base):
     owner_id = Column('owner_id', Integer, nullable=False)
     location = Column('location', String(127), nullable=False)
     category = Column("category", String(127), nullable=False)
-    date_created = Column('date_created', DateTime, server_default=func.NOW(), nullable=False)
+    date_created = Column('date_created', DateTime(timezone=True), server_default=func.NOW(), nullable=False)
     # relationships
     owner = relationship('User', back_populates='businesses')
     reviews = relationship('Review', back_populates='business')
