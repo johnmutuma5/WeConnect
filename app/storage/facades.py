@@ -156,8 +156,10 @@ class BusinessDbFacade(DbFacade):
         search_key = search_params.get('q', '')
 
         _operator = '%' + search_key + '%'
-        subquery = session.query(Business)\
-            .filter(Business.name.ilike(_operator))
+        subquery = session\
+                    .query(Business)\
+                    .filter(Business.name.ilike(_operator))\
+                    .order_by(Business.date_created.desc())
 
         # pagination
         limit = search_params.get('limit', 10)
@@ -178,7 +180,11 @@ class BusinessDbFacade(DbFacade):
                 continue
             search_key = filter_params[key]
             _operator = '%' + search_key + '%'
-            subquery = subquery.filter(getattr(Business, key).ilike(_operator))
+            subquery = subquery\
+                            .filter(getattr(Business, key)\
+                            .ilike(_operator))\
+                            .order_by(Business.date_created.desc())
+
 
         # pagination
         limit = filter_params.get("limit", 10)
